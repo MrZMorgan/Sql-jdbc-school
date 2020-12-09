@@ -10,12 +10,11 @@ import java.util.stream.Collectors;
 public class DataGenerator {
 
     private static final String HYPHEN = "-";
-    private static final String SPACE = " ";
     private static final String user = "postgres";
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void generateTables(String sqlCreate, String sqlDrop) throws SQLException {
+    public void generateTables(String sqlDrop, String sqlCreate) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -24,12 +23,12 @@ public class DataGenerator {
             statement = connection.createStatement();
             try {
                 statement.executeQuery(sqlDrop);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             statement.executeQuery(sqlCreate);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
@@ -43,7 +42,7 @@ public class DataGenerator {
         return groups;
     }
 
-    public String generateGroupName(int digit) {
+    private String generateGroupName(int digit) {
         StringBuilder group = new StringBuilder();
         group.append(generateRandomLetter());
         group.append(generateRandomLetter());
@@ -53,11 +52,11 @@ public class DataGenerator {
         return group.toString();
     }
 
-    public int generateRandomDigit(int digit) {
+    private int generateRandomDigit(int digit) {
         return new Random().nextInt(digit);
     }
 
-    public char generateRandomLetter() {
+    private char generateRandomLetter() {
         return (char) (new Random().nextInt(26) + 'a');
     }
 
