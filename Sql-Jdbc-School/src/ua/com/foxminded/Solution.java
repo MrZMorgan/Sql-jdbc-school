@@ -4,20 +4,20 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Solution {
-    static String tableName = "groups";
-    static String sqlCreate = "CREATE TABLE groups (\n" +
-            "    group_id BIGSERIAL NOT NULL PRIMARY KEY,\n" +
-            "    group_name VARCHAR(50) NOT NULL\n" +
-            ")";
-    static String sqlDrop = "DROP TABLE groups;";
+    final static String tableName = "groups";
+    final static String courses = "src/ua/com/foxminded/rawdata/courses";
+    final static String first_names = "src/ua/com/foxminded/rawdata/first_names";
+    final static String last_names = "src/ua/com/foxminded/rawdata/last_names";
+
 
     public static void main(String[] args) throws SQLException {
         DataGenerator dataGenerator = new DataGenerator();
 //        dataGenerator.generateTables(tableName, sqlCreate, sqlDrop);
 
-        List<String> strings = dataGenerator.generateGroupsNamesList();
+        List<String> strings = dataGenerator.generateNamesList(first_names, last_names);
         for (String s : strings) {
             System.out.println(s);
         }
+        System.out.println(strings.size());
     }
 }
