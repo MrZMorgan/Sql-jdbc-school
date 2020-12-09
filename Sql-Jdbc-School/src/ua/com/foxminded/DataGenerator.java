@@ -4,18 +4,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataGenerator {
 
-    private static String HYPHEN = "-";
-    private static String SPACE = " ";
-    private static String user = "postgres";
-    private static String password = "1234";
-    private static String url = "jdbc:postgresql://localhost:5432/school";
+    private static final String HYPHEN = "-";
+    private static final String SPACE = " ";
+    private static final String user = "postgres";
+    private static final String password = "1234";
+    private static final String url = "jdbc:postgresql://localhost:5432/school";
 
     public void generateTables(String sqlCreate, String sqlDrop) throws SQLException {
         Connection connection = null;
@@ -26,8 +24,6 @@ public class DataGenerator {
             statement = connection.createStatement();
             try {
                 statement.executeQuery(sqlDrop);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
             statement.executeQuery(sqlCreate);
         } catch (Exception e) {
@@ -65,13 +61,13 @@ public class DataGenerator {
         return (char) (new Random().nextInt(26) + 'a');
     }
 
-    public List<String> generateNamesList(String firstNamesFileName, String lastNamesFileName) {
+    public Map<String, String> generateNamesList(String firstNamesFileName, String lastNamesFileName) {
         List<String> firstNames = read(firstNamesFileName);
         List<String> lastNames = read(lastNamesFileName);
-        List<String> names = new LinkedList<>();
+        Map<String, String> names = new LinkedHashMap<>();
 
         for (int i = 0; i < 200; i++) {
-            names.add(firstNames.get(generateRandomDigit(firstNames.size())) + SPACE +
+            names.put(firstNames.get(generateRandomDigit(firstNames.size())),
                     lastNames.get(generateRandomDigit(lastNames.size())));
         }
 
