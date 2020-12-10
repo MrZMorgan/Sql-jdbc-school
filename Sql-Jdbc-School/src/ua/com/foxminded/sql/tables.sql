@@ -7,7 +7,7 @@ CREATE TABLE groups (
 DROP TABLE students;
 CREATE TABLE students (
     id SERIAL NOT NULL PRIMARY KEY,
-    group_id INT NOT NULL,
+    group_id INT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL
 );
@@ -18,6 +18,7 @@ CREATE TABLE courses (
     name VARCHAR(50) NOT NULL,
     description VARCHAR(200) NOT NULL
 );
+
 
 DROP TABLE students_courses;
 CREATE TABLE students_courses (

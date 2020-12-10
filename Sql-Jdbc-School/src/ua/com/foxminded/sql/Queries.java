@@ -17,7 +17,7 @@ public class Queries {
     public final static String SQL_DROP_STUDENTS_TABLE = "DROP TABLE students;";
     public final static String SQL_CREATE_STUDENTS_TABLE = "CREATE TABLE students (\n" +
             "    id SERIAL NOT NULL PRIMARY KEY,\n" +
-            "    group_id INT NOT NULL,\n" +
+            "    group_id INT,\n" +
             "    first_name VARCHAR(50) NOT NULL,\n" +
             "    last_name VARCHAR(50) NOT NULL\n" +
             ");";

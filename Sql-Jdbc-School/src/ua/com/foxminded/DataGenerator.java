@@ -86,8 +86,8 @@ public class DataGenerator {
         return strings;
     }
 
-    public Map<Integer, String[]> assignStudentsToGroups(Map<String, Integer> groupNames, List<String[]> namesList) {
-        Map<Integer, String[]> namesGroups = new LinkedHashMap<>();
+    public List<String[]> assignStudentsToGroups(Map<String, Integer> groupNames, List<String[]> namesList) {
+        List<String[]> namesGroups = new LinkedList<>();
 
         int groupId = 1;
         int counter = 0;
@@ -97,8 +97,7 @@ public class DataGenerator {
                 if (counter == 200) {
                     break;
                 }
-                namesGroups.put(groupId, namesList.get(counter));
-                System.out.println(groupId + "(" + (counter + 1) + ")" + " : " + namesList.get(counter)[0] + " " + namesList.get(counter)[1]);
+                namesGroups.add(new String[]{String.valueOf(groupId), namesList.get(counter)[0], namesList.get(counter)[1]});
                 counter++;
             }
             groupId++;
