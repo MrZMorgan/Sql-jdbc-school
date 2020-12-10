@@ -13,7 +13,7 @@ public class CoursesDAO implements DAO {
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(String courseName) {
+    public void create(int id, String courseName) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -21,7 +21,7 @@ public class CoursesDAO implements DAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO courses (name) VALUES ('" + courseName +"');");
+                statement.executeQuery("INSERT INTO courses (id, name) VALUES (" + id + ", '"  + courseName +"');");
             } catch (Exception e) {
                 e.printStackTrace();
             }

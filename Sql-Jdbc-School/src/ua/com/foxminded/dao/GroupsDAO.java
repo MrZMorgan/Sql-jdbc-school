@@ -12,7 +12,7 @@ public class GroupsDAO implements DAO {
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(String groupName) {
+    public void create(int id, String groupName) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -20,7 +20,7 @@ public class GroupsDAO implements DAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO groups (group_name) VALUES ('" + groupName +"');");
+                statement.executeQuery("INSERT INTO groups (id ,group_name) VALUES (" + id + ", '"  + groupName +"');");
             } catch (Exception e) {
                 e.printStackTrace();
             }
