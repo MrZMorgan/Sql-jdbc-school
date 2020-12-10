@@ -31,29 +31,6 @@ public class Facade {
 
         groupNames.forEach((groupName, groupSize) -> groupsDAO.create(groupName));
         coursesList.forEach(course -> coursesDAO.create(course));
-
-
-//        namesGroups.forEach(data -> studentsDAO.create(Integer.parseInt(data[0]), data[1], data[2]));
-
-        int j = 0;
-        if (namesGroups.size() == 200) {
-            for (; j < 200; j++) {
-                System.out.println(namesList.get(j)[0] + " " + namesList.get(j)[1] + " : "
-                        + namesGroups.get(j)[0] + " : " + namesGroups.get(j)[1] + " " + namesGroups.get(j)[2]);
-            }
-        } else {
-            if (namesGroups.size() < 200) {
-                for (int i = 0; i < namesGroups.size(); i++) {
-                    System.out.println(namesList.get(j)[0] + " " + namesList.get(j)[1] + " : "
-                            + namesGroups.get(j)[0] + " : " + namesGroups.get(j)[1] + " " + namesGroups.get(j)[2]);
-                    j++;
-                }
-
-                while (j < 200) {
-                    System.out.println(namesList.get(j)[0] + " " + namesList.get(j)[1] + "нет группы");
-                    j++;
-                }
-            }
-        }
+        studentsDAO.fillTable(namesGroups, namesList);
     }
 }
