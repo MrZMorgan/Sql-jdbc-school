@@ -14,7 +14,7 @@ public class DataGenerator {
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void generateTables(String sqlDrop, String sqlCreate) {
+    public void generateTable(String sqlDrop, String sqlCreate) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -32,11 +32,12 @@ public class DataGenerator {
         }
     }
 
-    public List<String> generateGroupsNamesList() {
-        List<String> groups = new LinkedList<>();
+    public Map<String, Integer> generateGroupsNamesList() {
+        Map<String, Integer> groups = new LinkedHashMap<>();
+
 
         for (int i = 0; i < 10; i++) {
-            groups.add(generateGroupName(10));
+            groups.put(generateGroupName(10), new Random().nextInt(21) + 10);
         }
 
         return groups;
@@ -60,14 +61,15 @@ public class DataGenerator {
         return (char) (new Random().nextInt(26) + 'a');
     }
 
-    public Map<String, String> generateNamesList(String firstNamesFileName, String lastNamesFileName) {
+    public List<String[]> generateNamesList(String firstNamesFileName, String lastNamesFileName) {
         List<String> firstNames = read(firstNamesFileName);
         List<String> lastNames = read(lastNamesFileName);
-        Map<String, String> names = new LinkedHashMap<>();
+        List<String[]> names = new LinkedList<>();
 
         for (int i = 0; i < 200; i++) {
-            names.put(firstNames.get(generateRandomDigit(firstNames.size())),
-                    lastNames.get(generateRandomDigit(lastNames.size())));
+            String[] fullName = {firstNames.get(generateRandomDigit(firstNames.size())),
+                    lastNames.get(generateRandomDigit(lastNames.size()))};
+            names.add(fullName);
         }
 
         return names;

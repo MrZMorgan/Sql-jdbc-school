@@ -5,7 +5,6 @@ import ua.com.foxminded.interfaces.DAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.util.Random;
 
 public class StudentsDAO implements DAO {
 
