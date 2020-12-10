@@ -35,7 +35,6 @@ public class DataGenerator {
     public Map<String, Integer> generateGroupsNamesList() {
         Map<String, Integer> groups = new LinkedHashMap<>();
 
-
         for (int i = 0; i < 10; i++) {
             groups.put(generateGroupName(10), new Random().nextInt(21) + 10);
         }
@@ -53,7 +52,7 @@ public class DataGenerator {
         return group.toString();
     }
 
-    private int generateRandomDigit(int digit) {
+    public int generateRandomDigit(int digit) {
         return new Random().nextInt(digit);
     }
 
@@ -85,5 +84,26 @@ public class DataGenerator {
         }
 
         return strings;
+    }
+
+    public Map<Integer, String[]> assignStudentsToGroups(Map<String, Integer> groupNames, List<String[]> namesList) {
+        Map<Integer, String[]> namesGroups = new LinkedHashMap<>();
+
+        int groupId = 1;
+        int counter = 0;
+
+        for (Map.Entry<String, Integer> entry : groupNames.entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                if (counter == 200) {
+                    break;
+                }
+                namesGroups.put(groupId, namesList.get(counter));
+                System.out.println(groupId + "(" + (counter + 1) + ")" + " : " + namesList.get(counter)[0] + " " + namesList.get(counter)[1]);
+                counter++;
+            }
+            groupId++;
+        }
+
+        return namesGroups;
     }
 }
