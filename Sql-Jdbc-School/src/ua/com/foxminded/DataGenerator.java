@@ -1,5 +1,7 @@
 package ua.com.foxminded;
 
+import ua.com.foxminded.dao.StudentsCoursesDAO;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -104,5 +106,14 @@ public class DataGenerator {
         }
 
         return namesGroups;
+    }
+
+    public void assignCoursesToStudents(List<String[]> namesList, StudentsCoursesDAO studentsCoursesDAO) {
+        for (int i = 0; i < namesList.size(); i++) {
+            int courseCount = new Random().nextInt(3) + 1;
+            for (int j = 0; j < courseCount; j++) {
+                studentsCoursesDAO.create(i + 1, j + 1);
+            }
+        }
     }
 }
