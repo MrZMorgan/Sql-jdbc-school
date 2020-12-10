@@ -40,8 +40,9 @@ public class StudentsDAO implements DAO {
     public void fillTable(List<String[]> namesGroups, List<String[]> namesList) {
         int j = 0;
         if (namesGroups.size() == 200) {
-            for (int i = 0; i < 200; i++) {
+            while (j < 200) {
                 create(j + 1, Integer.parseInt(namesGroups.get(j)[0]), namesGroups.get(j)[1], namesGroups.get(j)[2]);
+                j++;
             }
         } else {
             if (namesGroups.size() < 200) {
