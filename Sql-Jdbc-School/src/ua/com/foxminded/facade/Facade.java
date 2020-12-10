@@ -8,9 +8,22 @@ import ua.com.foxminded.dao.StudentsDAO;
 import static ua.com.foxminded.sql.Queries.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Facade {
+
+    CoursesDAO coursesDAO ;
+    GroupsDAO groupsDAO;
+    StudentsDAO studentsDAO;
+    StudentsCoursesDAO studentsCoursesDAO;
+
+    public Facade(CoursesDAO coursesDAO, GroupsDAO groupsDAO, StudentsDAO studentsDAO, StudentsCoursesDAO studentsCoursesDAO) {
+        this.coursesDAO = coursesDAO;
+        this.groupsDAO = groupsDAO;
+        this.studentsDAO = studentsDAO;
+        this.studentsCoursesDAO = studentsCoursesDAO;
+    }
 
     final static String courses = "src/ua/com/foxminded/rawdata/courses";
     final static String first_names = "src/ua/com/foxminded/rawdata/first_names";
@@ -23,11 +36,6 @@ public class Facade {
         dataGenerator.generateTable(SQL_DROP_GROUPS_TABLE , SQL_CREATE_GROUPS_TABLE);
         dataGenerator.generateTable(SQL_DROP_COURSES_TABLE, SQL_CREATE_COURSES_TABLE);
         dataGenerator.generateTable(SQL_DROP_STUDENTS_TABLE, SQL_CREATE_STUDENTS_TABLE);
-
-        CoursesDAO coursesDAO = new CoursesDAO();
-        GroupsDAO groupsDAO = new GroupsDAO();
-        StudentsDAO studentsDAO = new StudentsDAO();
-        StudentsCoursesDAO studentsCoursesDAO = new StudentsCoursesDAO();
 
         Map<String, Integer> groupNames = dataGenerator.generateGroupsNamesList();
         List<String[]> namesList = dataGenerator.generateNamesList(first_names, last_names);
@@ -42,5 +50,20 @@ public class Facade {
 
         dataGenerator.generateTable(SQL_DROP_STUDENTS_COURSES_TABLE, SQL_CREATE_STUDENTS_COURSES_TABLE);
         dataGenerator.assignCoursesToStudents(namesList, studentsCoursesDAO);
+    }
+
+    public void workWithDatabase() {
+        System.out.println("To delete student from DB type \"delete\"\n" +
+                           "To close app close type \"exit\"");
+        Scanner scanner = new Scanner(System.in);
+        String command = scanner.nextLine();
+        while (!command.equals("exit")) {
+            if (command.equals("delete")) {
+                System.out.println("Type student id and press \"Enter\" to delete student");
+                command = scanner.nextLine();
+                studentsCoursesDAO.deleteStudent(Integer.parseInt(command));
+                studentsDAO.deleteStudent(Integer.parseInt(command));
+            }
+        }
     }
 }

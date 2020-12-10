@@ -34,4 +34,27 @@ public class StudentsCoursesDAO implements DAO {
             }
         }
     }
+
+    public void deleteStudent(int studentId) {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(url, user, password);
+            statement = connection.createStatement();
+            try {
+                statement.executeQuery( "DELETE FROM students_courses WHERE student_id = "+ studentId +";");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
 }
