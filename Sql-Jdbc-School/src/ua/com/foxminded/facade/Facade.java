@@ -34,7 +34,6 @@ public class Facade {
     private final static String courses = "src/ua/com/foxminded/rawdata/courses";
     private final static String first_names = "src/ua/com/foxminded/rawdata/first_names";
     private final static String last_names = "src/ua/com/foxminded/rawdata/last_names";
-    private List<String> coursesList;
 
     public void generateTestData() {
         dataGenerator.generateTable(SQL_DROP_GROUPS_TABLE , SQL_CREATE_GROUPS_TABLE);
@@ -43,7 +42,7 @@ public class Facade {
 
         Map<String, Integer> groupNames = dataGenerator.generateGroupsNamesList();
         List<String[]> namesList = dataGenerator.generateNamesList(first_names, last_names);
-        coursesList = dataGenerator.read(courses);
+        List<String> coursesList = dataGenerator.read(courses);
         List<String[]> namesGroups = dataGenerator.assignStudentsToGroups(groupNames, namesList);
 
         AtomicInteger groupId = new AtomicInteger(1);
@@ -53,7 +52,7 @@ public class Facade {
         studentsDAO.fillTable(namesGroups, namesList);
 
         dataGenerator.generateTable(SQL_DROP_STUDENTS_COURSES_TABLE, SQL_CREATE_STUDENTS_COURSES_TABLE);
-        dataGenerator.assignCoursesToStudents(namesList, studentsCoursesDAO);
+        dataGenerator.assignCoursesToStudents(namesList, studentsCoursesDAO, coursesList.size());
     }
 
     public void workWithDatabase() {
@@ -61,7 +60,8 @@ public class Facade {
                            "To add new student type \"add\"" + "\n" +
                            "To assign student to course type \"assign\"" + "\n" +
                            "To find all students related to course with given name type \"student to courses\"" + "\n" +
-                           "To delete student from courseType \"delete from\"" + "\n" + "\n" +
+                           "To delete student from courseType \"delete from\"" + "\n" +
+                           "To find all groups with less or equals student count type expected group size \"group\"" + "\n" + "\n" +
                            "To close app close type \"exit\"");
                 Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
@@ -82,27 +82,41 @@ public class Facade {
                     break;
                 case "assign":
                     System.out.println("Type \"students_id\"");
-                    String studentsId = scanner.nextLine();
+                    int studentsId = scanner.nextInt();
                     System.out.println("Type students \"course_id\"" );
-                    String courseId = scanner.nextLine();
-                    studentsCoursesDAO.create(Integer.parseInt(studentsId), Integer.parseInt(courseId));
+                    int courseId = scanner.nextInt();
+                    studentsCoursesDAO.create(studentsId, courseId);
                     break;
                 case "delete from":
                     System.out.println("Type \"students_id\"");
-                    studentsId = scanner.nextLine();
+                    studentsId = scanner.nextInt();
                     System.out.println("Type students \"course_id\"");
-                    courseId = scanner.nextLine();
-                    studentsCoursesDAO.deleteStudentFromCourse(Integer.parseInt(studentsId), Integer.parseInt(courseId));
+                    courseId = scanner.nextInt();
+                    studentsCoursesDAO.deleteStudentFromCourse(studentsId, courseId);
                     break;
                 case "student to courses" :
-                    System.out.println("Type students \"course_name\"");
-                    courseId = scanner.nextLine();
+                    System.out.println("Type \"course_name\"");
+                    courseId = scanner.nextInt();
                     int courseName = coursesDAO.getCourseId(courseId);
                     List<Integer> list = studentsCoursesDAO.getStudentsIdListRelatedToCourseId(courseName);
                     for (Integer i : list) {
                         String[] fullName = studentsDAO.getStudentById(i);
                         System.out.println(fullName[0] + " " + fullName[1]);
                     }
+                    break;
+                case "group":
+                    System.out.println("Type \"expected_group_size\"");
+                    int expectedGroupSize = scanner.nextInt();
+                    List<int[]> groupsSizes = studentsDAO.getGroupsBySize(expectedGroupSize);
+                    List<String> groupNames = groupsDAO.getGroupNameList();
+                    for (int i = 0; i < groupsSizes.size(); i++) {
+                        for (int j = 0; j < groupNames.size(); j++) {
+                            if (groupsSizes.get(i)[0] == j + 1) {
+                                System.out.println(groupNames.get(j) + " : " + groupsSizes.get(i)[1] );
+                            }
+                        }
+                    }
+                    break;
                 default:
                     System.out.println("Incorrect command");
                     command = scanner.nextLine();
