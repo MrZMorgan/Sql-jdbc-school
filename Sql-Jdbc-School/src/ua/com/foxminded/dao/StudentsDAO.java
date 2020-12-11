@@ -1,10 +1,8 @@
 package ua.com.foxminded.dao;
 
 import ua.com.foxminded.interfaces.DAO;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.LinkedList;
 import java.util.List;
 
 public class StudentsDAO implements DAO {
@@ -79,6 +77,79 @@ public class StudentsDAO implements DAO {
                 }
             }
         }
+    }
+
+    public int getStudentsTableSize() {
+        final String sql = "SELECT * FROM students";
+        Connection connection = null;
+        int id = 0;
+        try  {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                id++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return id;
+    }
+
+    public String[] getStudentById(int studentId) {
+        final String sql = "SELECT * FROM students WHERE id = "  + studentId + ";";
+        Connection connection = null;
+        String[] fullName = new String[2];
+        try  {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                fullName[0] = resultSet.getString("first_name");
+                fullName[1] = resultSet.getString("last_name");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return fullName;
+    }
+
+    public List<int[]> getGroupsBySize(int expectedGroupSize) {
+        final String sql = "SELECT group_id, COUNT(*) FROM students GROUP BY group_id HAVING COUNT(*) >= " + expectedGroupSize + ";";
+        Connection connection = null;
+        List<int[]> groupsSizes = new LinkedList<>();
+        try  {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int[] groupSize = new int[2];
+                groupSize[0] = resultSet.getInt("group_id");
+                groupSize[1] = resultSet.getInt("count");
+                groupsSizes.add(groupSize);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return groupsSizes;
     }
 }
 

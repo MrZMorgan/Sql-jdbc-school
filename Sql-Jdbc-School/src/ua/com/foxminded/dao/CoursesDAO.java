@@ -1,10 +1,8 @@
 package ua.com.foxminded.dao;
 
 import ua.com.foxminded.interfaces.DAO;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 
 public class CoursesDAO implements DAO {
 
@@ -33,5 +31,28 @@ public class CoursesDAO implements DAO {
                 throwables.printStackTrace();
             }
         }
+    }
+
+    public int getCourseId(int courseName) {
+        final String sql = "SELECT * FROM courses WHERE name = "  + courseName + ";";
+        Connection connection = null;
+        int courseId = 0;
+        try  {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                courseId = resultSet.getInt("id");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return courseId;
     }
 }

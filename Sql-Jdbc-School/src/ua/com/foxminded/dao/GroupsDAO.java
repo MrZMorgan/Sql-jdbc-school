@@ -1,10 +1,10 @@
 package ua.com.foxminded.dao;
 
 import ua.com.foxminded.interfaces.DAO;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GroupsDAO implements DAO {
 
@@ -33,5 +33,28 @@ public class GroupsDAO implements DAO {
                 throwables.printStackTrace();
             }
         }
+    }
+
+    public List<String> getGroupNameList() {
+        final String sql = "SELECT group_name FROM groups;";
+        Connection connection = null;
+        List<String> groupNames = new LinkedList<>();
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                groupNames.add(resultSet.getString("group_name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return groupNames;
     }
 }

@@ -108,12 +108,7 @@ public class DataGenerator {
         return namesGroups;
     }
 
-    public void assignCoursesToStudents(List<String[]> namesList, StudentsCoursesDAO studentsCoursesDAO) {
-        for (int i = 0; i < namesList.size(); i++) {
-            int courseCount = new Random().nextInt(3) + 1;
-            for (int j = 0; j < courseCount; j++) {
-                studentsCoursesDAO.create(i + 1, j + 1);
-            }
-        }
-    }
+//    public void assignCoursesToStudents(List<String[]> namesList, StudentsCoursesDAO studentsCoursesDAO, int coursesSize) {
+//        if ()
+//    }
 }
