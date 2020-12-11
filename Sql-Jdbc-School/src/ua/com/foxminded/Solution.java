@@ -1,5 +1,10 @@
 package ua.com.foxminded;
 
-public class Solution {
+import ua.com.foxminded.facade.Facade;
 
+public class Solution {
+    public static void main(String[] args) {
+        Facade facade = new Facade(new DataGenerator());
+        facade.generateTestData();
+    }
 }
