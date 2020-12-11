@@ -11,6 +11,6 @@ public class Solution {
     public static void main(String[] args) {
         Facade facade = new Facade(new CoursesDAO(), new GroupsDAO(), new StudentsDAO(), new StudentsCoursesDAO());
         facade.generateTestData();
-        facade.workWithDatabase();
+//        facade.workWithDatabase();
     }
 }

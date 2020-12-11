@@ -54,15 +54,28 @@ public class Facade {
 
     public void workWithDatabase() {
         System.out.println("To delete student from DB type \"delete\"\n" +
+                           "To add new student type \"add\"\n" +
                            "To close app close type \"exit\"");
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
         while (!command.equals("exit")) {
-            if (command.equals("delete")) {
-                System.out.println("Type student id and press \"Enter\" to delete student");
-                command = scanner.nextLine();
-                studentsCoursesDAO.deleteStudent(Integer.parseInt(command));
-                studentsDAO.deleteStudent(Integer.parseInt(command));
+            switch (command) {
+                case "delete" :
+                    System.out.println("Type student id and press \"Enter\" to delete student");
+                    command = scanner.nextLine();
+                    studentsCoursesDAO.deleteStudent(Integer.parseInt(command));
+                    studentsDAO.deleteStudent(Integer.parseInt(command));
+                    break;
+                case "add":
+                    System.out.println("Type students \"first_name\"" );
+                    String firstName = scanner.nextLine();
+                    System.out.println("Type students \"last_name\"" );
+                    String lastName = scanner.nextLine();
+                    studentsDAO.fillTable(, );
+                default:
+                    System.out.println("Incorrect command");
+                    command = scanner.nextLine();
+                    break;
             }
         }
     }
