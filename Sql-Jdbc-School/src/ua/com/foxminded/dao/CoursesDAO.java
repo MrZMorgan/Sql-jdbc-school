@@ -33,8 +33,8 @@ public class CoursesDAO implements DAO {
         }
     }
 
-    public int getCourseId(int courseName) {
-        final String sql = "SELECT * FROM courses WHERE name = "  + courseName + ";";
+    public int getCourseId(String courseName) {
+        final String sql = "SELECT id FROM courses WHERE name = '"  + courseName + "';";
         Connection connection = null;
         int courseId = 0;
         try  {

@@ -101,5 +101,29 @@ public class StudentsDAO implements DAO {
         }
         return id;
     }
+
+    public String[] getStudentById(int studentId) {
+        final String sql = "SELECT * FROM students WHERE id = "  + studentId + ";";
+        Connection connection = null;
+        String[] fullName = new String[2];
+        try  {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                fullName[0] = resultSet.getString("first_name");
+                fullName[1] = resultSet.getString("last_name");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return fullName;
+    }
 }
 

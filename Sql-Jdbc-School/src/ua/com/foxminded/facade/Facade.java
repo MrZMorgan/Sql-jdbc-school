@@ -17,28 +17,33 @@ public class Facade {
     GroupsDAO groupsDAO;
     StudentsDAO studentsDAO;
     StudentsCoursesDAO studentsCoursesDAO;
+    DataGenerator dataGenerator;
 
-    public Facade(CoursesDAO coursesDAO, GroupsDAO groupsDAO, StudentsDAO studentsDAO, StudentsCoursesDAO studentsCoursesDAO) {
+    public Facade(CoursesDAO coursesDAO,
+                  GroupsDAO groupsDAO,
+                  StudentsDAO studentsDAO,
+                  StudentsCoursesDAO studentsCoursesDAO,
+                  DataGenerator dataGenerator) {
         this.coursesDAO = coursesDAO;
         this.groupsDAO = groupsDAO;
         this.studentsDAO = studentsDAO;
         this.studentsCoursesDAO = studentsCoursesDAO;
+        this.dataGenerator = dataGenerator;
     }
 
     private final static String courses = "src/ua/com/foxminded/rawdata/courses";
     private final static String first_names = "src/ua/com/foxminded/rawdata/first_names";
     private final static String last_names = "src/ua/com/foxminded/rawdata/last_names";
+    private List<String> coursesList;
 
     public void generateTestData() {
-        DataGenerator dataGenerator = new DataGenerator();
-
         dataGenerator.generateTable(SQL_DROP_GROUPS_TABLE , SQL_CREATE_GROUPS_TABLE);
         dataGenerator.generateTable(SQL_DROP_COURSES_TABLE, SQL_CREATE_COURSES_TABLE);
         dataGenerator.generateTable(SQL_DROP_STUDENTS_TABLE, SQL_CREATE_STUDENTS_TABLE);
 
         Map<String, Integer> groupNames = dataGenerator.generateGroupsNamesList();
         List<String[]> namesList = dataGenerator.generateNamesList(first_names, last_names);
-        List<String> coursesList = dataGenerator.read(courses);
+        coursesList = dataGenerator.read(courses);
         List<String[]> namesGroups = dataGenerator.assignStudentsToGroups(groupNames, namesList);
 
         AtomicInteger groupId = new AtomicInteger(1);
@@ -52,10 +57,13 @@ public class Facade {
     }
 
     public void workWithDatabase() {
-        System.out.println("To delete student from DB type \"delete\"\n" +
-                           "To add new student type \"add\"\n" +
+        System.out.println("To delete student from DB type \"delete\"" + "\n" +
+                           "To add new student type \"add\"" + "\n" +
+                           "To assign student to course type \"assign\"" + "\n" +
+                           "To find all students related to course with given name type \"student to courses\"" + "\n" +
+                           "To delete student from courseType \"delete from\"" + "\n" + "\n" +
                            "To close app close type \"exit\"");
-        Scanner scanner = new Scanner(System.in);
+                Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
         while (!command.equals("exit")) {
             switch (command) {
@@ -66,11 +74,35 @@ public class Facade {
                     studentsDAO.deleteStudent(Integer.parseInt(command));
                     break;
                 case "add":
-                    System.out.println("Type students \"first_name\"" );
+                    System.out.println("Type students \"first_name\"");
                     String firstName = scanner.nextLine();
                     System.out.println("Type students \"last_name\"" );
                     String lastName = scanner.nextLine();
                     studentsDAO.create(studentsDAO.getStudentsTableSize() + 1, 0,firstName, lastName);
+                    break;
+                case "assign":
+                    System.out.println("Type \"students_id\"");
+                    String studentsId = scanner.nextLine();
+                    System.out.println("Type students \"course_id\"" );
+                    String courseId = scanner.nextLine();
+                    studentsCoursesDAO.create(Integer.parseInt(studentsId), Integer.parseInt(courseId));
+                    break;
+                case "delete from":
+                    System.out.println("Type \"students_id\"");
+                    studentsId = scanner.nextLine();
+                    System.out.println("Type students \"course_id\"");
+                    courseId = scanner.nextLine();
+                    studentsCoursesDAO.deleteStudentFromCourse(Integer.parseInt(studentsId), Integer.parseInt(courseId));
+                    break;
+                case "student to courses" :
+                    System.out.println("Type students \"course_name\"");
+                    courseId = scanner.nextLine();
+                    int courseName = coursesDAO.getCourseId(courseId);
+                    List<Integer> list = studentsCoursesDAO.getStudentsIdListRelatedToCourseId(courseName);
+                    for (Integer i : list) {
+                        String[] fullName = studentsDAO.getStudentById(i);
+                        System.out.println(fullName[0] + " " + fullName[1]);
+                    }
                 default:
                     System.out.println("Incorrect command");
                     command = scanner.nextLine();

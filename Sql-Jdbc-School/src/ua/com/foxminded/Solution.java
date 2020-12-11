@@ -9,7 +9,7 @@ import ua.com.foxminded.facade.Facade;
 public class Solution {
 
     public static void main(String[] args) {
-        Facade facade = new Facade(new CoursesDAO(), new GroupsDAO(), new StudentsDAO(), new StudentsCoursesDAO());
+        Facade facade = new Facade(new CoursesDAO(), new GroupsDAO(), new StudentsDAO(), new StudentsCoursesDAO(), new DataGenerator());
         facade.generateTestData();
         facade.workWithDatabase();
     }

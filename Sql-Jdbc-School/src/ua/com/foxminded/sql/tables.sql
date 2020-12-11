@@ -25,3 +25,5 @@ CREATE TABLE students_courses (
     student_id INT REFERENCES students (id),
     courses_id INT REFERENCES courses (id)
 );
+
+
