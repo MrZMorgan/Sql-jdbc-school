@@ -81,4 +81,16 @@ public class DataGenerator {
 
         return strings;
     }
+
+    public List<String[]> generateFullNamesList(List<String> firstNames, List<String> lastNames) {
+        List<String[]> fullNamesList = new LinkedList<>();
+        for (int i = 0; i < 200; i++) {
+            String firstName = firstNames.get(generateRandomDigit(firstNames.size()));
+            String lastName = lastNames.get(generateRandomDigit(lastNames.size()));
+            String[] fullName = {firstName, lastName};
+            fullNamesList.add(fullName);
+        }
+
+        return fullNamesList;
+    }
 }
