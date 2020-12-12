@@ -84,6 +84,7 @@ public class DataGenerator {
 
     public List<String[]> generateFullNamesList(List<String> firstNames, List<String> lastNames) {
         List<String[]> fullNamesList = new LinkedList<>();
+
         for (int i = 0; i < 200; i++) {
             String firstName = firstNames.get(generateRandomDigit(firstNames.size()));
             String lastName = lastNames.get(generateRandomDigit(lastNames.size()));
@@ -92,5 +93,35 @@ public class DataGenerator {
         }
 
         return fullNamesList;
+    }
+
+    public List<String[]> assignStudentsToGroups(List<String> groups, List<String[]> fullNamesList) {
+        List<String[]> studentsJournal = new ArrayList<>();
+        int totalGroupSize = 0;
+
+        for (int i = 0; i < groups.size(); i++) {
+            int groupSize = generateRandomDigit(21) + 10;
+            for (int j = 0; j < groupSize; j++) {
+                if (totalGroupSize == 200) {
+                    break ;
+                } else {
+                    String[] studentData = {String.valueOf(i + 1),
+                            fullNamesList.get(totalGroupSize)[0], fullNamesList.get(totalGroupSize)[1]};
+                    studentsJournal.add(studentData);
+                    totalGroupSize++;
+                }
+            }
+        }
+
+        if (totalGroupSize < fullNamesList.size()) {
+            while (totalGroupSize < 200) {
+                String[] studentData = {String.valueOf(0),
+                        fullNamesList.get(totalGroupSize)[0], fullNamesList.get(totalGroupSize)[1]};
+                studentsJournal.add(studentData);
+                totalGroupSize++;
+            }
+        }
+
+        return studentsJournal;
     }
 }

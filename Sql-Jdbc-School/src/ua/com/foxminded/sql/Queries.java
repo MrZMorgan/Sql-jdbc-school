@@ -12,7 +12,7 @@ public class Queries {
     public final static String SQL_CREATE_COURSES_TABLE = "CREATE TABLE courses (\n" +
                                                           "    id SERIAL NOT NULL PRIMARY KEY,\n" +
                                                           "    name VARCHAR(50) NOT NULL,\n" +
-                                                          "    description VARCHAR(200) NOT NULL\n" +
+                                                          "    description VARCHAR(200)\n" +
                                                           ");";
 
     public final static String SQL_DROP_STUDENTS_TABLE = "DROP TABLE if exists students cascade;";
