@@ -18,8 +18,14 @@ public class Queries {
     public final static String SQL_DROP_STUDENTS_TABLE = "DROP TABLE if exists students cascade;";
     public final static String SQL_CREATE_STUDENTS_TABLE = "CREATE TABLE students (\n" +
                                                            "    id SERIAL NOT NULL PRIMARY KEY,\n" +
-                                                           "    group_id INT NOT NULL,\n" +
+                                                           "    group_id INT,\n" +
                                                            "    first_name VARCHAR(50) NOT NULL,\n" +
                                                            "    last_name VARCHAR(50) NOT NULL\n" +
                                                            ");";
+
+    public final static String SQL_DROP_STUDENTS_COURSES_TABLE = "DROP TABLE students_courses;";
+    public final static String SQL_CREATE_STUDENTS_COURSES_TABLE = "CREATE TABLE students_courses (\n" +
+                                                                   "    student_id INT REFERENCES students (id),\n" +
+                                                                   "    courses_id INT REFERENCES courses (id)\n" +
+                                                                   ");";
 }

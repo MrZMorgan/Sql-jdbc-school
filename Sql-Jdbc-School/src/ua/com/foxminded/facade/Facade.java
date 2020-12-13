@@ -41,4 +41,6 @@ public class Facade {
         courses.forEach(coursesDao::create);
         studentsJournal.forEach(s -> studentsDAO.create(Integer.parseInt(s[0]), s[1], s[2]));
     }
+    
+    
 }

@@ -19,8 +19,13 @@ public class StudentsDAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO students (group_id, first_name, last_name) " +
-                        "VALUES ('" + groupId  + "', '" + firstName  + "', '" + lastName + "');");
+                if (groupId > 0) {
+                    statement.executeQuery("INSERT INTO students (group_id, first_name, last_name) " +
+                            "VALUES (" + groupId + ", '" + firstName  + "', '" + lastName + "');");
+                } else {
+                    statement.executeQuery("INSERT INTO students (first_name, last_name) " +
+                            "VALUES ('" + firstName + "', '" + lastName + "');");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
