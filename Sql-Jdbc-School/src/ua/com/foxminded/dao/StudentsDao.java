@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class StudentsDAO {
+public class StudentsDao {
 
     private static final String user = "postgres";
     private static final String password = "1234";

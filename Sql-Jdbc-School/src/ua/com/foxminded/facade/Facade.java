@@ -4,7 +4,7 @@ import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.dao.CoursesDao;
 import ua.com.foxminded.dao.GroupsDao;
 import ua.com.foxminded.dao.StudentsCoursesDAO;
-import ua.com.foxminded.dao.StudentsDAO;
+import ua.com.foxminded.dao.StudentsDao;
 
 import java.util.*;
 
@@ -15,7 +15,7 @@ public class Facade {
     private final DataGenerator dataGenerator;
     private final CoursesDao coursesDao;
     private final GroupsDao groupsDao;
-    private final StudentsDAO studentsDAO;
+    private final StudentsDao studentsDAO;
     private final StudentsCoursesDAO studentsCoursesDAO;
 
 
@@ -49,7 +49,7 @@ public class Facade {
     public Facade(DataGenerator dataGenerator,
                   CoursesDao coursesDao,
                   GroupsDao groupsDao,
-                  StudentsDAO studentsDAO,
+                  StudentsDao studentsDAO,
                   StudentsCoursesDAO studentsCoursesDAO) {
         this.dataGenerator = dataGenerator;
         this.coursesDao = coursesDao;
