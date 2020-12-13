@@ -26,6 +26,6 @@ public class Queries {
     public final static String SQL_DROP_STUDENTS_COURSES_TABLE = "DROP TABLE students_courses;";
     public final static String SQL_CREATE_STUDENTS_COURSES_TABLE = "CREATE TABLE students_courses (\n" +
                                                                    "    student_id INT REFERENCES students (id),\n" +
-                                                                   "    courses_id INT REFERENCES courses (id)\n" +
+                                                                   "    course_id INT REFERENCES courses (id)\n" +
                                                                    ");";
 }
