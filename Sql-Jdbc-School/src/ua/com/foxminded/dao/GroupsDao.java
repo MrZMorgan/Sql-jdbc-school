@@ -1,17 +1,16 @@
 package ua.com.foxminded.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
-public class StudentsDAO {
+public class GroupsDao {
 
     private static final String user = "postgres";
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(int groupId, String firstName, String lastName) {
+    public void create(String groupName) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -19,13 +18,7 @@ public class StudentsDAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                if (groupId > 0) {
-                    statement.executeQuery("INSERT INTO students (group_id, first_name, last_name) " +
-                            "VALUES (" + groupId + ", '" + firstName  + "', '" + lastName + "');");
-                } else {
-                    statement.executeQuery("INSERT INTO students (first_name, last_name) " +
-                            "VALUES ('" + firstName + "', '" + lastName + "');");
-                }
+                statement.executeQuery("INSERT INTO groups (name) VALUES ('"  + groupName +"');");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -40,17 +33,19 @@ public class StudentsDAO {
         }
     }
 
-    public void deleteById(int studentId) {
+    public List<int[]> getGroupsBySize(int expectedGroupSize) {
+        final String sql = "SELECT group_id, COUNT (*) FROM students GROUP BY group_id HAVING COUNT(*) <= " + expectedGroupSize + " ORDER BY group_id;\n";
         Connection connection = null;
-        Statement statement = null;
-        try {
-            Class.forName("org.postgresql.Driver");
+        List<int[]> groupsSizes = new LinkedList<>();
+        try  {
             connection = DriverManager.getConnection(url, user, password);
-            statement = connection.createStatement();
-            try {
-                statement.executeQuery("DELETE FROM students WHERE id = "+ studentId +";");
-            } catch (Exception e) {
-                e.printStackTrace();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int[] groupSize = new int[2];
+                groupSize[0] = resultSet.getInt("group_id");
+                groupSize[1] = resultSet.getInt("count");
+                groupsSizes.add(groupSize);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,5 +56,6 @@ public class StudentsDAO {
                 throwables.printStackTrace();
             }
         }
+        return groupsSizes;
     }
 }

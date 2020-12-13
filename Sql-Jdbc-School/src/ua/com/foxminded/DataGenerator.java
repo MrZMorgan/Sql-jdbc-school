@@ -5,7 +5,10 @@ import ua.com.foxminded.dao.StudentsCoursesDAO;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,19 +32,16 @@ public class DataGenerator {
                 e.printStackTrace();
             }
             statement.executeQuery(sqlCreate);
-        } catch (Exception e) {
+
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
-    }
-
-    public Map<String, Integer> generateGroupsNamesList() {
-        Map<String, Integer> groups = new LinkedHashMap<>();
-
-        for (int i = 0; i < 10; i++) {
-            groups.put(generateGroupName(10), new Random().nextInt(21) + 10);
-        }
-
-        return groups;
     }
 
     private String generateGroupName(int digit) {
@@ -54,6 +54,16 @@ public class DataGenerator {
         return group.toString();
     }
 
+    public List<String> generateGroupsNamesList() {
+        List<String> groups = new LinkedList<>();
+
+        for (int i = 0; i < 10; i++) {
+            groups.add(generateGroupName(10));
+        }
+
+        return groups;
+    }
+
     public int generateRandomDigit(int digit) {
         return new Random().nextInt(digit);
     }
@@ -62,25 +72,11 @@ public class DataGenerator {
         return (char) (new Random().nextInt(26) + 'a');
     }
 
-    public List<String[]> generateNamesList(String firstNamesFileName, String lastNamesFileName) {
-        List<String> firstNames = read(firstNamesFileName);
-        List<String> lastNames = read(lastNamesFileName);
-        List<String[]> names = new LinkedList<>();
-
-        for (int i = 0; i < 200; i++) {
-            String[] fullName = {firstNames.get(generateRandomDigit(firstNames.size())),
-                    lastNames.get(generateRandomDigit(lastNames.size()))};
-            names.add(fullName);
-        }
-
-        return names;
-    }
-
-    public List<String> read(String filename) {
+    public List<String> readFile(String fileName) {
         List<String> strings = new LinkedList<>();
 
         try {
-            strings = Files.lines(Paths.get(filename)).collect(Collectors.toList());
+            strings = Files.lines(Paths.get(fileName)).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,32 +84,69 @@ public class DataGenerator {
         return strings;
     }
 
-    public List<String[]> assignStudentsToGroups(Map<String, Integer> groupNames, List<String[]> namesList) {
-        List<String[]> namesGroups = new LinkedList<>();
+    public List<String[]> generateFullNamesList(List<String> firstNames, List<String> lastNames) {
+        List<String[]> fullNamesList = new LinkedList<>();
 
-        int groupId = 1;
-        int counter = 0;
-
-        for (Map.Entry<String, Integer> entry : groupNames.entrySet()) {
-            for (int i = 0; i < entry.getValue(); i++) {
-                if (counter == 200) {
-                    break;
-                }
-                namesGroups.add(new String[]{String.valueOf(groupId), namesList.get(counter)[0], namesList.get(counter)[1]});
-                counter++;
-            }
-            groupId++;
+        for (int i = 0; i < 200; i++) {
+            String firstName = firstNames.get(generateRandomDigit(firstNames.size()));
+            String lastName = lastNames.get(generateRandomDigit(lastNames.size()));
+            String[] fullName = {firstName, lastName};
+            fullNamesList.add(fullName);
         }
 
-        return namesGroups;
+        return fullNamesList;
     }
 
-    public void assignCoursesToStudents(List<String[]> namesList, StudentsCoursesDAO studentsCoursesDAO, int numberOfCourses) {
-        for (int i = 0; i < namesList.size(); i++) {
-            int courseCount = new Random().nextInt(3) + 1;
-            for (int j = 0; j < courseCount; j++) {
-                studentsCoursesDAO.create(i + 1, new Random().nextInt(numberOfCourses + 1));
+    public List<String[]> assignStudentsToGroups(List<String> groups, List<String[]> fullNamesList) {
+        List<String[]> studentsJournal = new ArrayList<>();
+        int totalGroupSize = 0;
+
+        for (int i = 0; i < groups.size(); i++) {
+            int groupSize = generateRandomDigit(21) + 10;
+            for (int j = 0; j < groupSize; j++) {
+                if (totalGroupSize == 200) {
+                    break ;
+                } else {
+                    String[] studentData = {String.valueOf(i + 1),
+                            fullNamesList.get(totalGroupSize)[0], fullNamesList.get(totalGroupSize)[1]};
+                    studentsJournal.add(studentData);
+                    totalGroupSize++;
+                }
             }
         }
+
+        if (totalGroupSize < fullNamesList.size()) {
+            while (totalGroupSize < 200) {
+                String[] studentData = {String.valueOf(0),
+                        fullNamesList.get(totalGroupSize)[0], fullNamesList.get(totalGroupSize)[1]};
+                studentsJournal.add(studentData);
+                totalGroupSize++;
+            }
+        }
+
+        return studentsJournal;
+    }
+
+    public List<int[]> assignStudentsToCourses(List<String[]> studentsJournal, List<String> courses) {
+        List<int[]> assignations = new LinkedList<>();
+
+        for (int i = 0; i < studentsJournal.size(); i++) {
+            int numberOfCourses = new Random().nextInt(3) + 1;
+            int[] list = new int[numberOfCourses];
+            int course = new Random().nextInt(courses.size() + 1);
+            list[0] = course;
+            assignations.add(new int[] {i + 1, course});
+
+            for (int j = 0; j < numberOfCourses - 1; j++) {
+                course = new Random().nextInt(courses.size() + 1);
+                while (course == list[j]) {
+                    course = new Random().nextInt(courses.size() + 1);
+                }
+                list[j + 1] = course;
+                assignations.add(new int[] {i + 1, course});
+            }
+        }
+
+        return assignations;
     }
 }

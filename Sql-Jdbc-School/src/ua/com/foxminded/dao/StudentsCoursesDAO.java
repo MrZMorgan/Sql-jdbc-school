@@ -1,18 +1,16 @@
 package ua.com.foxminded.dao;
 
-import ua.com.foxminded.interfaces.DAO;
-
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StudentsCoursesDAO implements DAO {
+public class StudentsCoursesDAO {
 
     private static final String user = "postgres";
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(int studentId, int courseId) {
+    public void create(int studentId, int course_id) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -20,7 +18,7 @@ public class StudentsCoursesDAO implements DAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO students_courses (student_id, courses_id) VALUES (" + studentId + ", " + courseId + ");");
+                statement.executeQuery("INSERT INTO students_courses (student_id , course_id) VALUES (" + studentId + ", " + course_id + ");");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -35,7 +33,7 @@ public class StudentsCoursesDAO implements DAO {
         }
     }
 
-    public void deleteStudent(int studentId) {
+    public void deleteById(int studentId) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -43,7 +41,7 @@ public class StudentsCoursesDAO implements DAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery( "DELETE FROM students_courses WHERE student_id = "+ studentId +";");
+                statement.executeQuery("DELETE FROM students_courses WHERE student_id = "+ studentId +";");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -58,7 +56,7 @@ public class StudentsCoursesDAO implements DAO {
         }
     }
 
-    public void deleteStudentFromCourse(int studentId, int courseId) {
+    public void deleteFromCourse(int studentId, int courseId) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -66,7 +64,8 @@ public class StudentsCoursesDAO implements DAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery( "DELETE FROM students_courses WHERE student_id =" + studentId +" AND courses_id =" + courseId +";");
+                statement.executeQuery("DELETE FROM students_courses " +
+                        "WHERE student_id = " + studentId + " AND course_id = " + courseId + "");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -81,17 +80,21 @@ public class StudentsCoursesDAO implements DAO {
         }
     }
 
-    public List<Integer> getStudentsIdListRelatedToCourseId(int courseId) {
-        final String sql = "SELECT student_id FROM students_courses WHERE courses_id = "  + courseId + ";";
+    public List<String[]> getStudentsRelatedToCourses(String courseName) {
+        final String sql = "SELECT first_name, last_name FROM students\n" +
+                "JOIN students_courses ON students.id = students_courses.student_id\n" +
+                "JOIN courses ON students_courses.course_id = courses.id WHERE name = '" + courseName + "'";
         Connection connection = null;
-        List<Integer> studentsIdList = new LinkedList<>();
+        List<String[]> names = new LinkedList<>();
         try  {
             connection = DriverManager.getConnection(url, user, password);
             PreparedStatement statement = connection.prepareStatement(sql);
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int studentId = resultSet.getInt("student_id");
-                studentsIdList.add(studentId);
+                String[] groupSize = new String[2];
+                groupSize[0] = resultSet.getString("first_name");
+                groupSize[1] = resultSet.getString("last_name");
+                names.add(groupSize);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,6 +105,6 @@ public class StudentsCoursesDAO implements DAO {
                 throwables.printStackTrace();
             }
         }
-        return studentsIdList;
+        return names;
     }
 }

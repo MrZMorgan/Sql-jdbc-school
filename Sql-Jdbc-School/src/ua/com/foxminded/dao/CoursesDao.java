@@ -1,17 +1,17 @@
 package ua.com.foxminded.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class StudentsDAO {
+public class CoursesDao {
 
     private static final String user = "postgres";
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(int groupId, String firstName, String lastName) {
+    public void create(String courseName) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -19,13 +19,7 @@ public class StudentsDAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                if (groupId > 0) {
-                    statement.executeQuery("INSERT INTO students (group_id, first_name, last_name) " +
-                            "VALUES (" + groupId + ", '" + firstName  + "', '" + lastName + "');");
-                } else {
-                    statement.executeQuery("INSERT INTO students (first_name, last_name) " +
-                            "VALUES ('" + firstName + "', '" + lastName + "');");
-                }
+                statement.executeQuery("INSERT INTO courses (name) VALUES ('" + courseName + "');");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -40,17 +34,16 @@ public class StudentsDAO {
         }
     }
 
-    public void deleteById(int studentId) {
+    public Map<Integer, String> getCoursesList() {
+        final String sql = "SELECT * FROM courses;";
         Connection connection = null;
-        Statement statement = null;
-        try {
-            Class.forName("org.postgresql.Driver");
+        Map<Integer, String> courseList = new LinkedHashMap<>();
+        try  {
             connection = DriverManager.getConnection(url, user, password);
-            statement = connection.createStatement();
-            try {
-                statement.executeQuery("DELETE FROM students WHERE id = "+ studentId +";");
-            } catch (Exception e) {
-                e.printStackTrace();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,5 +54,6 @@ public class StudentsDAO {
                 throwables.printStackTrace();
             }
         }
+        return courseList;
     }
 }

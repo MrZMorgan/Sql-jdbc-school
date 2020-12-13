@@ -1,127 +1,182 @@
 package ua.com.foxminded.facade;
 
 import ua.com.foxminded.DataGenerator;
-import ua.com.foxminded.dao.CoursesDAO;
-import ua.com.foxminded.dao.GroupsDAO;
+import ua.com.foxminded.dao.CoursesDao;
+import ua.com.foxminded.dao.GroupsDao;
 import ua.com.foxminded.dao.StudentsCoursesDAO;
 import ua.com.foxminded.dao.StudentsDAO;
+
+import java.util.*;
+
 import static ua.com.foxminded.sql.Queries.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Facade {
 
-    CoursesDAO coursesDAO ;
-    GroupsDAO groupsDAO;
-    StudentsDAO studentsDAO;
-    StudentsCoursesDAO studentsCoursesDAO;
-    DataGenerator dataGenerator;
+    private final DataGenerator dataGenerator;
+    private final CoursesDao coursesDao;
+    private final GroupsDao groupsDao;
+    private final StudentsDAO studentsDAO;
+    private final StudentsCoursesDAO studentsCoursesDAO;
 
-    public Facade(CoursesDAO coursesDAO,
-                  GroupsDAO groupsDAO,
+
+
+
+    private final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
+                                                "To find all students related to course with given name type \"courses\"\n" +
+                                                "To add new student to database type \"add\"\n" +
+                                                "To delete student by id type \"delete\"\n" +
+                                                "To add student to course type \"assign\"\n" +
+                                                "To remove student to course type \"remove\"\n\n" +
+                                                "To close app type \"exit\"";
+    private final static String ADD_NEW_STUDENT_ID_MESSAGE =
+            "Type the number of course to which you want to assign the student and press \"Enter\" button\n" +
+            "To not assign a student to the course type \"0\" and press \"Enter\" button";
+    private final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
+            "Type student first name and press \"Enter\" button";
+    private final static String ADD_NEW_STUDENT_LAST_NAME_MESSAGE =
+            "Type student last name and press \"Enter\" button";
+    private final static String DELETE_STUDENT_BY_ID_MESSAGE =
+            "Type the id of student you wand delete from database and press \"Enter\" button";
+    private final static String STUDENT_ID_MESSAGE =
+            "Type the student id and press \"Enter\" button";
+    private final static String COURSE_ID_MESSAGE =
+            "Type the course id and press \"Enter\" button";
+    private final static String GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE =
+            "Type expected group size and press \"Enter\" button";
+    private final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
+            "Type course name press \"Enter\" button";
+
+    public Facade(DataGenerator dataGenerator,
+                  CoursesDao coursesDao,
+                  GroupsDao groupsDao,
                   StudentsDAO studentsDAO,
-                  StudentsCoursesDAO studentsCoursesDAO,
-                  DataGenerator dataGenerator) {
-        this.coursesDAO = coursesDAO;
-        this.groupsDAO = groupsDAO;
+                  StudentsCoursesDAO studentsCoursesDAO) {
+        this.dataGenerator = dataGenerator;
+        this.coursesDao = coursesDao;
+        this.groupsDao = groupsDao;
         this.studentsDAO = studentsDAO;
         this.studentsCoursesDAO = studentsCoursesDAO;
-        this.dataGenerator = dataGenerator;
     }
-
-    private final static String courses = "src/ua/com/foxminded/rawdata/courses";
-    private final static String first_names = "src/ua/com/foxminded/rawdata/first_names";
-    private final static String last_names = "src/ua/com/foxminded/rawdata/last_names";
 
     public void generateTestData() {
-        dataGenerator.generateTable(SQL_DROP_GROUPS_TABLE , SQL_CREATE_GROUPS_TABLE);
-        dataGenerator.generateTable(SQL_DROP_COURSES_TABLE, SQL_CREATE_COURSES_TABLE);
+        dataGenerator.generateTable(SQL_DROP_GROUPS_TABLE, SQL_CREATE_GROUPS_TABLE);
+        dataGenerator.generateTable(SQL_DROP_COURSES_TABLE,SQL_CREATE_COURSES_TABLE);
         dataGenerator.generateTable(SQL_DROP_STUDENTS_TABLE, SQL_CREATE_STUDENTS_TABLE);
-
-        Map<String, Integer> groupNames = dataGenerator.generateGroupsNamesList();
-        List<String[]> namesList = dataGenerator.generateNamesList(first_names, last_names);
-        List<String> coursesList = dataGenerator.read(courses);
-        List<String[]> namesGroups = dataGenerator.assignStudentsToGroups(groupNames, namesList);
-
-        AtomicInteger groupId = new AtomicInteger(1);
-        groupNames.forEach((groupName, groupSize) -> groupsDAO.create(groupId.getAndIncrement(), groupName));
-        AtomicInteger courseId = new AtomicInteger(1);
-        coursesList.forEach(course -> coursesDAO.create(courseId.getAndIncrement(), course));
-        studentsDAO.fillTable(namesGroups, namesList);
-
         dataGenerator.generateTable(SQL_DROP_STUDENTS_COURSES_TABLE, SQL_CREATE_STUDENTS_COURSES_TABLE);
-        dataGenerator.assignCoursesToStudents(namesList, studentsCoursesDAO, coursesList.size());
+
+        List<String> groups = dataGenerator.generateGroupsNamesList();
+        List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
+        List<String> firstNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/first_names");
+        List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
+        List<String[]> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
+        List<String[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
+        List<int[]> assignations = dataGenerator.assignStudentsToCourses(studentsJournal, courses);
+
+        groups.forEach(groupsDao::create);
+        courses.forEach(coursesDao::create);
+        studentsJournal.forEach(s -> studentsDAO.create(Integer.parseInt(s[0]), s[1], s[2]));
+        assignations.forEach(a -> studentsCoursesDAO.create(a[0], a[1]));
     }
 
-    public void workWithDatabase() {
-        System.out.println("To delete student from DB type \"delete\"" + "\n" +
-                           "To add new student type \"add\"" + "\n" +
-                           "To assign student to course type \"assign\"" + "\n" +
-                           "To find all students related to course with given name type \"student to courses\"" + "\n" +
-                           "To delete student from courseType \"delete from\"" + "\n" +
-                           "To find all groups with less or equals student count type expected group size \"group\"" + "\n" + "\n" +
-                           "To close app close type \"exit\"");
-                Scanner scanner = new Scanner(System.in);
+    public void workWithDataBase() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(INTRO_MESSAGE);
         String command = scanner.nextLine();
         while (!command.equals("exit")) {
             switch (command) {
-                case "delete" :
-                    System.out.println("Type student id and press \"Enter\" to delete student");
+                case "groups" :
+                    findGroupsWithLessOrEqualsStudentCount();
+                    System.out.println(INTRO_MESSAGE);
                     command = scanner.nextLine();
-                    studentsCoursesDAO.deleteStudent(Integer.parseInt(command));
-                    studentsDAO.deleteStudent(Integer.parseInt(command));
                     break;
-                case "add":
-                    System.out.println("Type students \"first_name\"");
-                    String firstName = scanner.nextLine();
-                    System.out.println("Type students \"last_name\"" );
-                    String lastName = scanner.nextLine();
-                    studentsDAO.create(studentsDAO.getStudentsTableSize() + 1, 0,firstName, lastName);
+                case "courses":
+                    findStudentsRelatedToCourses();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
                     break;
-                case "assign":
-                    System.out.println("Type \"students_id\"");
-                    int studentsId = scanner.nextInt();
-                    System.out.println("Type students \"course_id\"" );
-                    int courseId = scanner.nextInt();
-                    studentsCoursesDAO.create(studentsId, courseId);
+                case "add" :
+                    addNewStudent();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
                     break;
-                case "delete from":
-                    System.out.println("Type \"students_id\"");
-                    studentsId = scanner.nextInt();
-                    System.out.println("Type students \"course_id\"");
-                    courseId = scanner.nextInt();
-                    studentsCoursesDAO.deleteStudentFromCourse(studentsId, courseId);
+                case "delete" :
+                    deleteStudentById();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
                     break;
-                case "student to courses" :
-                    System.out.println("Type \"course_name\"");
-                    courseId = scanner.nextInt();
-                    int courseName = coursesDAO.getCourseId(courseId);
-                    List<Integer> list = studentsCoursesDAO.getStudentsIdListRelatedToCourseId(courseName);
-                    for (Integer i : list) {
-                        String[] fullName = studentsDAO.getStudentById(i);
-                        System.out.println(fullName[0] + " " + fullName[1]);
-                    }
+                case "assign" :
+                    assignStudentToCourse();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
                     break;
-                case "group":
-                    System.out.println("Type \"expected_group_size\"");
-                    int expectedGroupSize = scanner.nextInt();
-                    List<int[]> groupsSizes = studentsDAO.getGroupsBySize(expectedGroupSize);
-                    List<String> groupNames = groupsDAO.getGroupNameList();
-                    for (int i = 0; i < groupsSizes.size(); i++) {
-                        for (int j = 0; j < groupNames.size(); j++) {
-                            if (groupsSizes.get(i)[0] == j + 1) {
-                                System.out.println(groupNames.get(j) + " : " + groupsSizes.get(i)[1] );
-                            }
-                        }
-                    }
+                case "remove" :
+                    removeStudentFromCourse();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
                     break;
                 default:
-                    System.out.println("Incorrect command");
+                    System.out.println("Incorrect command\n");
+                    System.out.println(INTRO_MESSAGE);
                     command = scanner.nextLine();
-                    break;
             }
         }
+    }
+
+    private void findGroupsWithLessOrEqualsStudentCount() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE);
+        int expectedGroupSize = scanner.nextInt();
+        List<int[]> groups = groupsDao.getGroupsBySize(expectedGroupSize);
+        groups.forEach(g -> System.out.println("Group " + g[0] + " : " + g[1] + " students"));
+        System.out.println();
+    }
+
+    private void findStudentsRelatedToCourses() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(STUDENTS_RELATED_TO_COURSES_MESSAGE);
+        String courseName = scanner.nextLine();
+        List<String[]> strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
+        strings.forEach(n -> System.out.println(n[0] + " " + n[1]));
+        System.out.println();
+    }
+
+    private void addNewStudent() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
+        int groupId = Integer.parseInt(scanner.nextLine());
+        System.out.println(ADD_NEW_STUDENT_FIRST_NAME_MESSAGE);
+        String firstName = scanner.nextLine();
+        System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
+        String lastName = scanner.nextLine();
+        studentsDAO.create(groupId, firstName, lastName);
+    }
+
+    private void deleteStudentById() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(DELETE_STUDENT_BY_ID_MESSAGE);
+        int studentId = scanner.nextInt();
+        studentsCoursesDAO.deleteById(studentId);
+        studentsDAO.deleteById(studentId);
+    }
+
+    private void assignStudentToCourse() {
+        int[] studentInfo = collectInfoForQuery();
+        studentsCoursesDAO.create(studentInfo[0], studentInfo[1]);
+    }
+
+    private void removeStudentFromCourse() {
+        int[] studentInfo = collectInfoForQuery();
+        studentsCoursesDAO.deleteFromCourse(studentInfo[0], studentInfo[1]);
+    }
+
+    private int[] collectInfoForQuery() {
+        int[] info = new int[2];
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(STUDENT_ID_MESSAGE);
+        info[0] = scanner.nextInt();
+        coursesDao.getCoursesList().forEach((id, name) -> System.out.println("Course id: " + id + " - " + name));
+        System.out.println(COURSE_ID_MESSAGE);
+        info[1] = scanner.nextInt();
+        return info;
     }
 }
