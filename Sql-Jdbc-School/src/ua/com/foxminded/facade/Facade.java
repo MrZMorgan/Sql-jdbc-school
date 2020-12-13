@@ -3,9 +3,9 @@ package ua.com.foxminded.facade;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.dao.CoursesDao;
 import ua.com.foxminded.dao.GroupsDao;
+import ua.com.foxminded.dao.StudentsDAO;
 
 import java.util.List;
-import java.util.Map;
 
 import static ua.com.foxminded.sql.Queries.*;
 
@@ -13,13 +13,16 @@ public class Facade {
     private final DataGenerator dataGenerator;
     private final CoursesDao coursesDao;
     private final GroupsDao groupsDao;
+    private final StudentsDAO studentsDAO;
 
     public Facade(DataGenerator dataGenerator,
                   CoursesDao coursesDao,
-                  GroupsDao groupsDao) {
+                  GroupsDao groupsDao,
+                  StudentsDAO studentsDAO) {
         this.dataGenerator = dataGenerator;
         this.coursesDao = coursesDao;
         this.groupsDao = groupsDao;
+        this.studentsDAO = studentsDAO;
     }
 
     public void generateTestData() {
@@ -34,10 +37,8 @@ public class Facade {
         List<String[]> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
         List<String[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
 
-        groups.forEach(g -> groupsDao.create(g));
-        courses.forEach(c -> coursesDao.create(c));
-
-        courses.forEach(System.out::println);
-
+        groups.forEach(groupsDao::create);
+        courses.forEach(coursesDao::create);
+        studentsJournal.forEach(s -> studentsDAO.create(Integer.parseInt(s[0]), s[1], s[2]));
     }
 }
