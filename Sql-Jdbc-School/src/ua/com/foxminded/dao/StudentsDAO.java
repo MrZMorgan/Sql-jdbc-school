@@ -39,4 +39,27 @@ public class StudentsDAO {
             }
         }
     }
+
+    public void deleteById(int studentId) {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(url, user, password);
+            statement = connection.createStatement();
+            try {
+                statement.executeQuery("DELETE FROM students WHERE id = "+ studentId +";");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
 }

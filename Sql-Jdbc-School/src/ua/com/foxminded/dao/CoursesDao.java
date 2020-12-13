@@ -1,9 +1,9 @@
 package ua.com.foxminded.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CoursesDao {
 
@@ -32,5 +32,28 @@ public class CoursesDao {
                 throwables.printStackTrace();
             }
         }
+    }
+
+    public Map<Integer, String> getCoursesList() {
+        final String sql = "SELECT * FROM courses;";
+        Connection connection = null;
+        Map<Integer, String> courseList = new LinkedHashMap<>();
+        try  {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return courseList;
     }
 }

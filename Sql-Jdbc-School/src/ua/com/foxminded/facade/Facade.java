@@ -11,20 +11,30 @@ import java.util.*;
 import static ua.com.foxminded.sql.Queries.*;
 
 public class Facade {
+
     private final DataGenerator dataGenerator;
     private final CoursesDao coursesDao;
     private final GroupsDao groupsDao;
     private final StudentsDAO studentsDAO;
     private final StudentsCoursesDAO studentsCoursesDAO;
 
-    private final static String INTRO_MESSAGE = "To add new student to database type \"add\"";
+    private final static String INTRO_MESSAGE = "To add new student to database type \"add\"\n" +
+                                                "To delete student by id type \"delete\"\n" +
+                                                "To add student to course type \"assign\"\n" +
+                                                "To close app type \"exit\"";
     private final static String ADD_NEW_STUDENT_ID_MESSAGE =
-            "Type the number to which you want to assign the student and press \"Enter\" button.\n" +
-            "To not assign a student to the course, press \"Enter\" button.";
+            "Type the number to which you want to assign the student and press \"Enter\" button\n" +
+            "To not assign a student to the course type \"0\" and press \"Enter\" button";
     private final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
-            "Type the student first name and press \"Enter\" button.";
+            "Type the student first name and press \"Enter\" button";
     private final static String ADD_NEW_STUDENT_LAST_NAME_MESSAGE =
-            "Type the student last name and press \"Enter\" button.";
+            "Type the student last name and press \"Enter\" button";
+    private final static String DELETE_STUDENT_BY_ID_MESSAGE =
+            "Type the id of student you wand delete from database and press \"Enter\" button";
+    private final static String ADD_STUDENT_TO_COURSE_STUDENT_ID_MESSAGE =
+            "Type the student id and press \"Enter\" button";
+    private final static String ADD_STUDENT_TO_COURSE_COURSE_ID_MESSAGE =
+            "Type the course id and press \"Enter\" button";
 
     public Facade(DataGenerator dataGenerator,
                   CoursesDao coursesDao,
@@ -65,18 +75,50 @@ public class Facade {
         while (!command.equals("exit")) {
             switch (command) {
                 case "add" :
-                    System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
-                    int groupId = Integer.parseInt(scanner.nextLine());
-                    System.out.println(ADD_NEW_STUDENT_FIRST_NAME_MESSAGE);
-                    String firstName = scanner.nextLine();
-                    System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
-                    String lastName = scanner.nextLine();
-                    studentsDAO.create(groupId, firstName, lastName);
+                    addNewStudent();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
+                    break;
+                case "delete" :
+                    deleteStudentById();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
+                    break;
+                case "assign" :
+                    assignStudentToCourse();
                     System.out.println(INTRO_MESSAGE);
                     command = scanner.nextLine();
                     break;
             }
         }
+    }
 
+    private void addNewStudent() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
+        int groupId = Integer.parseInt(scanner.nextLine());
+        System.out.println(ADD_NEW_STUDENT_FIRST_NAME_MESSAGE);
+        String firstName = scanner.nextLine();
+        System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
+        String lastName = scanner.nextLine();
+        studentsDAO.create(groupId, firstName, lastName);
+    }
+
+    private void deleteStudentById() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(DELETE_STUDENT_BY_ID_MESSAGE);
+        int studentId = scanner.nextInt();
+        studentsCoursesDAO.deleteById(studentId);
+        studentsDAO.deleteById(studentId);
+    }
+
+    private void assignStudentToCourse() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(ADD_STUDENT_TO_COURSE_STUDENT_ID_MESSAGE);
+        int studentsId = scanner.nextInt();
+        coursesDao.getCoursesList().forEach((id, name) -> System.out.println("Course id: " + id + " - " + name));
+        System.out.println(ADD_STUDENT_TO_COURSE_COURSE_ID_MESSAGE);
+        int courseId = scanner.nextInt();
+        studentsCoursesDAO.create(studentsId, courseId);
     }
 }
