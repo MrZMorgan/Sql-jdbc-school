@@ -14,6 +14,6 @@ public class Solution {
                                    new StudentsDAO(),
                                    new StudentsCoursesDAO());
         facade.generateTestData();
-        facade.workWithDataBase();
+//        facade.workWithDataBase();
     }
 }

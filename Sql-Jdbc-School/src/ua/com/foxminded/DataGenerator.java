@@ -132,20 +132,18 @@ public class DataGenerator {
 
         for (int i = 0; i < studentsJournal.size(); i++) {
             int numberOfCourses = new Random().nextInt(3) + 1;
+            int[] list = new int[numberOfCourses];
+            int course = new Random().nextInt(courses.size() + 1);
+            list[0] = course;
+            assignations.add(new int[] {i + 1, course});
 
-            for (int j = 0; j < numberOfCourses; j++) {
-                List<Integer> list = new ArrayList<>();
-                int course = new Random().nextInt(courses.size() + 1);
-                assignations.add(new int[] {i + 1, course});
-
-                for (int k = 0; k < list.size(); k++) {
+            for (int j = 0; j < numberOfCourses - 1; j++) {
+                course = new Random().nextInt(courses.size() + 1);
+                while (course == list[j]) {
                     course = new Random().nextInt(courses.size() + 1);
-
-                    if (list.get(k) != course) {
-                        list.add(course);
-                        assignations.add(new int[] {i + 1, course});
-                    }
                 }
+                list[j + 1] = course;
+                assignations.add(new int[] {i + 1, course});
             }
         }
 

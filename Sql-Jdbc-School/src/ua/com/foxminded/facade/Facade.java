@@ -21,9 +21,10 @@ public class Facade {
     private final static String INTRO_MESSAGE = "To add new student to database type \"add\"\n" +
                                                 "To delete student by id type \"delete\"\n" +
                                                 "To add student to course type \"assign\"\n" +
+                                                "To remove student to course type \"remove\"\n" +
                                                 "To close app type \"exit\"";
     private final static String ADD_NEW_STUDENT_ID_MESSAGE =
-            "Type the number to which you want to assign the student and press \"Enter\" button\n" +
+            "Type the number of course to which you want to assign the student and press \"Enter\" button\n" +
             "To not assign a student to the course type \"0\" and press \"Enter\" button";
     private final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
             "Type the student first name and press \"Enter\" button";
@@ -31,9 +32,9 @@ public class Facade {
             "Type the student last name and press \"Enter\" button";
     private final static String DELETE_STUDENT_BY_ID_MESSAGE =
             "Type the id of student you wand delete from database and press \"Enter\" button";
-    private final static String ADD_STUDENT_TO_COURSE_STUDENT_ID_MESSAGE =
+    private final static String STUDENT_ID_MESSAGE =
             "Type the student id and press \"Enter\" button";
-    private final static String ADD_STUDENT_TO_COURSE_COURSE_ID_MESSAGE =
+    private final static String COURSE_ID_MESSAGE =
             "Type the course id and press \"Enter\" button";
 
     public Facade(DataGenerator dataGenerator,
@@ -89,6 +90,11 @@ public class Facade {
                     System.out.println(INTRO_MESSAGE);
                     command = scanner.nextLine();
                     break;
+                case "remove" :
+                    removeStudentFromCourse();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
+                    break;
             }
         }
     }
@@ -113,12 +119,23 @@ public class Facade {
     }
 
     private void assignStudentToCourse() {
+        int[] studentInfo = collectInfoForQuery();
+        studentsCoursesDAO.create(studentInfo[0], studentInfo[1]);
+    }
+
+    private void removeStudentFromCourse() {
+        int[] studentInfo = collectInfoForQuery();
+        studentsCoursesDAO.deleteFromCourse(studentInfo[0], studentInfo[1]);
+    }
+
+    private int[] collectInfoForQuery() {
+        int[] info = new int[2];
         Scanner scanner = new Scanner(System.in);
-        System.out.println(ADD_STUDENT_TO_COURSE_STUDENT_ID_MESSAGE);
-        int studentsId = scanner.nextInt();
+        System.out.println(STUDENT_ID_MESSAGE);
+        info[0] = scanner.nextInt();
         coursesDao.getCoursesList().forEach((id, name) -> System.out.println("Course id: " + id + " - " + name));
-        System.out.println(ADD_STUDENT_TO_COURSE_COURSE_ID_MESSAGE);
-        int courseId = scanner.nextInt();
-        studentsCoursesDAO.create(studentsId, courseId);
+        System.out.println(COURSE_ID_MESSAGE);
+        info[1] = scanner.nextInt();
+        return info;
     }
 }
