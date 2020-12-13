@@ -18,24 +18,33 @@ public class Facade {
     private final StudentsDAO studentsDAO;
     private final StudentsCoursesDAO studentsCoursesDAO;
 
-    private final static String INTRO_MESSAGE = "To add new student to database type \"add\"\n" +
+
+
+
+    private final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
+                                                "To find all students related to course with given name type \"courses\"\n" +
+                                                "To add new student to database type \"add\"\n" +
                                                 "To delete student by id type \"delete\"\n" +
                                                 "To add student to course type \"assign\"\n" +
-                                                "To remove student to course type \"remove\"\n" +
+                                                "To remove student to course type \"remove\"\n\n" +
                                                 "To close app type \"exit\"";
     private final static String ADD_NEW_STUDENT_ID_MESSAGE =
             "Type the number of course to which you want to assign the student and press \"Enter\" button\n" +
             "To not assign a student to the course type \"0\" and press \"Enter\" button";
     private final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
-            "Type the student first name and press \"Enter\" button";
+            "Type student first name and press \"Enter\" button";
     private final static String ADD_NEW_STUDENT_LAST_NAME_MESSAGE =
-            "Type the student last name and press \"Enter\" button";
+            "Type student last name and press \"Enter\" button";
     private final static String DELETE_STUDENT_BY_ID_MESSAGE =
             "Type the id of student you wand delete from database and press \"Enter\" button";
     private final static String STUDENT_ID_MESSAGE =
             "Type the student id and press \"Enter\" button";
     private final static String COURSE_ID_MESSAGE =
             "Type the course id and press \"Enter\" button";
+    private final static String GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE =
+            "Type expected group size and press \"Enter\" button";
+    private final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
+            "Type course name press \"Enter\" button";
 
     public Facade(DataGenerator dataGenerator,
                   CoursesDao coursesDao,
@@ -75,6 +84,16 @@ public class Facade {
         String command = scanner.nextLine();
         while (!command.equals("exit")) {
             switch (command) {
+                case "groups" :
+                    findGroupsWithLessOrEqualsStudentCount();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
+                    break;
+                case "courses":
+                    findStudentsRelatedToCourses();
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
+                    break;
                 case "add" :
                     addNewStudent();
                     System.out.println(INTRO_MESSAGE);
@@ -95,8 +114,30 @@ public class Facade {
                     System.out.println(INTRO_MESSAGE);
                     command = scanner.nextLine();
                     break;
+                default:
+                    System.out.println("Incorrect command\n");
+                    System.out.println(INTRO_MESSAGE);
+                    command = scanner.nextLine();
             }
         }
+    }
+
+    private void findGroupsWithLessOrEqualsStudentCount() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE);
+        int expectedGroupSize = scanner.nextInt();
+        List<int[]> groups = groupsDao.getGroupsBySize(expectedGroupSize);
+        groups.forEach(g -> System.out.println("Group " + g[0] + " : " + g[1] + " students"));
+        System.out.println();
+    }
+
+    private void findStudentsRelatedToCourses() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(STUDENTS_RELATED_TO_COURSES_MESSAGE);
+        String courseName = scanner.nextLine();
+        List<String[]> strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
+        strings.forEach(n -> System.out.println(n[0] + " " + n[1]));
+        System.out.println();
     }
 
     private void addNewStudent() {

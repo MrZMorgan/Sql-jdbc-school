@@ -1,9 +1,8 @@
 package ua.com.foxminded.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class StudentsCoursesDAO {
 
@@ -79,5 +78,33 @@ public class StudentsCoursesDAO {
                 throwables.printStackTrace();
             }
         }
+    }
+
+    public List<String[]> getStudentsRelatedToCourses(String courseName) {
+        final String sql = "SELECT first_name, last_name FROM students\n" +
+                "JOIN students_courses ON students.id = students_courses.student_id\n" +
+                "JOIN courses ON students_courses.course_id = courses.id WHERE name = '" + courseName + "'";
+        Connection connection = null;
+        List<String[]> names = new LinkedList<>();
+        try  {
+            connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String[] groupSize = new String[2];
+                groupSize[0] = resultSet.getString("first_name");
+                groupSize[1] = resultSet.getString("last_name");
+                names.add(groupSize);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return names;
     }
 }
