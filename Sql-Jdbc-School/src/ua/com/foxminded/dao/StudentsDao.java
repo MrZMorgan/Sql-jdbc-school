@@ -57,4 +57,29 @@ public class StudentsDao {
             }
         }
     }
+
+    public void assignStudentToGroup(int groupId, int studentId) {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(url, user, password);
+            statement = connection.createStatement();
+            try {
+                statement.executeQuery("UPDATE students " +
+                                       "SET group_id = " + groupId + " " +
+                                       "WHERE id = " + studentId + ";");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
 }
