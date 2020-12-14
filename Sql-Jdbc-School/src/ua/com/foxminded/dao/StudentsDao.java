@@ -11,7 +11,7 @@ public class StudentsDao {
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(int groupId, String firstName, String lastName) {
+    public void create(String firstName, String lastName) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -19,13 +19,8 @@ public class StudentsDao {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                if (groupId > 0) {
-                    statement.executeQuery("INSERT INTO students (group_id, first_name, last_name) " +
-                            "VALUES (" + groupId + ", '" + firstName  + "', '" + lastName + "');");
-                } else {
-                    statement.executeQuery("INSERT INTO students (first_name, last_name) " +
-                            "VALUES ('" + firstName + "', '" + lastName + "');");
-                }
+                statement.executeQuery("INSERT INTO students (first_name, last_name) " +
+                        "VALUES ('" + firstName + "', '" + lastName + "');");
             } catch (Exception e) {
                 e.printStackTrace();
             }

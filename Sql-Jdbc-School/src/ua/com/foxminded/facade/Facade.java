@@ -69,13 +69,17 @@ public class Facade {
         List<String> firstNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/first_names");
         List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
         List<String[]> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
-        List<String[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
-        List<int[]> assignations = dataGenerator.assignStudentsToCourses(studentsJournal, courses);
 
+
+//        List<String[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
+//        List<int[]> assignations = dataGenerator.assignStudentsToCourses(studentsJournal, courses);
+
+        fullNamesList.forEach(student -> studentsDAO.create(student[0], student[1]));
         groups.forEach(groupsDao::create);
         courses.forEach(coursesDao::create);
-        studentsJournal.forEach(s -> studentsDAO.create(Integer.parseInt(s[0]), s[1], s[2]));
-        assignations.forEach(a -> studentsCoursesDAO.create(a[0], a[1]));
+
+//        studentsJournal.forEach(s -> studentsDAO.create(Integer.parseInt(s[0]), s[1], s[2]));
+//        assignations.forEach(a -> studentsCoursesDAO.create(a[0], a[1]));
     }
 
     public void workWithDataBase() {
@@ -141,14 +145,14 @@ public class Facade {
     }
 
     private void addNewStudent() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
-        int groupId = Integer.parseInt(scanner.nextLine());
-        System.out.println(ADD_NEW_STUDENT_FIRST_NAME_MESSAGE);
-        String firstName = scanner.nextLine();
-        System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
-        String lastName = scanner.nextLine();
-        studentsDAO.create(groupId, firstName, lastName);
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
+//        int groupId = Integer.parseInt(scanner.nextLine());
+//        System.out.println(ADD_NEW_STUDENT_FIRST_NAME_MESSAGE);
+//        String firstName = scanner.nextLine();
+//        System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
+//        String lastName = scanner.nextLine();
+//        studentsDAO.create(firstName, lastName);
     }
 
     private void deleteStudentById() {
