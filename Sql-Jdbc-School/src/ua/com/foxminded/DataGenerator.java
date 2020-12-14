@@ -1,6 +1,7 @@
 package ua.com.foxminded;
 
 import ua.com.foxminded.dao.StudentsCoursesDAO;
+import ua.com.foxminded.dao.StudentsDao;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -97,8 +98,9 @@ public class DataGenerator {
         return fullNamesList;
     }
 
-    public List<String[]> assignStudentsToGroups(List<String> groups, List<String[]> fullNamesList) {
-        List<String[]> studentsJournal = new ArrayList<>();
+    public void assignStudentsToGroups(List<String> groups,
+                                       List<String[]> fullNamesList,
+                                       StudentsDao dao) {
         int totalGroupSize = 0;
 
         for (int i = 0; i < groups.size(); i++) {
@@ -107,9 +109,7 @@ public class DataGenerator {
                 if (totalGroupSize == 200) {
                     break ;
                 } else {
-                    String[] studentData = {String.valueOf(i + 1),
-                            fullNamesList.get(totalGroupSize)[0], fullNamesList.get(totalGroupSize)[1]};
-                    studentsJournal.add(studentData);
+                    dao.assignStudentToGroup(i + 1, totalGroupSize + 1);
                     totalGroupSize++;
                 }
             }
@@ -117,14 +117,10 @@ public class DataGenerator {
 
         if (totalGroupSize < fullNamesList.size()) {
             while (totalGroupSize < 200) {
-                String[] studentData = {String.valueOf(0),
-                        fullNamesList.get(totalGroupSize)[0], fullNamesList.get(totalGroupSize)[1]};
-                studentsJournal.add(studentData);
+                dao.assignStudentToGroup(0, totalGroupSize + 1);
                 totalGroupSize++;
             }
         }
-
-        return studentsJournal;
     }
 
     public List<int[]> assignStudentsToCourses(List<String[]> studentsJournal, List<String> courses) {

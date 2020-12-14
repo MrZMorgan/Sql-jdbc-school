@@ -75,6 +75,8 @@ public class Facade {
 //        List<int[]> assignations = dataGenerator.assignStudentsToCourses(studentsJournal, courses);
 
         fullNamesList.forEach(student -> studentsDAO.create(student[0], student[1]));
+        dataGenerator.assignStudentsToGroups(groups, fullNamesList, studentsDAO);
+
         groups.forEach(groupsDao::create);
         courses.forEach(coursesDao::create);
 
