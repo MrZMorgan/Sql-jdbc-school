@@ -2,9 +2,11 @@ package ua.com.foxminded.dao;
 
 import ua.com.foxminded.interfaces.StudentsDAOInterface;
 
+import java.io.FileInputStream;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 public class StudentsDAO implements StudentsDAOInterface {
 
@@ -17,10 +19,13 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
 
-        try {
+        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
             Class.forName("org.postgresql.Driver");
+            Properties properties = new Properties();
+            properties.load(stream);
+            connection = DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
             String[] data = fullName.toString().split(" ");
-            connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
                 statement.executeQuery("INSERT INTO students (first_name, last_name) " +
@@ -42,9 +47,12 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void deleteById(int studentId) {
         Connection connection = null;
         Statement statement = null;
-        try {
+        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(url, user, password);
+            Properties properties = new Properties();
+            properties.load(stream);
+            connection = DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
             statement = connection.createStatement();
             try {
                 statement.executeQuery("DELETE FROM students " +
@@ -66,9 +74,12 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void assignStudentToGroup(int groupId, int studentId) {
         Connection connection = null;
         Statement statement = null;
-        try {
+        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(url, user, password);
+            Properties properties = new Properties();
+            properties.load(stream);
+            connection = DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
             statement = connection.createStatement();
             try {
                 statement.executeQuery("UPDATE students " +

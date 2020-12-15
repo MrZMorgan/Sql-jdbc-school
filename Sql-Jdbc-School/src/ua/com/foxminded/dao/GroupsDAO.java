@@ -2,23 +2,24 @@ package ua.com.foxminded.dao;
 
 import ua.com.foxminded.interfaces.GroupsDAOInterface;
 
+import java.io.FileInputStream;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 public class GroupsDAO implements GroupsDAOInterface {
-
-    private static final String user = "postgres";
-    private static final String password = "1234";
-    private static final String url = "jdbc:postgresql://localhost:5432/school";
 
     @Override
     public <String> void create(String groupName) {
         Connection connection = null;
         Statement statement = null;
-        try {
+        try (FileInputStream stream = new FileInputStream("src/connection.properties")){
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(url, user, password);
+            Properties properties = new Properties();
+            properties.load(stream);
+            connection = DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
             statement = connection.createStatement();
             try {
                 statement.executeQuery("INSERT INTO groups (name) " +
@@ -44,10 +45,14 @@ public class GroupsDAO implements GroupsDAOInterface {
                            "ORDER BY group_id;\n";
         Connection connection = null;
         List<int[]> groupsSizes = new LinkedList<>();
-        try  {
-            connection = DriverManager.getConnection(url, user, password);
+        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+            Class.forName("org.postgresql.Driver");
+            Properties properties = new Properties();
+            properties.load(stream);
+            connection = DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
             PreparedStatement statement = connection.prepareStatement(sql);
-            final ResultSet resultSet = statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int[] groupSize = new int[2];
                 groupSize[0] = resultSet.getInt("group_id");

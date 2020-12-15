@@ -10,18 +10,14 @@ import java.util.Properties;
 
 public class CoursesDAO implements CourseDAOInterface {
 
-    private static final String user = "postgres";
-    private static final String password = "1234";
-    private static final String url = "jdbc:postgresql://localhost:5432/school";
-
     @Override
     public <String> void create(String courseName) {
         Connection connection = null;
         Statement statement = null;
         try (FileInputStream stream = new FileInputStream("src/connection.properties")){
+            Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
-            Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(properties.getProperty("url"),
                     properties.getProperty("user"), properties.getProperty("password"));
             statement = connection.createStatement();
@@ -46,8 +42,12 @@ public class CoursesDAO implements CourseDAOInterface {
         final String sql = "SELECT * FROM courses;";
         Connection connection = null;
         Map<Integer, String> courseList = new LinkedHashMap<>();
-        try  {
-            connection = DriverManager.getConnection(url, user, password);
+        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+            Class.forName("org.postgresql.Driver");
+            Properties properties = new Properties();
+            properties.load(stream);
+            connection = DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
             PreparedStatement statement = connection.prepareStatement(sql);
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
