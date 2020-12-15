@@ -14,7 +14,7 @@ public class GroupsDAO implements GroupsDAOInterface {
     public <String> void create(String groupName) {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")){
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")){
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
@@ -45,7 +45,7 @@ public class GroupsDAO implements GroupsDAOInterface {
                            "ORDER BY group_id;\n";
         Connection connection = null;
         List<int[]> groupsSizes = new LinkedList<>();
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);

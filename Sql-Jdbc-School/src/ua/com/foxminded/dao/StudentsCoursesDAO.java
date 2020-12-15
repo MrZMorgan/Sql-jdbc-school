@@ -14,7 +14,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
     public <T> void create(T rowData) {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
@@ -42,7 +42,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
     public void deleteById(int studentId) {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
@@ -68,7 +68,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
     public void deleteFromCourse(int studentId, int courseId) {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
@@ -99,7 +99,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
                 "JOIN courses ON students_courses.course_id = courses.id WHERE name = '" + courseName + "'";
         Connection connection = null;
         List<String[]> names = new LinkedList<>();
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);

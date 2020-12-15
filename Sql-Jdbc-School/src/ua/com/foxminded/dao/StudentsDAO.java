@@ -19,7 +19,7 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
 
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
@@ -47,7 +47,7 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void deleteById(int studentId) {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
@@ -74,7 +74,7 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void assignStudentToGroup(int groupId, int studentId) {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("src/connection.properties")) {
+        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
             Class.forName("org.postgresql.Driver");
             Properties properties = new Properties();
             properties.load(stream);
