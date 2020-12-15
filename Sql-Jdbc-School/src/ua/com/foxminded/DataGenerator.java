@@ -127,15 +127,15 @@ public class DataGenerator {
         return data;
     }
 
-    public List<int[]> assignStudentsToCourses(List<String> studentsJournal, List<String> courses) {
-        List<int[]> assignations = new LinkedList<>();
+    public List<String> assignStudentsToCourses(List<String> studentsJournal, List<String> courses) {
+        List<String> assignations = new LinkedList<>();
 
         for (int i = 0; i < studentsJournal.size(); i++) {
             int numberOfCourses = new Random().nextInt(3) + 1;
             int[] list = new int[numberOfCourses];
             int course = new Random().nextInt(courses.size() + 1);
             list[0] = course;
-            assignations.add(new int[] {i + 1, course});
+            assignations.add(i + 1 + " " + course);
 
             for (int j = 0; j < numberOfCourses - 1; j++) {
                 course = new Random().nextInt(courses.size() + 1);
@@ -143,7 +143,7 @@ public class DataGenerator {
                     course = new Random().nextInt(courses.size() + 1);
                 }
                 list[j + 1] = course;
-                assignations.add(new int[] {i + 1, course});
+                assignations.add(i + 1 + " " + course);
             }
         }
 

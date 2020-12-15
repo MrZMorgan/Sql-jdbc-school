@@ -70,16 +70,16 @@ public class Facade {
         List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
         List<String> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
 
-        groups.forEach(groupsDao::create); // заполнили таблицу группами
-        courses.forEach(coursesDao::create); // заполнили таблицукурсами
+        groups.forEach(groupsDao::create);
+        courses.forEach(coursesDao::create);
 
-        fullNamesList.forEach(student -> studentsDAO.create(student)); // заполнили таблицу студентов
+        fullNamesList.forEach(studentsDAO::create);
 
-        List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList, studentsDAO); // приписали студентов у группам
+        List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList, studentsDAO);
         studentsJournal.forEach(s -> studentsDAO.assignStudentToGroup(s[1], s[0]));
 
-        List<int[]> assertions = dataGenerator.assignStudentsToCourses(fullNamesList, courses);
-        assertions.forEach(a -> studentsCoursesDAO.create(a[0], a[1]));
+        List<String> assertions = dataGenerator.assignStudentsToCourses(fullNamesList, courses);
+        assertions.forEach(studentsCoursesDAO::create);
     }
 
     public void workWithDataBase() {
@@ -165,7 +165,7 @@ public class Facade {
 
     private void assignStudentToCourse() {
         int[] studentInfo = collectInfoForQuery();
-        studentsCoursesDAO.create(studentInfo[0], studentInfo[1]);
+        studentsCoursesDAO.create(studentInfo[0] + " " + studentInfo[1]);
     }
 
     private void removeStudentFromCourse() {
