@@ -1,7 +1,6 @@
 package ua.com.foxminded;
 
-import ua.com.foxminded.dao.StudentsCoursesDAO;
-import ua.com.foxminded.dao.StudentsDao;
+import ua.com.foxminded.dao.StudentsDAO;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -100,7 +99,7 @@ public class DataGenerator {
 
     public List<int[]> assignStudentsToGroups(List<String> groups,
                                        List<String[]> fullNamesList,
-                                       StudentsDao dao) {
+                                       StudentsDAO dao) {
         List<int[]> data = new LinkedList<>();
         int totalGroupSize = 0;
 

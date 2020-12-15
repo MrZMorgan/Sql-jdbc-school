@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StudentsDao {
+public class StudentsDAO {
 
     private static final String user = "postgres";
     private static final String password = "1234";

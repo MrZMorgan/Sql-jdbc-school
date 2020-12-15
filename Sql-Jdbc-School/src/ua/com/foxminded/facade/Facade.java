@@ -1,10 +1,10 @@
 package ua.com.foxminded.facade;
 
 import ua.com.foxminded.DataGenerator;
-import ua.com.foxminded.dao.CoursesDao;
-import ua.com.foxminded.dao.GroupsDao;
+import ua.com.foxminded.dao.CoursesDAO;
+import ua.com.foxminded.dao.GroupsDAO;
 import ua.com.foxminded.dao.StudentsCoursesDAO;
-import ua.com.foxminded.dao.StudentsDao;
+import ua.com.foxminded.dao.StudentsDAO;
 
 import java.util.*;
 
@@ -13,9 +13,9 @@ import static ua.com.foxminded.sql.Queries.*;
 public class Facade {
 
     private final DataGenerator dataGenerator;
-    private final CoursesDao coursesDao;
-    private final GroupsDao groupsDao;
-    private final StudentsDao studentsDAO;
+    private final CoursesDAO coursesDao;
+    private final GroupsDAO groupsDao;
+    private final StudentsDAO studentsDAO;
     private final StudentsCoursesDAO studentsCoursesDAO;
 
 
@@ -47,9 +47,9 @@ public class Facade {
             "Type course name press \"Enter\" button";
 
     public Facade(DataGenerator dataGenerator,
-                  CoursesDao coursesDao,
-                  GroupsDao groupsDao,
-                  StudentsDao studentsDAO,
+                  CoursesDAO coursesDao,
+                  GroupsDAO groupsDao,
+                  StudentsDAO studentsDAO,
                   StudentsCoursesDAO studentsCoursesDAO) {
         this.dataGenerator = dataGenerator;
         this.coursesDao = coursesDao;
@@ -145,14 +145,14 @@ public class Facade {
     }
 
     private void addNewStudent() {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
-//        int groupId = Integer.parseInt(scanner.nextLine());
-//        System.out.println(ADD_NEW_STUDENT_FIRST_NAME_MESSAGE);
-//        String firstName = scanner.nextLine();
-//        System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
-//        String lastName = scanner.nextLine();
-//        studentsDAO.create(firstName, lastName);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
+        int groupId = Integer.parseInt(scanner.nextLine());
+        System.out.println(ADD_NEW_STUDENT_FIRST_NAME_MESSAGE);
+        String firstName = scanner.nextLine();
+        System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
+        String lastName = scanner.nextLine();
+        studentsDAO.create(firstName, lastName);
     }
 
     private void deleteStudentById() {

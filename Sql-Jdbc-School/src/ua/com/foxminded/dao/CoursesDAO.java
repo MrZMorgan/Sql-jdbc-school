@@ -1,16 +1,18 @@
 package ua.com.foxminded.dao;
 
+import ua.com.foxminded.interfaces.CourseDAOInterface;
 import java.sql.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class GroupsDao {
+public class CoursesDAO implements CourseDAOInterface {
 
     private static final String user = "postgres";
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(String groupName) {
+    @Override
+    public <String> void create(String courseName) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -18,7 +20,7 @@ public class GroupsDao {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO groups (name) VALUES ('"  + groupName +"');");
+                statement.executeQuery("INSERT INTO courses (name) VALUES ('" + courseName + "');");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -33,22 +35,16 @@ public class GroupsDao {
         }
     }
 
-    public List<int[]> getGroupsBySize(int expectedGroupSize) {
-        final String sql = "SELECT group_id, COUNT (*) " +
-                           "FROM students GROUP BY group_id " +
-                           "HAVING COUNT(*) <= " + expectedGroupSize + " " +
-                           "ORDER BY group_id;\n";
+    public Map<Integer, String> getCoursesList() {
+        final String sql = "SELECT * FROM courses;";
         Connection connection = null;
-        List<int[]> groupsSizes = new LinkedList<>();
+        Map<Integer, String> courseList = new LinkedHashMap<>();
         try  {
             connection = DriverManager.getConnection(url, user, password);
             PreparedStatement statement = connection.prepareStatement(sql);
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int[] groupSize = new int[2];
-                groupSize[0] = resultSet.getInt("group_id");
-                groupSize[1] = resultSet.getInt("count");
-                groupsSizes.add(groupSize);
+                courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,6 +55,6 @@ public class GroupsDao {
                 throwables.printStackTrace();
             }
         }
-        return groupsSizes;
+        return courseList;
     }
 }
