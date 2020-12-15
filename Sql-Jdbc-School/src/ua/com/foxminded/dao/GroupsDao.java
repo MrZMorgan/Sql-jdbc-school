@@ -34,7 +34,10 @@ public class GroupsDao {
     }
 
     public List<int[]> getGroupsBySize(int expectedGroupSize) {
-        final String sql = "SELECT group_id, COUNT (*) FROM students GROUP BY group_id HAVING COUNT(*) <= " + expectedGroupSize + " ORDER BY group_id;\n";
+        final String sql = "SELECT group_id, COUNT (*) " +
+                           "FROM students GROUP BY group_id " +
+                           "HAVING COUNT(*) <= " + expectedGroupSize + " " +
+                           "ORDER BY group_id;\n";
         Connection connection = null;
         List<int[]> groupsSizes = new LinkedList<>();
         try  {

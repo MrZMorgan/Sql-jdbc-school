@@ -98,9 +98,10 @@ public class DataGenerator {
         return fullNamesList;
     }
 
-    public void assignStudentsToGroups(List<String> groups,
+    public List<int[]> assignStudentsToGroups(List<String> groups,
                                        List<String[]> fullNamesList,
                                        StudentsDao dao) {
+        List<int[]> data = new LinkedList<>();
         int totalGroupSize = 0;
 
         for (int i = 0; i < groups.size(); i++) {
@@ -109,7 +110,8 @@ public class DataGenerator {
                 if (totalGroupSize == 200) {
                     break ;
                 } else {
-                    dao.assignStudentToGroup(i + 1, totalGroupSize + 1);
+//                    dao.assignStudentToGroup(i + 1, totalGroupSize + 1);
+                    data.add(new int[] {totalGroupSize + 1, i + 1});
                     totalGroupSize++;
                 }
             }
@@ -117,10 +119,13 @@ public class DataGenerator {
 
         if (totalGroupSize < fullNamesList.size()) {
             while (totalGroupSize < 200) {
-                dao.assignStudentToGroup(0, totalGroupSize + 1);
+//                dao.assignStudentToGroup(0, totalGroupSize + 1);
+                data.add(new int[] {totalGroupSize + 1, 0});
                 totalGroupSize++;
             }
         }
+
+        return data;
     }
 
     public List<int[]> assignStudentsToCourses(List<String[]> studentsJournal, List<String> courses) {
