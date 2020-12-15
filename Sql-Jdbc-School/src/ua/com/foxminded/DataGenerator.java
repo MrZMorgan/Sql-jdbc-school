@@ -84,13 +84,13 @@ public class DataGenerator {
         return strings;
     }
 
-    public List<String[]> generateFullNamesList(List<String> firstNames, List<String> lastNames) {
-        List<String[]> fullNamesList = new LinkedList<>();
+    public List<String> generateFullNamesList(List<String> firstNames, List<String> lastNames) {
+        List<String> fullNamesList = new LinkedList<>();
 
         for (int i = 0; i < 200; i++) {
             String firstName = firstNames.get(generateRandomDigit(firstNames.size()));
             String lastName = lastNames.get(generateRandomDigit(lastNames.size()));
-            String[] fullName = {firstName, lastName};
+            String fullName = firstName + " " + lastName;
             fullNamesList.add(fullName);
         }
 
@@ -98,7 +98,7 @@ public class DataGenerator {
     }
 
     public List<int[]> assignStudentsToGroups(List<String> groups,
-                                       List<String[]> fullNamesList,
+                                       List<String> fullNamesList,
                                        StudentsDAO dao) {
         List<int[]> data = new LinkedList<>();
         int totalGroupSize = 0;
@@ -127,7 +127,7 @@ public class DataGenerator {
         return data;
     }
 
-    public List<int[]> assignStudentsToCourses(List<String[]> studentsJournal, List<String> courses) {
+    public List<int[]> assignStudentsToCourses(List<String> studentsJournal, List<String> courses) {
         List<int[]> assignations = new LinkedList<>();
 
         for (int i = 0; i < studentsJournal.size(); i++) {

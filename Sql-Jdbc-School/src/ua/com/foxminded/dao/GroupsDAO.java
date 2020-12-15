@@ -21,7 +21,8 @@ public class GroupsDAO implements GroupsDAOInterface {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO groups (name) VALUES ('"  + groupName +"');");
+                statement.executeQuery("INSERT INTO groups (name) " +
+                                       "VALUES ('"  + groupName +"');");
             } catch (Exception e) {
                 e.printStackTrace();
             }

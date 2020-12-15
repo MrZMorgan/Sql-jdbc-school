@@ -18,7 +18,8 @@ public class StudentsCoursesDAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO students_courses (student_id , course_id) VALUES (" + studentId + ", " + course_id + ");");
+                statement.executeQuery("INSERT INTO students_courses (student_id , course_id) " +
+                                       "VALUES (" + studentId + ", " + course_id + ");");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -65,7 +66,8 @@ public class StudentsCoursesDAO {
             statement = connection.createStatement();
             try {
                 statement.executeQuery("DELETE FROM students_courses " +
-                        "WHERE student_id = " + studentId + " AND course_id = " + courseId + "");
+                                       "WHERE student_id = " + studentId + " " +
+                                       "AND course_id = " + courseId + "");
             } catch (Exception e) {
                 e.printStackTrace();
             }

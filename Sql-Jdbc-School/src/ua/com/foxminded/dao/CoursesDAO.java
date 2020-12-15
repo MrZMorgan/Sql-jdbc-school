@@ -20,7 +20,8 @@ public class CoursesDAO implements CourseDAOInterface {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO courses (name) VALUES ('" + courseName + "');");
+                statement.executeQuery("INSERT INTO courses (name) " +
+                                       "VALUES ('" + courseName + "');");
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -1,25 +1,30 @@
 package ua.com.foxminded.dao;
 
+import ua.com.foxminded.interfaces.StudentsDAOInterface;
+
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StudentsDAO {
+public class StudentsDAO implements StudentsDAOInterface {
 
     private static final String user = "postgres";
     private static final String password = "1234";
     private static final String url = "jdbc:postgresql://localhost:5432/school";
 
-    public void create(String firstName, String lastName) {
+    @Override
+    public <T> void create(T fullName) {
         Connection connection = null;
         Statement statement = null;
+
         try {
             Class.forName("org.postgresql.Driver");
+            String[] data = fullName.toString().split(" ");
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
                 statement.executeQuery("INSERT INTO students (first_name, last_name) " +
-                        "VALUES ('" + firstName + "', '" + lastName + "');");
+                                       "VALUES ('" + data[0] + "', '" + data[1] + "');");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -42,7 +47,8 @@ public class StudentsDAO {
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
             try {
-                statement.executeQuery("DELETE FROM students WHERE id = "+ studentId +";");
+                statement.executeQuery("DELETE FROM students " +
+                                       "WHERE id = "+ studentId +";");
             } catch (Exception e) {
                 e.printStackTrace();
             }

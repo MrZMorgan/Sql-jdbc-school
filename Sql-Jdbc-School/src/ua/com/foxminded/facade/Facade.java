@@ -68,12 +68,12 @@ public class Facade {
         List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
         List<String> firstNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/first_names");
         List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
-        List<String[]> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
+        List<String> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
 
         groups.forEach(groupsDao::create); // заполнили таблицу группами
         courses.forEach(coursesDao::create); // заполнили таблицукурсами
 
-        fullNamesList.forEach(student -> studentsDAO.create(student[0], student[1])); // заполнили таблицу студентов
+        fullNamesList.forEach(student -> studentsDAO.create(student)); // заполнили таблицу студентов
 
         List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList, studentsDAO); // приписали студентов у группам
         studentsJournal.forEach(s -> studentsDAO.assignStudentToGroup(s[1], s[0]));
@@ -152,7 +152,7 @@ public class Facade {
         String firstName = scanner.nextLine();
         System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
         String lastName = scanner.nextLine();
-        studentsDAO.create(firstName, lastName);
+        studentsDAO.create(firstName + " " + lastName);
     }
 
     private void deleteStudentById() {
