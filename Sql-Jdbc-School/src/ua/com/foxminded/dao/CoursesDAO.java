@@ -1,9 +1,12 @@
 package ua.com.foxminded.dao;
 
 import ua.com.foxminded.interfaces.CourseDAOInterface;
+
+import java.io.FileInputStream;
 import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class CoursesDAO implements CourseDAOInterface {
 
@@ -15,9 +18,12 @@ public class CoursesDAO implements CourseDAOInterface {
     public <String> void create(String courseName) {
         Connection connection = null;
         Statement statement = null;
-        try {
+        try (FileInputStream stream = new FileInputStream("src/connection.properties")){
+            Properties properties = new Properties();
+            properties.load(stream);
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
             statement = connection.createStatement();
             try {
                 statement.executeQuery("INSERT INTO courses (name) " +
