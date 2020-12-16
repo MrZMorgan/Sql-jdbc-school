@@ -5,6 +5,7 @@ import ua.com.foxminded.dao.CoursesDAO;
 import ua.com.foxminded.dao.GroupsDAO;
 import ua.com.foxminded.dao.StudentsCoursesDAO;
 import ua.com.foxminded.dao.StudentsDAO;
+import ua.com.foxminded.exceptions.DAOException;
 
 import java.util.*;
 
@@ -18,33 +19,32 @@ public class Facade {
     private final StudentsDAO studentsDAO;
     private final StudentsCoursesDAO studentsCoursesDAO;
 
-
-
-
-    private final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
+    public final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
                                                 "To find all students related to course with given name type \"courses\"\n" +
                                                 "To add new student to database type \"add\"\n" +
                                                 "To delete student by id type \"delete\"\n" +
                                                 "To add student to course type \"assign\"\n" +
                                                 "To remove student to course type \"remove\"\n\n" +
                                                 "To close app type \"exit\"";
-    private final static String ADD_NEW_STUDENT_ID_MESSAGE =
+    public final static String ADD_NEW_STUDENT_ID_MESSAGE =
             "Type the number of course to which you want to assign the student and press \"Enter\" button\n" +
             "To not assign a student to the course type \"0\" and press \"Enter\" button";
-    private final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
+    public final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
             "Type student first name and press \"Enter\" button";
-    private final static String ADD_NEW_STUDENT_LAST_NAME_MESSAGE =
+    public final static String ADD_NEW_STUDENT_LAST_NAME_MESSAGE =
             "Type student last name and press \"Enter\" button";
-    private final static String DELETE_STUDENT_BY_ID_MESSAGE =
+    public final static String DELETE_STUDENT_BY_ID_MESSAGE =
             "Type the id of student you wand delete from database and press \"Enter\" button";
-    private final static String STUDENT_ID_MESSAGE =
+    public final static String STUDENT_ID_MESSAGE =
             "Type the student id and press \"Enter\" button";
-    private final static String COURSE_ID_MESSAGE =
+    public final static String COURSE_ID_MESSAGE =
             "Type the course id and press \"Enter\" button";
-    private final static String GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE =
+    public final static String GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE =
             "Type expected group size and press \"Enter\" button";
-    private final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
+    public final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
             "Type course name press \"Enter\" button";
+
+    public final static String SPACE = " ";
 
     public Facade(DataGenerator dataGenerator,
                   CoursesDAO coursesDao,
@@ -58,7 +58,7 @@ public class Facade {
         this.studentsCoursesDAO = studentsCoursesDAO;
     }
 
-    public void generateTestData() {
+    public void generateTestData() throws DAOException {
         dataGenerator.generateTable(SQL_DROP_GROUPS_TABLE, SQL_CREATE_GROUPS_TABLE);
         dataGenerator.generateTable(SQL_DROP_COURSES_TABLE,SQL_CREATE_COURSES_TABLE);
         dataGenerator.generateTable(SQL_DROP_STUDENTS_TABLE, SQL_CREATE_STUDENTS_TABLE);
@@ -70,19 +70,34 @@ public class Facade {
         List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
         List<String> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
 
-        groups.forEach(groupsDao::create);
-        courses.forEach(coursesDao::create);
+        for (String group : groups) {
+            groupsDao.create(group);
+        }
 
-        fullNamesList.forEach(studentsDAO::create);
+        for (String cours : courses) {
+            coursesDao.create(cours);
+        }
+
+        for (String s1 : fullNamesList) {
+            studentsDAO.create(s1);
+        }
 
         List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList, studentsDAO);
-        studentsJournal.forEach(s -> studentsDAO.assignStudentToGroup(s[1], s[0]));
+        studentsJournal.forEach(s -> {
+            try {
+                studentsDAO.assignStudentToGroup(s[1], s[0]);
+            } catch (DAOException e) {
+                e.printStackTrace();
+            }
+        });
 
         List<String> assertions = dataGenerator.assignStudentsToCourses(fullNamesList, courses);
-        assertions.forEach(studentsCoursesDAO::create);
+        for (String assertion : assertions) {
+            studentsCoursesDAO.create(assertion);
+        }
     }
 
-    public void workWithDataBase() {
+    public void workWithDataBase() throws DAOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(INTRO_MESSAGE);
         String command = scanner.nextLine();
@@ -130,7 +145,12 @@ public class Facade {
         Scanner scanner = new Scanner(System.in);
         System.out.println(GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE);
         int expectedGroupSize = scanner.nextInt();
-        List<int[]> groups = groupsDao.getGroupsBySize(expectedGroupSize);
+        List<int[]> groups = null;
+        try {
+            groups = groupsDao.getGroupsBySize(expectedGroupSize);
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
         groups.forEach(g -> System.out.println("Group " + g[0] + " : " + g[1] + " students"));
         System.out.println();
     }
@@ -139,12 +159,17 @@ public class Facade {
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENTS_RELATED_TO_COURSES_MESSAGE);
         String courseName = scanner.nextLine();
-        List<String[]> strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
-        strings.forEach(n -> System.out.println(n[0] + " " + n[1]));
+        List<String[]> strings = null;
+        try {
+            strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+        strings.forEach(n -> System.out.println(n[0] + SPACE + n[1]));
         System.out.println();
     }
 
-    private void addNewStudent() {
+    private void addNewStudent() throws DAOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
         int groupId = Integer.parseInt(scanner.nextLine());
@@ -152,10 +177,10 @@ public class Facade {
         String firstName = scanner.nextLine();
         System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
         String lastName = scanner.nextLine();
-        studentsDAO.create(firstName + " " + lastName);
+        studentsDAO.create(firstName + SPACE + lastName);
     }
 
-    private void deleteStudentById() {
+    private void deleteStudentById() throws DAOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(DELETE_STUDENT_BY_ID_MESSAGE);
         int studentId = scanner.nextInt();
@@ -163,17 +188,17 @@ public class Facade {
         studentsDAO.deleteById(studentId);
     }
 
-    private void assignStudentToCourse() {
+    private void assignStudentToCourse() throws DAOException {
         int[] studentInfo = collectInfoForQuery();
         studentsCoursesDAO.create(studentInfo[0] + " " + studentInfo[1]);
     }
 
-    private void removeStudentFromCourse() {
+    private void removeStudentFromCourse() throws DAOException {
         int[] studentInfo = collectInfoForQuery();
         studentsCoursesDAO.deleteFromCourse(studentInfo[0], studentInfo[1]);
     }
 
-    private int[] collectInfoForQuery() {
+    private int[] collectInfoForQuery() throws DAOException {
         int[] info = new int[2];
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENT_ID_MESSAGE);

@@ -1,32 +1,25 @@
 package ua.com.foxminded.dao;
 
+import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.StudentsDAOInterface;
-
 import java.io.FileInputStream;
 import java.sql.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
 
 public class StudentsDAO implements StudentsDAOInterface {
 
-    private static final String user = "postgres";
-    private static final String password = "1234";
-    private static final String url = "jdbc:postgresql://localhost:5432/school";
+    public final static String RESOURCE_FILE_PATH = "resources/connection.properties";
+    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
     @Override
-    public <T> void create(T fullName) {
+    public <T> void create(T fullName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
 
-        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
-            Class.forName("org.postgresql.Driver");
-            Properties properties = new Properties();
-            properties.load(stream);
-            connection = DriverManager.getConnection(properties.getProperty("url"),
-                    properties.getProperty("user"), properties.getProperty("password"));
-            String[] data = fullName.toString().split(" ");
+        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
+            connection = new ConnectionFactory().connect(stream);
             statement = connection.createStatement();
+            String[] data = fullName.toString().split(" ");
             try {
                 statement.executeQuery("INSERT INTO students (first_name, last_name) " +
                                        "VALUES ('" + data[0] + "', '" + data[1] + "');");
@@ -39,20 +32,16 @@ public class StudentsDAO implements StudentsDAOInterface {
             try {
                 connection.close();
             } catch (SQLException throwables) {
-                throwables.printStackTrace();
+                throw new DAOException(FAILED_CONNECTION_MESSAGE);
             }
         }
     }
 
-    public void deleteById(int studentId) {
+    public void deleteById(int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
-            Class.forName("org.postgresql.Driver");
-            Properties properties = new Properties();
-            properties.load(stream);
-            connection = DriverManager.getConnection(properties.getProperty("url"),
-                    properties.getProperty("user"), properties.getProperty("password"));
+        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
+            connection = new ConnectionFactory().connect(stream);
             statement = connection.createStatement();
             try {
                 statement.executeQuery("DELETE FROM students " +
@@ -66,20 +55,16 @@ public class StudentsDAO implements StudentsDAOInterface {
             try {
                 connection.close();
             } catch (SQLException throwables) {
-                throwables.printStackTrace();
+                throw new DAOException(FAILED_CONNECTION_MESSAGE);
             }
         }
     }
 
-    public void assignStudentToGroup(int groupId, int studentId) {
+    public void assignStudentToGroup(int groupId, int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream("resources/connection.properties")) {
-            Class.forName("org.postgresql.Driver");
-            Properties properties = new Properties();
-            properties.load(stream);
-            connection = DriverManager.getConnection(properties.getProperty("url"),
-                    properties.getProperty("user"), properties.getProperty("password"));
+        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
+            connection = new ConnectionFactory().connect(stream);
             statement = connection.createStatement();
             try {
                 statement.executeQuery("UPDATE students " +
@@ -94,7 +79,7 @@ public class StudentsDAO implements StudentsDAOInterface {
             try {
                 connection.close();
             } catch (SQLException throwables) {
-                throwables.printStackTrace();
+                throw new DAOException(FAILED_CONNECTION_MESSAGE);
             }
         }
     }

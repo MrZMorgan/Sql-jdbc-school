@@ -4,6 +4,7 @@ import ua.com.foxminded.dao.CoursesDAO;
 import ua.com.foxminded.dao.GroupsDAO;
 import ua.com.foxminded.dao.StudentsCoursesDAO;
 import ua.com.foxminded.dao.StudentsDAO;
+import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.facade.Facade;
 
 public class Solution {
@@ -13,7 +14,11 @@ public class Solution {
                                    new GroupsDAO(),
                                    new StudentsDAO(),
                                    new StudentsCoursesDAO());
-        facade.generateTestData();
-        facade.workWithDataBase();
+        try {
+            facade.generateTestData();
+            facade.workWithDataBase();
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
     }
 }
