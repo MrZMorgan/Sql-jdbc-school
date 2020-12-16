@@ -16,8 +16,8 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
 
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             String[] data = fullName.toString().split(" ");
             try {
@@ -40,8 +40,8 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void deleteById(int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery("DELETE FROM students " +
@@ -63,8 +63,8 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void assignStudentToGroup(int groupId, int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery("UPDATE students " +

@@ -17,8 +17,8 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
     public <T> void create(T rowData) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             String[] data = rowData.toString().split(" ");
             try {
@@ -41,8 +41,8 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
     public void deleteById(int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery("DELETE FROM students_courses " +
@@ -64,8 +64,8 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
     public void deleteFromCourse(int studentId, int courseId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery("DELETE FROM students_courses " +
@@ -92,8 +92,8 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
                            "WHERE name = '" + courseName + "'";
         Connection connection = null;
         List<String[]> names = new LinkedList<>();
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             PreparedStatement statement = connection.prepareStatement(sql);
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

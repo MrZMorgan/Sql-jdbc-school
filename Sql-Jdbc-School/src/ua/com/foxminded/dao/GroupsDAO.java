@@ -17,8 +17,8 @@ public class GroupsDAO implements GroupsDAOInterface {
     public <String> void create(String groupName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)){
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery("INSERT INTO groups (name) " +
@@ -44,8 +44,8 @@ public class GroupsDAO implements GroupsDAOInterface {
                            "ORDER BY group_id;\n";
         Connection connection = null;
         List<int[]> groupsSizes = new LinkedList<>();
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

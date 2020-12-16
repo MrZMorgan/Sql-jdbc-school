@@ -11,15 +11,15 @@ import java.util.Map;
 
 public class CoursesDAO implements CourseDAOInterface {
 
-    public final static String RESOURCE_FILE_PATH = "resources/connection.properties";
+
     private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
     @Override
     public <String> void create(String courseName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)){
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery("INSERT INTO courses (name) " +
@@ -42,8 +42,8 @@ public class CoursesDAO implements CourseDAOInterface {
         final String sql = "SELECT * FROM courses;";
         Connection connection = null;
         Map<Integer, String> courseList = new LinkedHashMap<>();
-        try (FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH)) {
-            connection = new ConnectionFactory().connect(stream);
+        try {
+            connection = new ConnectionFactory().connect();
             PreparedStatement statement = connection.prepareStatement(sql);
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
