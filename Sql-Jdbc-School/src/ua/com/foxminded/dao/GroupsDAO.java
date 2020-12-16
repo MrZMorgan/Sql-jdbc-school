@@ -3,14 +3,12 @@ package ua.com.foxminded.dao;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.GroupsDAOInterface;
-import java.io.FileInputStream;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GroupsDAO implements GroupsDAOInterface {
 
-    public final static String RESOURCE_FILE_PATH = "resources/connection.properties";
     private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
     @Override

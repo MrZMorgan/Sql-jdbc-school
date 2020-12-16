@@ -1,5 +1,7 @@
 package ua.com.foxminded.connection;
 
+import ua.com.foxminded.exceptions.DAOException;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -11,13 +13,18 @@ public class ConnectionFactory {
 
     public final static String RESOURCE_FILE_PATH = "resources/connection.properties";
 
-    public Connection connect() throws ClassNotFoundException, SQLException, IOException {
+
+    public Connection connect() throws ClassNotFoundException, IOException {
         Properties properties = new Properties();
         FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH);
         properties.load(stream);
         stream.close();
         Class.forName(properties.getProperty("driver"));
-        return DriverManager.getConnection(properties.getProperty("url"),
-                properties.getProperty("user"), properties.getProperty("password"));
+        try {
+            return DriverManager.getConnection(properties.getProperty("url"),
+                    properties.getProperty("user"), properties.getProperty("password"));
+        } catch (SQLException throwables) {
+            return null;
+        }
     }
 }

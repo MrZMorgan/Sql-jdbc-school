@@ -3,14 +3,11 @@ package ua.com.foxminded.dao;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.CourseDAOInterface;
-
-import java.io.FileInputStream;
 import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CoursesDAO implements CourseDAOInterface {
-
 
     private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
@@ -54,7 +51,7 @@ public class CoursesDAO implements CourseDAOInterface {
         } finally {
             try {
                 connection.close();
-            } catch (SQLException throwable) {
+            } catch (SQLException throwables) {
                 throw new DAOException(FAILED_CONNECTION_MESSAGE);
             }
         }
