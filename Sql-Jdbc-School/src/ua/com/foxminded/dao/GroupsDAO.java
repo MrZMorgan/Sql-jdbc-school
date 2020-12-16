@@ -3,24 +3,32 @@ package ua.com.foxminded.dao;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.GroupsDAOInterface;
+
+import java.io.FileInputStream;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 public class GroupsDAO implements GroupsDAOInterface {
 
     private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
+    public static final String SQL_RESOURCES = "resources/sql.properties";
 
     @Override
-    public <String> void create(String groupName) throws DAOException {
+    public <T> void create(T groupName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
+        Properties properties = new Properties();
         try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
-                statement.executeQuery("INSERT INTO groups (name) " +
-                                       "VALUES ('"  + groupName +"');");
+                statement.executeQuery(String.format(properties.getProperty("CREATE_GROUP"), groupName));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -36,15 +44,18 @@ public class GroupsDAO implements GroupsDAOInterface {
     }
 
     public List<int[]> getGroupsBySize(int expectedGroupSize) throws DAOException {
-        final String sql = "SELECT group_id, COUNT (*) " +
-                           "FROM students GROUP BY group_id " +
-                           "HAVING COUNT(*) <= " + expectedGroupSize + " " +
-                           "ORDER BY group_id;\n";
         Connection connection = null;
+        Properties properties = new Properties();
         List<int[]> groupsSizes = new LinkedList<>();
         try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
             connection = new ConnectionFactory().connect();
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(
+                    String.format(properties.getProperty("GETGROUPS_BY_SIZE"), expectedGroupSize)
+            );
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int[] groupSize = new int[2];

@@ -3,10 +3,9 @@ package ua.com.foxminded.dao;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.StudentsDAOInterface;
-import java.io.FileInputStream;
 import java.sql.*;
 import java.util.LinkedList;
-import java.util.List;;
+import java.util.List;
 
 public class StudentsCoursesDAO implements StudentsDAOInterface {
 

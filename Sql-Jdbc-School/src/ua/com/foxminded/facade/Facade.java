@@ -78,8 +78,8 @@ public class Facade {
             coursesDao.create(cours);
         }
 
-        for (String s1 : fullNamesList) {
-            studentsDAO.create(s1);
+        for (String fullName : fullNamesList) {
+            studentsDAO.create(fullName);
         }
 
         List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList, studentsDAO);
