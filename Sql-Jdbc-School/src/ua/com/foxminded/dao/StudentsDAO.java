@@ -5,24 +5,28 @@ import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.StudentsDAOInterface;
 import java.io.FileInputStream;
 import java.sql.*;
+import java.util.Properties;
 
 public class StudentsDAO implements StudentsDAOInterface {
 
-    public final static String RESOURCE_FILE_PATH = "resources/connection.properties";
+    public static final String SQL_RESOURCES = "resources/sql.properties";
     private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
     @Override
     public <T> void create(T fullName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
-
+        Properties properties = new Properties();
         try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             String[] data = fullName.toString().split(" ");
             try {
-                statement.executeQuery("INSERT INTO students (first_name, last_name) " +
-                                       "VALUES ('" + data[0] + "', '" + data[1] + "');");
+                statement.executeQuery(String.format(properties.getProperty("CREATE_STUDENT"), data[0], data[1]));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -40,12 +44,16 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void deleteById(int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
+        Properties properties = new Properties();
         try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
-                statement.executeQuery("DELETE FROM students " +
-                                       "WHERE id = "+ studentId +";");
+                statement.executeQuery(String.format(properties.getProperty("DELETE_STUDENT_BY_ID"), studentId));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -63,13 +71,17 @@ public class StudentsDAO implements StudentsDAOInterface {
     public void assignStudentToGroup(int groupId, int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
+        Properties properties = new Properties();
         try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
-                statement.executeQuery("UPDATE students " +
-                                       "SET group_id = " + groupId + " " +
-                                       "WHERE id = " + studentId + ";");
+                statement.executeQuery(
+                        String.format(properties.getProperty("ASSIGN_STUDENT_TO_GROUP"), groupId, studentId));
             } catch (Exception e) {
                 e.printStackTrace();
             }
