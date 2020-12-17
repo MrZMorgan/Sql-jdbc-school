@@ -1,7 +1,11 @@
 package ua.com.foxminded;
 
+import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.dao.StudentsDAO;
+import ua.com.foxminded.exceptions.DAOException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,16 +19,19 @@ import java.util.stream.Collectors;
 public class DataGenerator {
 
     private static final String HYPHEN = "-";
-    private static final String user = "postgres";
-    private static final String password = "1234";
-    private static final String url = "jdbc:postgresql://localhost:5432/school";
+    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
+    public static final String SQL_RESOURCES = "resources/sql.properties";
 
-    public void generateTable(String sqlDrop, String sqlCreate) {
+    public void generateTable(String sqlDrop, String sqlCreate) throws DAOException {
         Connection connection = null;
         Statement statement = null;
+        Properties properties = new Properties();
         try {
-            Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(url, user, password);
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
+            connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery(sqlDrop);
@@ -33,13 +40,13 @@ public class DataGenerator {
             }
             statement.executeQuery(sqlCreate);
 
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException | SQLException | IOException e) {
             e.printStackTrace();
         } finally {
             try {
                 connection.close();
             } catch (SQLException throwables) {
-                throwables.printStackTrace();
+                throw new DAOException(FAILED_CONNECTION_MESSAGE);
             }
         }
     }
