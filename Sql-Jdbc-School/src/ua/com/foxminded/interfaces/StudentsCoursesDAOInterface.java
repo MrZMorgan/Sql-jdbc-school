@@ -1,6 +1,8 @@
 package ua.com.foxminded.interfaces;
 
-public interface StudentsCoursesDAOInterface extends GenericDAO {
+import ua.com.foxminded.exceptions.DAOException;
+
+public interface StudentsCoursesDAOInterface extends GenericDAO <String> {
     @Override
-    <T> void create(T t);
+    void create(String t) throws DAOException;
 }

@@ -11,30 +11,26 @@ import java.util.Properties;
 public class StudentsDAO implements StudentsDAOInterface {
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
     @Override
-    public <T> void create(T fullName) throws DAOException {
+    public void create(String fullName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
+        ConnectionFactory factory = new ConnectionFactory();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             stream.close();
 
-            connection = new ConnectionFactory().connect();
+            connection = factory.connect();
             statement = connection.createStatement();
-            String[] data = fullName.toString().split(" ");
+            String[] data = fullName.split(" ");
             statement.executeQuery(String.format(properties.getProperty("create.students"), data[0], data[1]));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throw new DAOException(FAILED_CONNECTION_MESSAGE);
-            }
+            factory.close(connection);
         }
     }
 
@@ -42,22 +38,19 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
+        ConnectionFactory factory = new ConnectionFactory();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             stream.close();
 
-            connection = new ConnectionFactory().connect();
+            connection = factory.connect();
             statement = connection.createStatement();
             statement.executeQuery(String.format(properties.getProperty("delete.student.by.id"), studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throw new DAOException(FAILED_CONNECTION_MESSAGE);
-            }
+            factory.close(connection);
         }
     }
 
@@ -65,23 +58,20 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
+        ConnectionFactory factory = new ConnectionFactory();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             stream.close();
 
-            connection = new ConnectionFactory().connect();
+            connection = factory.connect();
             statement = connection.createStatement();
             statement.executeQuery(
                     String.format(properties.getProperty("assign.student.to.group"), groupId, studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throw new DAOException(FAILED_CONNECTION_MESSAGE);
-            }
+            factory.close(connection);
         }
     }
 }

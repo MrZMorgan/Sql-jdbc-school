@@ -96,7 +96,7 @@ public class Facade {
             studentsDAO.create(fullName);
         }
 
-        List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList, studentsDAO);
+        List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
         studentsJournal.forEach(s -> {
             try {
                 studentsDAO.assignStudentToGroup(s[1], s[0]);

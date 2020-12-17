@@ -26,12 +26,13 @@ public class DataGenerator {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
+        ConnectionFactory factory = new ConnectionFactory();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             stream.close();
 
-            connection = new ConnectionFactory().connect();
+            connection = factory.connect();
             statement = connection.createStatement();
             try {
                 statement.executeQuery(sqlDrop);
@@ -39,26 +40,19 @@ public class DataGenerator {
                 e.printStackTrace();
             }
             statement.executeQuery(sqlCreate);
-
         } catch (ClassNotFoundException | SQLException | IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throw new DAOException(FAILED_CONNECTION_MESSAGE);
-            }
+            factory.close(connection);
         }
     }
 
     private String generateGroupName(int digit) {
-        StringBuilder group = new StringBuilder();
-        group.append(generateRandomLetter());
-        group.append(generateRandomLetter());
-        group.append(HYPHEN);
-        group.append(generateRandomDigit(digit));
-        group.append(generateRandomDigit(digit));
-        return group.toString();
+        return String.valueOf(generateRandomLetter()) +
+                generateRandomLetter() +
+                HYPHEN +
+                generateRandomDigit(digit) +
+                generateRandomDigit(digit);
     }
 
     public List<String> generateGroupsNamesList() {
@@ -105,8 +99,7 @@ public class DataGenerator {
     }
 
     public List<int[]> assignStudentsToGroups(List<String> groups,
-                                       List<String> fullNamesList,
-                                       StudentsDAO dao) {
+                                       List<String> fullNamesList) {
         List<int[]> data = new LinkedList<>();
         int totalGroupSize = 0;
 

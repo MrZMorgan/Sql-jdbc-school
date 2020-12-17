@@ -12,30 +12,26 @@ import java.util.Properties;
 
 public class CoursesDAO implements CourseDAOInterface {
 
-    public static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
     public static final String SQL_RESOURCES = "resources/sql.properties";
 
     @Override
-    public <T> void create(T courseName) throws DAOException {
+    public void create(String courseName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
+        ConnectionFactory factory = new ConnectionFactory();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             stream.close();
 
-            connection = new ConnectionFactory().connect();
+            connection = factory.connect();
             statement = connection.createStatement();
             statement.executeQuery(String.format(properties.getProperty("create.course"), courseName));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throw new DAOException(FAILED_CONNECTION_MESSAGE);
-            }
+            factory.close(connection);
         }
     }
 
@@ -43,12 +39,13 @@ public class CoursesDAO implements CourseDAOInterface {
         Connection connection = null;
         Map<Integer, String> courseList = new LinkedHashMap<>();
         Properties properties = new Properties();
+        ConnectionFactory factory = new ConnectionFactory();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             stream.close();
 
-            connection = new ConnectionFactory().connect();
+            connection = factory.connect();
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.courses.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -57,11 +54,7 @@ public class CoursesDAO implements CourseDAOInterface {
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException throwables) {
-                throw new DAOException(FAILED_CONNECTION_MESSAGE);
-            }
+            factory.close(connection);
         }
         return courseList;
     }
