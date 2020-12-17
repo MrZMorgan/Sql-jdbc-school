@@ -109,7 +109,6 @@ public class DataGenerator {
                 if (totalGroupSize == 200) {
                     break ;
                 } else {
-//                    dao.assignStudentToGroup(i + 1, totalGroupSize + 1);
                     data.add(new int[] {totalGroupSize + 1, i + 1});
                     totalGroupSize++;
                 }
@@ -118,7 +117,6 @@ public class DataGenerator {
 
         if (totalGroupSize < fullNamesList.size()) {
             while (totalGroupSize < 200) {
-//                dao.assignStudentToGroup(0, totalGroupSize + 1);
                 data.add(new int[] {totalGroupSize + 1, 0});
                 totalGroupSize++;
             }

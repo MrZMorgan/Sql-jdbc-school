@@ -3,7 +3,6 @@ package ua.com.foxminded.dao;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.CourseDAOInterface;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;

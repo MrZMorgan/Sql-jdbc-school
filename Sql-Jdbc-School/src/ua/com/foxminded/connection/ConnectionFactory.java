@@ -1,7 +1,5 @@
 package ua.com.foxminded.connection;
 
-import ua.com.foxminded.exceptions.DAOException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
