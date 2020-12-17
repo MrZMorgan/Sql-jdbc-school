@@ -7,6 +7,9 @@ import ua.com.foxminded.dao.StudentsCoursesDAO;
 import ua.com.foxminded.dao.StudentsDAO;
 import ua.com.foxminded.exceptions.DAOException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 import static ua.com.foxminded.sql.Queries.*;
@@ -43,6 +46,7 @@ public class Facade {
             "Type expected group size and press \"Enter\" button";
     public final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
             "Type course name press \"Enter\" button";
+    public static final String SQL_RESOURCES = "resources/sql.properties";
 
     public final static String SPACE = " ";
 
@@ -59,10 +63,24 @@ public class Facade {
     }
 
     public void generateTestData() throws DAOException {
-        dataGenerator.generateTable(SQL_DROP_GROUPS_TABLE, SQL_CREATE_GROUPS_TABLE);
-        dataGenerator.generateTable(SQL_DROP_COURSES_TABLE,SQL_CREATE_COURSES_TABLE);
-        dataGenerator.generateTable(SQL_DROP_STUDENTS_TABLE, SQL_CREATE_STUDENTS_TABLE);
-        dataGenerator.generateTable(SQL_DROP_STUDENTS_COURSES_TABLE, SQL_CREATE_STUDENTS_COURSES_TABLE);
+        Properties properties = new Properties();
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        dataGenerator.generateTable(properties.getProperty("SQL_DROP_GROUPS_TABLE"),
+                properties.getProperty("SQL_CREATE_GROUPS_TABLE"));
+        dataGenerator.generateTable(properties.getProperty("SQL_DROP_COURSES_TABLE"),
+                properties.getProperty("SQL_CREATE_COURSES_TABLE"));
+        dataGenerator.generateTable(properties.getProperty("SQL_DROP_STUDENTS_TABLE"),
+                properties.getProperty("SQL_CREATE_STUDENTS_TABLE"));
+        dataGenerator.generateTable(properties.getProperty("SQL_DROP_STUDENTS_COURSES_TABLE"),
+                properties.getProperty("SQL_CREATE_STUDENTS_COURSES_TABLE"));
 
         List<String> groups = dataGenerator.generateGroupsNamesList();
         List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
