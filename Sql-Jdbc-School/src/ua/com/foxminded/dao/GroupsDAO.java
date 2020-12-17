@@ -5,6 +5,7 @@ import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.GroupsDAOInterface;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,13 +28,9 @@ public class GroupsDAO implements GroupsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
-            try {
-                statement.executeQuery(String.format(properties.getProperty("CREATE_GROUP"), groupName));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            statement.executeQuery(String.format(properties.getProperty("CREATE_GROUP"), groupName));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         } finally {
             try {
                 connection.close();
@@ -54,7 +51,7 @@ public class GroupsDAO implements GroupsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             PreparedStatement statement = connection.prepareStatement(
-                    String.format(properties.getProperty("GETGROUPS_BY_SIZE"), expectedGroupSize)
+                    String.format(properties.getProperty("GET_GROUPS_BY_SIZE"), expectedGroupSize)
             );
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -63,8 +60,8 @@ public class GroupsDAO implements GroupsDAOInterface {
                 groupSize[1] = resultSet.getInt("count");
                 groupsSizes.add(groupSize);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         } finally {
             try {
                 connection.close();

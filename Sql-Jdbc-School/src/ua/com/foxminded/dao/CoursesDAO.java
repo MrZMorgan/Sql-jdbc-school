@@ -5,6 +5,7 @@ import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.CourseDAOInterface;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,13 +28,9 @@ public class CoursesDAO implements CourseDAOInterface {
 
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
-            try {
-                statement.executeQuery(String.format(properties.getProperty("CREATE_COURSE"), courseName));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            statement.executeQuery(String.format(properties.getProperty("CREATE_COURSE"), courseName));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         } finally {
             try {
                 connection.close();
@@ -58,8 +55,8 @@ public class CoursesDAO implements CourseDAOInterface {
             while (resultSet.next()) {
                 courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         } finally {
             try {
                 connection.close();

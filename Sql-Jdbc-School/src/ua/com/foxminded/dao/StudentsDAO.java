@@ -4,6 +4,8 @@ import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.StudentsDAOInterface;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 
@@ -25,13 +27,9 @@ public class StudentsDAO implements StudentsDAOInterface {
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             String[] data = fullName.toString().split(" ");
-            try {
-                statement.executeQuery(String.format(properties.getProperty("CREATE_STUDENT"), data[0], data[1]));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            statement.executeQuery(String.format(properties.getProperty("CREATE_STUDENT"), data[0], data[1]));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         } finally {
             try {
                 connection.close();
@@ -52,13 +50,9 @@ public class StudentsDAO implements StudentsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
-            try {
-                statement.executeQuery(String.format(properties.getProperty("DELETE_STUDENT_BY_ID"), studentId));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            statement.executeQuery(String.format(properties.getProperty("DELETE_STUDENT_BY_ID"), studentId));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         } finally {
             try {
                 connection.close();
@@ -79,14 +73,10 @@ public class StudentsDAO implements StudentsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
-            try {
-                statement.executeQuery(
-                        String.format(properties.getProperty("ASSIGN_STUDENT_TO_GROUP"), groupId, studentId));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            statement.executeQuery(
+                    String.format(properties.getProperty("ASSIGN_STUDENT_TO_GROUP"), groupId, studentId));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
         } finally {
             try {
                 connection.close();
