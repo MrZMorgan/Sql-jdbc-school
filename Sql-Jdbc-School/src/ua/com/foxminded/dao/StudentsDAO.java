@@ -26,7 +26,7 @@ public class StudentsDAO implements StudentsDAOInterface {
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             String[] data = fullName.toString().split(" ");
-            statement.executeQuery(String.format(properties.getProperty("CREATE_STUDENT"), data[0], data[1]));
+            statement.executeQuery(String.format(properties.getProperty("create.students"), data[0], data[1]));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -49,7 +49,7 @@ public class StudentsDAO implements StudentsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
-            statement.executeQuery(String.format(properties.getProperty("DELETE_STUDENT_BY_ID"), studentId));
+            statement.executeQuery(String.format(properties.getProperty("delete.student.by.id"), studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -73,7 +73,7 @@ public class StudentsDAO implements StudentsDAOInterface {
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             statement.executeQuery(
-                    String.format(properties.getProperty("ASSIGN_STUDENT_TO_GROUP"), groupId, studentId));
+                    String.format(properties.getProperty("assign.student.to.group"), groupId, studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {

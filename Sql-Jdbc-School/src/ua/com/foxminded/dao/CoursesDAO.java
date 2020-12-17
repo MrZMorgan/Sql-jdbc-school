@@ -27,7 +27,7 @@ public class CoursesDAO implements CourseDAOInterface {
 
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
-            statement.executeQuery(String.format(properties.getProperty("CREATE_COURSE"), courseName));
+            statement.executeQuery(String.format(properties.getProperty("create.course"), courseName));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -49,7 +49,7 @@ public class CoursesDAO implements CourseDAOInterface {
             stream.close();
 
             connection = new ConnectionFactory().connect();
-            PreparedStatement statement = connection.prepareStatement(properties.getProperty("GET_COURSES_LIST"));
+            PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.courses.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 courseList.put(resultSet.getInt("id"), resultSet.getString("name"));

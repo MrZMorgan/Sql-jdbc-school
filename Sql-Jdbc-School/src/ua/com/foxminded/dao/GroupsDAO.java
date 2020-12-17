@@ -27,7 +27,7 @@ public class GroupsDAO implements GroupsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
-            statement.executeQuery(String.format(properties.getProperty("CREATE_GROUP"), groupName));
+            statement.executeQuery(String.format(properties.getProperty("create.group"), groupName));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -50,7 +50,7 @@ public class GroupsDAO implements GroupsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             PreparedStatement statement = connection.prepareStatement(
-                    String.format(properties.getProperty("GET_GROUPS_BY_SIZE"), expectedGroupSize)
+                    String.format(properties.getProperty("get.groups.by.size"), expectedGroupSize)
             );
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

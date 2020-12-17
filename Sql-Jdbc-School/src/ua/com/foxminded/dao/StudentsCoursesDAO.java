@@ -30,7 +30,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
             String[] data = rowData.toString().split(" ");
             statement.executeQuery(
                     String.format(properties.getProperty(
-                            "CREATE_STUDENT_TO_COURSES"), Integer.parseInt(data[0]), Integer.parseInt(data[1])));
+                            "create.student.to.course"), Integer.parseInt(data[0]), Integer.parseInt(data[1])));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -54,7 +54,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             statement.executeQuery(
-                    String.format(properties.getProperty("DELETE_FROM_STUDENTS_COURSES_BY_STUDENT_ID"), studentId));
+                    String.format(properties.getProperty("delete.from.students.courses.by.student.id"), studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -78,7 +78,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
             connection = new ConnectionFactory().connect();
             statement = connection.createStatement();
             statement.executeQuery(
-                    String.format(properties.getProperty("DELETE_FROM_COURSE"), studentId, courseId));
+                    String.format(properties.getProperty("delete.from.course"), studentId, courseId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         } finally {
@@ -101,7 +101,7 @@ public class StudentsCoursesDAO implements StudentsDAOInterface {
 
             connection = new ConnectionFactory().connect();
             PreparedStatement statement = connection.prepareStatement(
-                    String.format(properties.getProperty("GET_STUDENTS_RELATED_TO_COURSES"), courseName));
+                    String.format(properties.getProperty("get.students.to.courses"), courseName));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String[] groupSize = new String[2];

@@ -69,14 +69,14 @@ public class Facade {
             e.printStackTrace();
         }
 
-        dataGenerator.generateTable(properties.getProperty("SQL_DROP_GROUPS_TABLE"),
-                properties.getProperty("SQL_CREATE_GROUPS_TABLE"));
-        dataGenerator.generateTable(properties.getProperty("SQL_DROP_COURSES_TABLE"),
-                properties.getProperty("SQL_CREATE_COURSES_TABLE"));
-        dataGenerator.generateTable(properties.getProperty("SQL_DROP_STUDENTS_TABLE"),
-                properties.getProperty("SQL_CREATE_STUDENTS_TABLE"));
-        dataGenerator.generateTable(properties.getProperty("SQL_DROP_STUDENTS_COURSES_TABLE"),
-                properties.getProperty("SQL_CREATE_STUDENTS_COURSES_TABLE"));
+        dataGenerator.generateTable(properties.getProperty("drop.groups.table"),
+                properties.getProperty("create.groups.table"));
+        dataGenerator.generateTable(properties.getProperty("drop.course.table"),
+                properties.getProperty("create.course.table"));
+        dataGenerator.generateTable(properties.getProperty("drop.students.table"),
+                properties.getProperty("create.students.table"));
+        dataGenerator.generateTable(properties.getProperty("drop.students.courses.table"),
+                properties.getProperty("create.students.courses.table"));
 
         List<String> groups = dataGenerator.generateGroupsNamesList();
         List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
