@@ -59,56 +59,9 @@ public class Facade {
     }
 
     public void generateTestData() throws DAOException {
-        Properties properties = new Properties();
-        FileInputStream stream = null;
-        try {
-            stream = new FileInputStream(SQL_RESOURCES);
-            properties.load(stream);
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        createTable();
 
-        dataGenerator.generateTable(properties.getProperty("drop.groups.table"),
-                properties.getProperty("create.groups.table"));
-        dataGenerator.generateTable(properties.getProperty("drop.course.table"),
-                properties.getProperty("create.course.table"));
-        dataGenerator.generateTable(properties.getProperty("drop.students.table"),
-                properties.getProperty("create.students.table"));
-        dataGenerator.generateTable(properties.getProperty("drop.students.courses.table"),
-                properties.getProperty("create.students.courses.table"));
-
-        List<String> groups = dataGenerator.generateGroupsNamesList();
-        List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
-        List<String> firstNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/first_names");
-        List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
-        List<String> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
-
-        for (String group : groups) {
-            groupsDao.create(group);
-        }
-
-        for (String cours : courses) {
-            coursesDao.create(cours);
-        }
-
-        for (String fullName : fullNamesList) {
-            studentsDAO.create(fullName);
-        }
-
-        List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
-        studentsJournal.forEach(s -> {
-            try {
-                studentsDAO.assignStudentToGroup(s[1], s[0]);
-            } catch (DAOException e) {
-                e.printStackTrace();
-            }
-        });
-
-        List<String> assertions = dataGenerator.assignStudentsToCourses(fullNamesList, courses);
-        for (String assertion : assertions) {
-            studentsCoursesDAO.create(assertion);
-        }
+        fillTableWithTestData();
     }
 
     public void workWithDataBase() throws DAOException {
@@ -221,5 +174,56 @@ public class Facade {
         System.out.println(COURSE_ID_MESSAGE);
         info[1] = scanner.nextInt();
         return info;
+    }
+
+    public void createTable() throws DAOException {
+        Properties properties = new Properties();
+        FileInputStream stream = null;
+        try {
+            stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        dataGenerator.generateTable(properties.getProperty("drop.groups.table"),
+                properties.getProperty("create.groups.table"));
+        dataGenerator.generateTable(properties.getProperty("drop.course.table"),
+                properties.getProperty("create.course.table"));
+        dataGenerator.generateTable(properties.getProperty("drop.students.table"),
+                properties.getProperty("create.students.table"));
+        dataGenerator.generateTable(properties.getProperty("drop.students.courses.table"),
+                properties.getProperty("create.students.courses.table"));
+    }
+
+    public void fillTableWithTestData() throws DAOException {
+        List<String> groups = dataGenerator.generateGroupsNamesList();
+        List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
+        List<String> firstNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/first_names");
+        List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
+        List<String> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
+        List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
+        List<String> assertions = dataGenerator.assignStudentsToCourses(fullNamesList, courses);
+
+        for (String group : groups) {
+            groupsDao.create(group);
+        }
+
+        for (String course : courses) {
+            coursesDao.create(course);
+        }
+
+        for (String fullName : fullNamesList) {
+            studentsDAO.create(fullName);
+        }
+
+        for (int[] s : studentsJournal) {
+            studentsDAO.assignStudentToGroup(s[1], s[0]);
+        }
+
+        for (String assertion : assertions) {
+            studentsCoursesDAO.create(assertion);
+        }
     }
 }
