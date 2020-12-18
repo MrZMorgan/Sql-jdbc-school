@@ -9,19 +9,16 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
 
-    public static final String SQL_RESOURCES = "resources/sql.properties";
+    public final static String SQL_RESOURCES = "resources/sql.properties";
+    public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(StudentsCoursesDAO.class.getName());
-    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/students_courses/sc_log.log";
-
 
     @Override
-    public void create(String rowData) throws DAOException, IOException {
+    public void create(String rowData) throws DAOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -33,18 +30,19 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
 
             connection = factory.connect();
             statement = connection.createStatement();
-            String[] data = rowData.split(" ");
+            String[] data = rowData.split(SPACE);
             statement.executeQuery(
                     String.format(properties.getProperty(
                             "create.student.to.course"), Integer.parseInt(data[0]), Integer.parseInt(data[1])));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            factory.log(logFilePath, logger, throwables);
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
         } finally {
             factory.close(connection);
         }
     }
 
-    public void deleteById(int studentId) throws DAOException, IOException {
+    public void deleteById(int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -59,13 +57,14 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
             statement.executeQuery(
                     String.format(properties.getProperty("delete.from.students.courses.by.student.id"), studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            factory.log(logFilePath, logger, throwables);
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
         } finally {
             factory.close(connection);
         }
     }
 
-    public void deleteFromCourse(int studentId, int courseId) throws DAOException, IOException {
+    public void deleteFromCourse(int studentId, int courseId) throws DAOException {
         Properties properties = new Properties();
         Connection connection = null;
         Statement statement = null;
@@ -80,13 +79,14 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
             statement.executeQuery(
                     String.format(properties.getProperty("delete.from.course"), studentId, courseId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            factory.log(logFilePath, logger, throwables);
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
         } finally {
             factory.close(connection);
         }
     }
 
-    public List<String[]> getStudentsRelatedToCourses(String courseName) throws DAOException, IOException {
+    public List<String[]> getStudentsRelatedToCourses(String courseName) throws DAOException {
         Properties properties = new Properties();
         Connection connection = null;
         List<String[]> names = new LinkedList<>();
@@ -107,7 +107,8 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
                 names.add(groupSize);
             }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            factory.log(logFilePath, logger, throwables);
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
         } finally {
             factory.close(connection);
         }

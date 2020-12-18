@@ -3,25 +3,21 @@ package ua.com.foxminded.dao;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.CourseDAOInterface;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CoursesDAO implements CourseDAOInterface {
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
     private final static Logger logger = Logger.getLogger(CoursesDAO.class.getName());
-    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/courses/courses_log.log";
 
     @Override
-    public void create(String courseName) throws DAOException, IOException {
+    public void create(String courseName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -34,13 +30,14 @@ public class CoursesDAO implements CourseDAOInterface {
             statement = connection.createStatement();
             statement.executeQuery(String.format(properties.getProperty("create.course"), courseName));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            factory.log(logFilePath, logger, throwables);
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
         } finally {
             factory.close(connection);
         }
     }
 
-    public Map<Integer, String> getCoursesList() throws DAOException, IOException {
+    public Map<Integer, String> getCoursesList() throws DAOException {
         Connection connection = null;
         Map<Integer, String> courseList = new LinkedHashMap<>();
         Properties properties = new Properties();
@@ -57,7 +54,8 @@ public class CoursesDAO implements CourseDAOInterface {
                 courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
             }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            factory.log(logFilePath, logger, throwables);
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
         } finally {
             factory.close(connection);
         }

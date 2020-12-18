@@ -1,22 +1,15 @@
 package ua.com.foxminded;
 
 import ua.com.foxminded.connection.ConnectionFactory;
-import ua.com.foxminded.dao.StudentsCoursesDAO;
-import ua.com.foxminded.dao.StudentsDAO;
 import ua.com.foxminded.exceptions.DAOException;
-
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -25,10 +18,8 @@ public class DataGenerator {
     private static final String HYPHEN = "-";
     public static final String SQL_RESOURCES = "resources/sql.properties";
     private final static Logger logger = Logger.getLogger(DataGenerator.class.getName());
-    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/data_generator/dg_log.log";
 
-
-    public void generateTable(String sqlDrop, String sqlCreate) throws DAOException, IOException {
+    public void generateTable(String sqlDrop, String sqlCreate) throws DAOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -47,7 +38,8 @@ public class DataGenerator {
             }
             statement.executeQuery(sqlCreate);
         } catch (ClassNotFoundException | SQLException | IOException e) {
-            factory.log(logFilePath, logger, e);
+            e.printStackTrace();
+            logger.info(e.getMessage());
         } finally {
             factory.close(connection);
         }

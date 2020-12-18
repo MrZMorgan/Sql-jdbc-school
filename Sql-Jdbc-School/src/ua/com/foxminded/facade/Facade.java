@@ -49,7 +49,6 @@ public class Facade {
     public static final String SQL_RESOURCES = "resources/sql.properties";
     public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(Facade.class.getName());
-    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/facade/facade_log.log";
 
     public Facade(DataGenerator dataGenerator,
                   CoursesDAO coursesDao,
@@ -117,21 +116,17 @@ public class Facade {
         System.out.println();
     }
 
-    private void findStudentsRelatedToCourses() throws IOException {
+    private void findStudentsRelatedToCourses() throws DAOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENTS_RELATED_TO_COURSES_MESSAGE);
         String courseName = scanner.nextLine();
         List<String[]> strings = null;
-        try {
-            strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
-        } catch (DAOException | IOException e) {
-            new ConnectionFactory().log(logFilePath, logger, e);
-        }
+        strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
         strings.forEach(n -> System.out.println(n[0] + SPACE + n[1]));
         System.out.println();
     }
 
-    private void addNewStudent() throws DAOException, IOException {
+    private void addNewStudent() throws DAOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
         int groupId = Integer.parseInt(scanner.nextLine());
@@ -142,7 +137,7 @@ public class Facade {
         studentsDAO.create(firstName + SPACE + lastName);
     }
 
-    private void deleteStudentById() throws DAOException, IOException {
+    private void deleteStudentById() throws DAOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(DELETE_STUDENT_BY_ID_MESSAGE);
         int studentId = scanner.nextInt();
@@ -160,7 +155,7 @@ public class Facade {
         studentsCoursesDAO.deleteFromCourse(studentInfo[0], studentInfo[1]);
     }
 
-    private int[] collectInfoForQuery() throws DAOException, IOException {
+    private int[] collectInfoForQuery() throws DAOException {
         int[] info = new int[2];
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENT_ID_MESSAGE);
@@ -171,7 +166,7 @@ public class Facade {
         return info;
     }
 
-    public void createTable() throws DAOException, IOException {
+    public void createTable() throws DAOException {
         Properties properties = new Properties();
         FileInputStream stream = null;
         try {
@@ -179,7 +174,8 @@ public class Facade {
             properties.load(stream);
             stream.close();
         } catch (IOException e) {
-            new ConnectionFactory().log(logFilePath, logger, e);
+            e.printStackTrace();
+            logger.info(e.getMessage());
         }
 
         dataGenerator.generateTable(properties.getProperty("drop.groups.table"),
