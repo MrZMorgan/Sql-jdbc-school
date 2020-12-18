@@ -1,6 +1,7 @@
 package ua.com.foxminded;
 
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.StudentsCoursesDAO;
 import ua.com.foxminded.dao.StudentsDAO;
 import ua.com.foxminded.exceptions.DAOException;
 
@@ -14,15 +15,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class DataGenerator {
 
     private static final String HYPHEN = "-";
-    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
     public static final String SQL_RESOURCES = "resources/sql.properties";
+    private final static Logger logger = Logger.getLogger(DataGenerator.class.getName());
+    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/data_generator/dg_log.log";
 
-    public void generateTable(String sqlDrop, String sqlCreate) throws DAOException {
+
+    public void generateTable(String sqlDrop, String sqlCreate) throws DAOException, IOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -41,7 +47,7 @@ public class DataGenerator {
             }
             statement.executeQuery(sqlCreate);
         } catch (ClassNotFoundException | SQLException | IOException e) {
-            e.printStackTrace();
+            factory.log(logFilePath, logger, e);
         } finally {
             factory.close(connection);
         }
@@ -73,16 +79,8 @@ public class DataGenerator {
         return (char) (new Random().nextInt(26) + 'a');
     }
 
-    public List<String> readFile(String fileName) {
-        List<String> strings = new LinkedList<>();
-
-        try {
-            strings = Files.lines(Paths.get(fileName)).collect(Collectors.toList());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return strings;
+    public List<String> readFile(String fileName) throws IOException {
+        return Files.lines(Paths.get(fileName)).collect(Collectors.toList());
     }
 
     public List<String> generateFullNamesList(List<String> firstNames, List<String> lastNames) {

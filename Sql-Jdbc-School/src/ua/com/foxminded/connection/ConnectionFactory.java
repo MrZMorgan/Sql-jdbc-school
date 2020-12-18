@@ -1,13 +1,16 @@
 package ua.com.foxminded.connection;
 
 import ua.com.foxminded.exceptions.DAOException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class ConnectionFactory {
 
@@ -35,5 +38,20 @@ public class ConnectionFactory {
         } catch (SQLException throwables) {
             throw new DAOException(FAILED_CONNECTION_MESSAGE);
         }
+    }
+
+    public void log(String logFilePath, Logger logger, Exception e) {
+        FileHandler handler = null;
+        SimpleFormatter formatter = new SimpleFormatter();
+        try {
+            handler = new FileHandler(logFilePath, true);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        handler.setFormatter(formatter);
+        logger.addHandler(handler);
+        e.printStackTrace();
+        logger.log(Level.INFO, e.getMessage());
+        handler.close();
     }
 }

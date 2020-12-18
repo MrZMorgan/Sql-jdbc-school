@@ -1,6 +1,7 @@
 package ua.com.foxminded.facade;
 
 import ua.com.foxminded.DataGenerator;
+import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.dao.CoursesDAO;
 import ua.com.foxminded.dao.GroupsDAO;
 import ua.com.foxminded.dao.StudentsCoursesDAO;
@@ -9,6 +10,9 @@ import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Facade {
 
@@ -43,8 +47,9 @@ public class Facade {
     public final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
             "Type course name press \"Enter\" button";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-
     public final static String SPACE = " ";
+    private final static Logger logger = Logger.getLogger(Facade.class.getName());
+    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/facade/facade_log.log";
 
     public Facade(DataGenerator dataGenerator,
                   CoursesDAO coursesDao,
@@ -58,13 +63,7 @@ public class Facade {
         this.studentsCoursesDAO = studentsCoursesDAO;
     }
 
-    public void generateTestData() throws DAOException {
-        createTable();
-
-        fillTableWithTestData();
-    }
-
-    public void workWithDataBase() throws DAOException {
+    public void workWithDataBase() throws DAOException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(INTRO_MESSAGE);
         String command = scanner.nextLine();
@@ -108,35 +107,31 @@ public class Facade {
         }
     }
 
-    private void findGroupsWithLessOrEqualsStudentCount() {
+    private void findGroupsWithLessOrEqualsStudentCount() throws DAOException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE);
         int expectedGroupSize = scanner.nextInt();
         List<int[]> groups = null;
-        try {
-            groups = groupsDao.getGroupsBySize(expectedGroupSize);
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
+        groups = groupsDao.getGroupsBySize(expectedGroupSize);
         groups.forEach(g -> System.out.println("Group " + g[0] + " : " + g[1] + " students"));
         System.out.println();
     }
 
-    private void findStudentsRelatedToCourses() {
+    private void findStudentsRelatedToCourses() throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENTS_RELATED_TO_COURSES_MESSAGE);
         String courseName = scanner.nextLine();
         List<String[]> strings = null;
         try {
             strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
-        } catch (DAOException e) {
-            e.printStackTrace();
+        } catch (DAOException | IOException e) {
+            new ConnectionFactory().log(logFilePath, logger, e);
         }
         strings.forEach(n -> System.out.println(n[0] + SPACE + n[1]));
         System.out.println();
     }
 
-    private void addNewStudent() throws DAOException {
+    private void addNewStudent() throws DAOException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(ADD_NEW_STUDENT_ID_MESSAGE);
         int groupId = Integer.parseInt(scanner.nextLine());
@@ -147,7 +142,7 @@ public class Facade {
         studentsDAO.create(firstName + SPACE + lastName);
     }
 
-    private void deleteStudentById() throws DAOException {
+    private void deleteStudentById() throws DAOException, IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(DELETE_STUDENT_BY_ID_MESSAGE);
         int studentId = scanner.nextInt();
@@ -155,17 +150,17 @@ public class Facade {
         studentsDAO.deleteById(studentId);
     }
 
-    private void assignStudentToCourse() throws DAOException {
+    private void assignStudentToCourse() throws DAOException, IOException {
         int[] studentInfo = collectInfoForQuery();
         studentsCoursesDAO.create(studentInfo[0] + " " + studentInfo[1]);
     }
 
-    private void removeStudentFromCourse() throws DAOException {
+    private void removeStudentFromCourse() throws DAOException, IOException {
         int[] studentInfo = collectInfoForQuery();
         studentsCoursesDAO.deleteFromCourse(studentInfo[0], studentInfo[1]);
     }
 
-    private int[] collectInfoForQuery() throws DAOException {
+    private int[] collectInfoForQuery() throws DAOException, IOException {
         int[] info = new int[2];
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENT_ID_MESSAGE);
@@ -176,7 +171,7 @@ public class Facade {
         return info;
     }
 
-    public void createTable() throws DAOException {
+    public void createTable() throws DAOException, IOException {
         Properties properties = new Properties();
         FileInputStream stream = null;
         try {
@@ -184,7 +179,7 @@ public class Facade {
             properties.load(stream);
             stream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            new ConnectionFactory().log(logFilePath, logger, e);
         }
 
         dataGenerator.generateTable(properties.getProperty("drop.groups.table"),
@@ -197,7 +192,7 @@ public class Facade {
                 properties.getProperty("create.students.courses.table"));
     }
 
-    public void fillTableWithTestData() throws DAOException {
+    public void fillTableWithTestData() throws DAOException, IOException {
         List<String> groups = dataGenerator.generateGroupsNamesList();
         List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
         List<String> firstNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/first_names");

@@ -7,13 +7,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class StudentsDAO implements StudentsDAOInterface {
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
+    private final static Logger logger = Logger.getLogger(StudentsDAO.class.getName());
+    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/students/students_log.log";
 
     @Override
-    public void create(String fullName) throws DAOException {
+    public void create(String fullName) throws DAOException, IOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -28,13 +33,13 @@ public class StudentsDAO implements StudentsDAOInterface {
             String[] data = fullName.split(" ");
             statement.executeQuery(String.format(properties.getProperty("create.students"), data[0], data[1]));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+            factory.log(logFilePath, logger, throwables);
         } finally {
             factory.close(connection);
         }
     }
 
-    public void deleteById(int studentId) throws DAOException {
+    public void deleteById(int studentId) throws DAOException, IOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -48,13 +53,13 @@ public class StudentsDAO implements StudentsDAOInterface {
             statement = connection.createStatement();
             statement.executeQuery(String.format(properties.getProperty("delete.student.by.id"), studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+            factory.log(logFilePath, logger, throwables);
         } finally {
             factory.close(connection);
         }
     }
 
-    public void assignStudentToGroup(int groupId, int studentId) throws DAOException {
+    public void assignStudentToGroup(int groupId, int studentId) throws DAOException, IOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -69,7 +74,7 @@ public class StudentsDAO implements StudentsDAOInterface {
             statement.executeQuery(
                     String.format(properties.getProperty("assign.student.to.group"), groupId, studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+            factory.log(logFilePath, logger, throwables);
         } finally {
             factory.close(connection);
         }

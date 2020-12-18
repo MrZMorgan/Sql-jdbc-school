@@ -9,13 +9,18 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GroupsDAO implements GroupsDAOInterface {
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
+    private final static Logger logger = Logger.getLogger(GroupsDAO.class.getName());
+    private static final String logFilePath = "/home/egor/Документы/repositorys/sql--jdbc-school/Sql-Jdbc-School/logs/groups/groups_log.log";
 
     @Override
-    public void create(String groupName) throws DAOException {
+    public void create(String groupName) throws DAOException, IOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -29,13 +34,13 @@ public class GroupsDAO implements GroupsDAOInterface {
             statement = connection.createStatement();
             statement.executeQuery(String.format(properties.getProperty("create.group"), groupName));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+            factory.log(logFilePath, logger, throwables);
         } finally {
             factory.close(connection);
         }
     }
 
-    public List<int[]> getGroupsBySize(int expectedGroupSize) throws DAOException {
+    public List<int[]> getGroupsBySize(int expectedGroupSize) throws DAOException, IOException {
         Connection connection = null;
         Properties properties = new Properties();
         ConnectionFactory factory = new ConnectionFactory();
@@ -57,7 +62,7 @@ public class GroupsDAO implements GroupsDAOInterface {
                 groupsSizes.add(groupSize);
             }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
+            factory.log(logFilePath, logger, throwables);
         } finally {
             factory.close(connection);
         }
