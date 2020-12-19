@@ -10,13 +10,17 @@ import java.util.Properties;
 
 public class ConnectionFactory {
 
-    public final static String RESOURCE_FILE_PATH = "resources/connection.properties";
-    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
+    String resourceFilePath;
 
+    public ConnectionFactory(String resourceFilePath) {
+        this.resourceFilePath = resourceFilePath;
+    }
+
+    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
     public Connection connect() throws ClassNotFoundException, IOException {
         Properties properties = new Properties();
-        FileInputStream stream = new FileInputStream(RESOURCE_FILE_PATH);
+        FileInputStream stream = new FileInputStream(resourceFilePath);
         properties.load(stream);
         stream.close();
         Class.forName(properties.getProperty("driver"));

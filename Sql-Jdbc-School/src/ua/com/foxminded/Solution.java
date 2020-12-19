@@ -12,12 +12,13 @@ import java.util.logging.Logger;
 public class Solution {
     public static void main(String[] args) {
         Logger logger = Logger.getLogger(Facade.class.getName());
+        String connectionProperties = "resources/connection.properties";
 
-        Facade facade = new Facade(new DataGenerator(),
-                                   new CoursesDAO(),
-                                   new GroupsDAO(),
-                                   new StudentsDAO(),
-                                   new StudentsCoursesDAO());
+        Facade facade = new Facade(new DataGenerator(connectionProperties),
+                                   new CoursesDAO(connectionProperties),
+                                   new GroupsDAO(connectionProperties),
+                                   new StudentsDAO(connectionProperties),
+                                   new StudentsCoursesDAO(connectionProperties));
         try {
             facade.createTable();
             facade.fillTableWithTestData();

@@ -22,6 +22,18 @@ public class Facade {
     private final StudentsDAO studentsDAO;
     private final StudentsCoursesDAO studentsCoursesDAO;
 
+    public Facade(DataGenerator dataGenerator,
+                  CoursesDAO coursesDao,
+                  GroupsDAO groupsDao,
+                  StudentsDAO studentsDAO,
+                  StudentsCoursesDAO studentsCoursesDAO) {
+        this.dataGenerator = dataGenerator;
+        this.coursesDao = coursesDao;
+        this.groupsDao = groupsDao;
+        this.studentsDAO = studentsDAO;
+        this.studentsCoursesDAO = studentsCoursesDAO;
+    }
+
     public final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
                                                 "To find all students related to course with given name type \"courses\"\n" +
                                                 "To add new student to database type \"add\"\n" +
@@ -49,18 +61,6 @@ public class Facade {
     public static final String SQL_RESOURCES = "resources/sql.properties";
     public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(Facade.class.getName());
-
-    public Facade(DataGenerator dataGenerator,
-                  CoursesDAO coursesDao,
-                  GroupsDAO groupsDao,
-                  StudentsDAO studentsDAO,
-                  StudentsCoursesDAO studentsCoursesDAO) {
-        this.dataGenerator = dataGenerator;
-        this.coursesDao = coursesDao;
-        this.groupsDao = groupsDao;
-        this.studentsDAO = studentsDAO;
-        this.studentsCoursesDAO = studentsCoursesDAO;
-    }
 
     public void workWithDataBase() throws DAOException, IOException {
         Scanner scanner = new Scanner(System.in);

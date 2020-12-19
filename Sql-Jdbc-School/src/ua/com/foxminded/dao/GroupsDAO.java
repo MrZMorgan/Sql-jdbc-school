@@ -13,6 +13,12 @@ import java.util.logging.Logger;
 
 public class GroupsDAO implements GroupsDAOInterface {
 
+    String resourceFilePath;
+
+    public GroupsDAO(String resourceFilePath) {
+        this.resourceFilePath = resourceFilePath;
+    }
+
     public static final String SQL_RESOURCES = "resources/sql.properties";
     private final static Logger logger = Logger.getLogger(GroupsDAO.class.getName());
 
@@ -21,7 +27,7 @@ public class GroupsDAO implements GroupsDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -41,7 +47,7 @@ public class GroupsDAO implements GroupsDAOInterface {
     public List<int[]> getGroupsBySize(int expectedGroupSize) throws DAOException {
         Connection connection = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         List<int[]> groupsSizes = new LinkedList<>();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);

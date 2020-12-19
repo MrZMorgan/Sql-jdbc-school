@@ -13,6 +13,12 @@ import java.util.logging.Logger;
 
 public class StudentsDAO implements StudentsDAOInterface {
 
+    String resourceFilePath;
+
+    public StudentsDAO(String resourceFilePath) {
+        this.resourceFilePath = resourceFilePath;
+    }
+
     public static final String SQL_RESOURCES = "resources/sql.properties";
     public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(StudentsDAO.class.getName());
@@ -22,7 +28,7 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -44,7 +50,7 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -65,7 +71,7 @@ public class StudentsDAO implements StudentsDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);

@@ -13,6 +13,12 @@ import java.util.logging.Logger;
 
 public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
 
+    String resourceFilePath;
+
+    public StudentsCoursesDAO(String resourceFilePath) {
+        this.resourceFilePath = resourceFilePath;
+    }
+
     public final static String SQL_RESOURCES = "resources/sql.properties";
     public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(StudentsCoursesDAO.class.getName());
@@ -22,7 +28,7 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -46,7 +52,7 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -68,7 +74,7 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
         Properties properties = new Properties();
         Connection connection = null;
         Statement statement = null;
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -90,7 +96,7 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
         Properties properties = new Properties();
         Connection connection = null;
         List<String[]> names = new LinkedList<>();
-        ConnectionFactory factory = new ConnectionFactory();
+        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
