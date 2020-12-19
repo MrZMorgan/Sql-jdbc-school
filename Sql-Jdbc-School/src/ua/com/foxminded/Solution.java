@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class Solution {
     public static void main(String[] args) {
         Logger logger = Logger.getLogger(Facade.class.getName());
-        String connectionProperties = "resources/connection.properties";
+        String connectionProperties = "resources/postrgres_connection.properties";
 
         Facade facade = new Facade(new DataGenerator(connectionProperties),
                                    new CoursesDAO(connectionProperties),
