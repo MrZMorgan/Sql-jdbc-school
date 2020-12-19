@@ -22,7 +22,7 @@ public class DataGenerator {
     }
 
     private static final String HYPHEN = "-";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
+    public static final String SQL_RESOURCES = "src/resources/sql.properties";
     private final static Logger logger = Logger.getLogger(DataGenerator.class.getName());
 
     public void generateTable(String sqlDrop, String sqlCreate) throws DAOException {

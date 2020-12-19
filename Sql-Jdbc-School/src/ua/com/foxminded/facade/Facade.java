@@ -1,7 +1,6 @@
 package ua.com.foxminded.facade;
 
 import ua.com.foxminded.DataGenerator;
-import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.dao.CoursesDAO;
 import ua.com.foxminded.dao.GroupsDAO;
 import ua.com.foxminded.dao.StudentsCoursesDAO;
@@ -10,8 +9,6 @@ import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Facade {
@@ -58,7 +55,7 @@ public class Facade {
             "Type expected group size and press \"Enter\" button";
     public final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
             "Type course name press \"Enter\" button";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
+    public static final String SQL_RESOURCES = "src/resources/sql.properties";
     public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(Facade.class.getName());
 
