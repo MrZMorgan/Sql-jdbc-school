@@ -19,7 +19,7 @@ public class StudentsDAO implements StudentsDAOInterface {
         this.resourceFilePath = resourceFilePath;
     }
 
-    public static final String SQL_RESOURCES = "src/resources/sql.properties";
+    public static final String SQL_RESOURCES = "resources/sql.properties";
     public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(StudentsDAO.class.getName());
 

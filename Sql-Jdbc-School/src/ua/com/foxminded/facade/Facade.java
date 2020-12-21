@@ -55,7 +55,7 @@ public class Facade {
             "Type expected group size and press \"Enter\" button";
     public final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
             "Type course name press \"Enter\" button";
-    public static final String SQL_RESOURCES = "src/resources/sql.properties";
+    public static final String SQL_RESOURCES = "resources/sql.properties";
     public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(Facade.class.getName());
 

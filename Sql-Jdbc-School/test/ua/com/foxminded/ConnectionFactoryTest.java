@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConnectionFactoryTest {
 
-    private final static String connectionProperties = "src/resources/h2_connection.properties";
+    private final static String connectionProperties = "resources/h2_connection.properties";
 
     @Test
     void testConnection() throws IOException, ClassNotFoundException, SQLException {
