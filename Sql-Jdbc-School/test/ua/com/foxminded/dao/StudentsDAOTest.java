@@ -37,7 +37,9 @@ class StudentsDAOTest {
             generator.generateTable(
                     properties.getProperty("drop.students.table"),
                     properties.getProperty("create.students.table.h2.database"));
-        } catch (DAOException | IOException e) {
+            connection = factory.connect();
+            statement = connection.createStatement();
+        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -47,8 +49,6 @@ class StudentsDAOTest {
         try {
             dao.create("Egor Anchutin");
 
-            connection = factory.connect();
-            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
             String id = "";
             String firstName = "";
@@ -62,7 +62,7 @@ class StudentsDAOTest {
             assertEquals("Egor", firstName);
             assertEquals("Anchutin", lastName);
             connection.close();
-        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+        } catch (DAOException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -78,9 +78,6 @@ class StudentsDAOTest {
 
             int expectedTableSize = 2;
 
-            Connection connection = factory.connect();
-            Statement statement = connection.createStatement();
-
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
 
             int actualTableSize = 0;
@@ -89,7 +86,7 @@ class StudentsDAOTest {
             }
             assertEquals(expectedTableSize, actualTableSize);
             connection.close();
-        } catch (DAOException | IOException | ClassNotFoundException | SQLException e) {
+        } catch (DAOException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -102,9 +99,6 @@ class StudentsDAOTest {
             dao.create("Egor Anchutin");
             dao.assignStudentToGroup(groupId, studentId);
 
-            Connection connection = factory.connect();
-            Statement statement = connection.createStatement();
-
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
 
             int actualGroupId = 0;
@@ -114,7 +108,7 @@ class StudentsDAOTest {
             }
             assertEquals(groupId, actualGroupId);
             connection.close();
-        } catch (DAOException | SQLException | IOException | ClassNotFoundException e) {
+        } catch (DAOException | SQLException e) {
             e.printStackTrace();
         }
     }

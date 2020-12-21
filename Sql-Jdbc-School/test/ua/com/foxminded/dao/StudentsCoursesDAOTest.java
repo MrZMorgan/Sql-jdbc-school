@@ -48,7 +48,10 @@ class StudentsCoursesDAOTest {
             generator.generateTable(
                     properties.getProperty("drop.students.courses.table"),
                     properties.getProperty("create.students.courses.table"));
-        } catch (DAOException | IOException e) {
+
+            connection = factory.connect();
+            statement = connection.createStatement();
+        } catch (DAOException | IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -56,12 +59,7 @@ class StudentsCoursesDAOTest {
     @Test
     void shouldCreateRecordInTable() {
         try {
-            coursesDAO.create("math");
-            studentsDAO.create("Egor Anchutin");
-            studentsCoursesDAO.create("1 1");
-
-            connection = factory.connect();
-            statement = connection.createStatement();
+            generateTestData();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
             String student_id = "";
             String course_id = "";
@@ -72,7 +70,7 @@ class StudentsCoursesDAOTest {
             assertEquals("1", student_id);
             assertEquals("1", course_id);
             connection.close();
-        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+        } catch (DAOException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -80,15 +78,10 @@ class StudentsCoursesDAOTest {
     @Test
     void shouldDeleteById() {
         try {
-            coursesDAO.create("math");
-            studentsDAO.create("Egor Anchutin");
-            studentsCoursesDAO.create("1 1");
+            generateTestData();
             studentsCoursesDAO.deleteById(1);
 
             int expectedTableSize = 0;
-
-            Connection connection = factory.connect();
-            Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
 
@@ -107,13 +100,8 @@ class StudentsCoursesDAOTest {
     @Test
     void deleteFromCourse() {
         try {
-            coursesDAO.create("math");
-            studentsDAO.create("Egor Anchutin");
-            studentsCoursesDAO.create("1 1");
+            generateTestData();
             studentsCoursesDAO.deleteFromCourse(1, 1);
-
-            Connection connection = factory.connect();
-            Statement statement = connection.createStatement();
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
 
@@ -124,7 +112,7 @@ class StudentsCoursesDAOTest {
 
             assertEquals("", actualCourseId);
             connection.close();
-        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+        } catch (DAOException | SQLException e) {
             e.printStackTrace();
         }
     }
@@ -132,7 +120,7 @@ class StudentsCoursesDAOTest {
     @Test
     void getStudentsRelatedToCourses() {
         try {
-            generateData();
+            generateDataForGetStudentsRelatedToCourses();
             List<String[]> data = studentsCoursesDAO.getStudentsRelatedToCourses("math");
 
             String[] student1 = {"Mikel", "Legg"};
@@ -146,7 +134,13 @@ class StudentsCoursesDAOTest {
         }
     }
 
-    void generateData() throws DAOException {
+    void generateTestData() throws DAOException {
+        coursesDAO.create("math");
+        studentsDAO.create("Egor Anchutin");
+        studentsCoursesDAO.create("1 1");
+    }
+
+    void generateDataForGetStudentsRelatedToCourses() throws DAOException {
         studentsDAO.create("Mikel Legg");
         studentsDAO.create("Fania Battram");
         studentsDAO.create("Mikel Deetlefs");
