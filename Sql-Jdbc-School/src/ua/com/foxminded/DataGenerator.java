@@ -38,11 +38,11 @@ public class DataGenerator {
             connection = factory.connect();
             statement = connection.createStatement();
             try {
-                statement.executeQuery(sqlDrop);
+                statement.execute(sqlDrop);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            statement.executeQuery(sqlCreate);
+            statement.execute(sqlCreate);
         } catch (ClassNotFoundException | SQLException | IOException e) {
             e.printStackTrace();
             logger.info(e.getMessage());

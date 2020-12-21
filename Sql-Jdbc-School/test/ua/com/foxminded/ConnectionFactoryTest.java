@@ -1,22 +1,26 @@
 package ua.com.foxminded;
 
 import org.junit.jupiter.api.Test;
-import ua.com.foxminded.connection.ConnectionFactory;
-import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ConnectionFactoryTest {
 
-    private final static String connectionProperties = "resources/h2_connection.properties";
-
     @Test
-    void testConnection() throws IOException, ClassNotFoundException, SQLException {
-        ConnectionFactory factory = new ConnectionFactory(connectionProperties);
-        Connection connection = factory.connect();
+    void testConnection() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(
+                    "jdbc:h2:~/schooltest;DATABASE_TO_UPPER=false;",
+                    "user",
+                    "1234");
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         assertNotNull(connection);
-        connection.close();
     }
 }

@@ -177,8 +177,8 @@ public class Facade {
 
         dataGenerator.generateTable(properties.getProperty("drop.groups.table"),
                 properties.getProperty("create.groups.table"));
-        dataGenerator.generateTable(properties.getProperty("drop.course.table"),
-                properties.getProperty("create.course.table"));
+        dataGenerator.generateTable(properties.getProperty("drop.courses.table"),
+                properties.getProperty("create.courses.table"));
         dataGenerator.generateTable(properties.getProperty("drop.students.table"),
                 properties.getProperty("create.students.table"));
         dataGenerator.generateTable(properties.getProperty("drop.students.courses.table"),
