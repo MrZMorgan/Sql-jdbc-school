@@ -84,7 +84,7 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
 
             connection = factory.connect();
             statement = connection.createStatement();
-            statement.executeQuery(
+            statement.execute(
                     String.format(properties.getProperty("delete.from.course"), studentId, courseId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

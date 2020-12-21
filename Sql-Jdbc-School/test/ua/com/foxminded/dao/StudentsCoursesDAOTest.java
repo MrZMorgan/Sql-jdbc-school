@@ -102,11 +102,32 @@ class StudentsCoursesDAOTest {
             e.printStackTrace();
         }
     }
-//
-//    @Test
-//    void deleteFromCourse() {
-//    }
-//
+
+    @Test
+    void deleteFromCourse() {
+        try {
+            coursesDAO.create("math");
+            studentsDAO.create("Egor Anchutin");
+            studentsCoursesDAO.create("1 1");
+            studentsCoursesDAO.deleteFromCourse(1, 1);
+
+            Connection connection = factory.connect();
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
+
+            String actualCourseId = "";
+            while (resultSet.next()) {
+                actualCourseId = String.valueOf(resultSet.getInt("COURSE_ID"));
+            }
+
+            assertEquals("", actualCourseId);
+            connection.close();
+        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 //    @Test
 //    void getStudentsRelatedToCourses() {
 //    }
