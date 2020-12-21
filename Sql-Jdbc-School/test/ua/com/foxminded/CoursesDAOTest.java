@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class CoursesDAOTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private CoursesDAO dao = new CoursesDAO(SQL_RESOURCES);
-    ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
+    private final CoursesDAO dao = new CoursesDAO(CONNECTION_PROPERTIES);
+    private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
 
     @BeforeEach
     void createTable() {
@@ -40,18 +40,10 @@ class CoursesDAOTest {
 
     @Test
     void shouldCreateNewCourse() {
-        Connection connectionToCreate = null;
         Connection connectionToCheck = null;
-        Statement statementToCreate = null;
         Statement statementToCheck = null;
-        Properties properties = new Properties();
         try {
-            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
-            properties.load(stream);
-            connectionToCreate = factory.connect();
-            statementToCreate = connectionToCreate.createStatement();
-            statementToCreate.execute(String.format(properties.getProperty("create.course.h2"), "math"));
-            connectionToCreate.close();
+            dao.create("math");
 
             connectionToCheck = factory.connect();
             statementToCheck = connectionToCheck.createStatement();
@@ -64,12 +56,14 @@ class CoursesDAOTest {
             }
             assertEquals(id, "1");
             assertEquals(name, "math");
-        } catch (ClassNotFoundException | SQLException | IOException e) {
+            connectionToCheck.close();
+        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-//    @Test
-//    void getCoursesList() {
-//    }
+    @Test
+    void getCoursesList() {
+
+    }
 }
