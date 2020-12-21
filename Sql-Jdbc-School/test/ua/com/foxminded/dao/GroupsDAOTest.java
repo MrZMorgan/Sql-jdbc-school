@@ -77,37 +77,42 @@ class GroupsDAOTest {
     @Test
     void getGroupsBySize() {
         try {
-            studentsDAO.create("Mikel Legg");
-            studentsDAO.create("Fania Battram");
-            studentsDAO.create("Mikel Deetlefs");
-            studentsDAO.create("Gunther Skedgell");
-            studentsDAO.create("Reed Rentoll");
-            studentsDAO.create("Kylie Godfroy");
-            studentsDAO.create("Enrique Laurence");
-            studentsDAO.create("Enrique Soal");
-            studentsDAO.create("Jerrie Josefsson");
-            studentsDAO.create("Leyla Skedgell");
+            generateData();
 
-            studentsDAO.assignStudentToGroup(1, 1);
-            studentsDAO.assignStudentToGroup(1, 2);
-            studentsDAO.assignStudentToGroup(1, 3);
-            studentsDAO.assignStudentToGroup(2, 4);
-            studentsDAO.assignStudentToGroup(2, 5);
-            studentsDAO.assignStudentToGroup(3, 6);
-            studentsDAO.assignStudentToGroup(3, 7);
-            studentsDAO.assignStudentToGroup(3, 8);
-            studentsDAO.assignStudentToGroup(3, 9);
-            studentsDAO.assignStudentToGroup(1, 10);
+            List<int[]> actualGroupsSizeList = groupsDAO.getGroupsBySize(3);
 
+            int groupId = 2;
+            int groupSize = 2;
 
-            List<int[]> actual = groupsDAO.getGroupsBySize(3);
-            List<int[]> expected = new LinkedList<>();
-            expected.add(new int[] {2, 2});
-
-            assertEquals(expected, actual);
+            assertEquals(groupId, actualGroupsSizeList.get(0)[0]);
+            assertEquals(groupSize, actualGroupsSizeList.get(0)[1]);
             connection.close();
-        } catch (DAOException | SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    void generateData() throws DAOException {
+        studentsDAO.create("Mikel Legg");
+        studentsDAO.create("Fania Battram");
+        studentsDAO.create("Mikel Deetlefs");
+        studentsDAO.create("Gunther Skedgell");
+        studentsDAO.create("Reed Rentoll");
+        studentsDAO.create("Kylie Godfroy");
+        studentsDAO.create("Enrique Laurence");
+        studentsDAO.create("Enrique Soal");
+        studentsDAO.create("Jerrie Josefsson");
+        studentsDAO.create("Leyla Skedgell");
+
+        studentsDAO.assignStudentToGroup(1, 1);
+        studentsDAO.assignStudentToGroup(1, 2);
+        studentsDAO.assignStudentToGroup(1, 3);
+        studentsDAO.assignStudentToGroup(2, 4);
+        studentsDAO.assignStudentToGroup(2, 5);
+        studentsDAO.assignStudentToGroup(3, 6);
+        studentsDAO.assignStudentToGroup(3, 7);
+        studentsDAO.assignStudentToGroup(3, 8);
+        studentsDAO.assignStudentToGroup(3, 9);
+        studentsDAO.assignStudentToGroup(1, 10);
     }
 }

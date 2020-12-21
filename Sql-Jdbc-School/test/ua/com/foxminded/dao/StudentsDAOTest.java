@@ -66,4 +66,31 @@ class StudentsDAOTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void shouldDeleteStudentById() {
+        try {
+            dao.create("Egor Anchutin");
+            dao.create("Zach Morgan");
+            dao.create("York Morgan");
+
+            dao.deleteById(1);
+
+            int expectedTableSize = 2;
+
+            Connection connection = factory.connect();
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
+
+            int actualTableSize = 0;
+            while (resultSet.next()) {
+                actualTableSize++;
+            }
+            assertEquals(expectedTableSize, actualTableSize);
+            connection.close();
+        } catch (DAOException | IOException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
