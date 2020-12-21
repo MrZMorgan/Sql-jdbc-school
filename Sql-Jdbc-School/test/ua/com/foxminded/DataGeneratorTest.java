@@ -40,7 +40,7 @@ class DataGeneratorTest {
         try {
             connection = factory.connect();
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM courses");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM courses;");
             ResultSetMetaData metaData = resultSet.getMetaData();
             assertEquals("ID", metaData.getColumnName(1));
             assertEquals("NAME", metaData.getColumnName(2));

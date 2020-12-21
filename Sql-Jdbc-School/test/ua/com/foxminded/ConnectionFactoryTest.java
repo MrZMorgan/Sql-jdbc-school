@@ -19,10 +19,10 @@ class ConnectionFactoryTest {
         Connection connection = null;
         try {
             connection = factory.connect();
+            assertNotNull(connection);
             connection.close();
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
         }
-        assertNotNull(connection);
     }
 }
