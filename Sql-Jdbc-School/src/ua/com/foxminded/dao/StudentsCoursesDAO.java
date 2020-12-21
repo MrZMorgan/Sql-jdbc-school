@@ -37,9 +37,11 @@ public class StudentsCoursesDAO implements StudentsCoursesDAOInterface {
             connection = factory.connect();
             statement = connection.createStatement();
             String[] data = rowData.split(SPACE);
-            statement.executeQuery(
-                    String.format(properties.getProperty(
-                            "create.student.to.course"), Integer.parseInt(data[0]), Integer.parseInt(data[1])));
+            statement.execute(
+                    String.format(
+                            properties.getProperty("create.student.to.course"),
+                            Integer.parseInt(data[0]), Integer.parseInt(data[1]))
+            );
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
