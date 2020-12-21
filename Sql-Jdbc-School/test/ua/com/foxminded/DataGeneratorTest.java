@@ -1,6 +1,7 @@
 package ua.com.foxminded;
 
 import org.junit.jupiter.api.*;
+import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.FileInputStream;
@@ -33,10 +34,11 @@ class DataGeneratorTest {
 
     @Test
     void shouldVerifyTableCreated() {
+        ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
         Statement statement = null;
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:h2:~/schooltest", "user", "1234");
+            connection = factory.connect();
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM courses");
             ResultSetMetaData metaData = resultSet.getMetaData();
@@ -44,7 +46,7 @@ class DataGeneratorTest {
             assertEquals("NAME", metaData.getColumnName(2));
             assertEquals("DESCRIPTION", metaData.getColumnName(3));
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
