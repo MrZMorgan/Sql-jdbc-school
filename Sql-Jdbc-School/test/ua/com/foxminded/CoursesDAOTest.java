@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,7 +65,30 @@ class CoursesDAOTest {
     }
 
     @Test
-    void getCoursesList() {
+    void shouldGetCoursesList() {
+        Connection connectionToCheck = null;
+        Statement statementToCheck = null;
+        List<String> expectedGroupsList = new LinkedList<>();
+        expectedGroupsList.add("1 math");
+        expectedGroupsList.add("2 geometry");
+        expectedGroupsList.add("3 biology");
+        try {
+            dao.create("math");
+            dao.create("geometry");
+            dao.create("biology");
 
+            connectionToCheck = factory.connect();
+            statementToCheck = connectionToCheck.createStatement();
+            ResultSet resultSet = statementToCheck.executeQuery("SELECT * FROM courses;");
+            List<String> actualCoursesList = new LinkedList<>();
+            while (resultSet.next()) {
+                actualCoursesList.add(resultSet.getString("ID") + " "
+                        + resultSet.getString("NAME"));
+            }
+            assertEquals(expectedGroupsList, actualCoursesList);
+            connectionToCheck.close();
+        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
