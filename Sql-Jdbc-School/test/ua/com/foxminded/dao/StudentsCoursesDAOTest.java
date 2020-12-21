@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -128,7 +129,47 @@ class StudentsCoursesDAOTest {
         }
     }
 
-//    @Test
-//    void getStudentsRelatedToCourses() {
-//    }
+    @Test
+    void getStudentsRelatedToCourses() {
+        try {
+            generateData();
+            List<String[]> data = studentsCoursesDAO.getStudentsRelatedToCourses("math");
+
+            String[] student1 = {"Mikel", "Legg"};
+            String[] student2 = {"Mikel", "Deetlefs"};
+
+            assertEquals(student1[0] + student1[1], data.get(0)[0] + data.get(0)[1]);
+            assertEquals(student2[0] + student2[1], data.get(1)[0] + data.get(1)[1]);
+
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void generateData() throws DAOException {
+        studentsDAO.create("Mikel Legg");
+        studentsDAO.create("Fania Battram");
+        studentsDAO.create("Mikel Deetlefs");
+        studentsDAO.create("Gunther Skedgell");
+        studentsDAO.create("Reed Rentoll");
+        studentsDAO.create("Kylie Godfroy");
+        studentsDAO.create("Enrique Laurence");
+        studentsDAO.create("Enrique Soal");
+        studentsDAO.create("Jerrie Josefsson");
+        studentsDAO.create("Leyla Skedgell");
+
+        coursesDAO.create("math");
+        coursesDAO.create("economy");
+
+        studentsCoursesDAO.create("1 1");
+        studentsCoursesDAO.create("2 2");
+        studentsCoursesDAO.create("3 1");
+        studentsCoursesDAO.create("4 2");
+        studentsCoursesDAO.create("5 2");
+        studentsCoursesDAO.create("6 2");
+        studentsCoursesDAO.create("7 2");
+        studentsCoursesDAO.create("8 2");
+        studentsCoursesDAO.create("9 2");
+        studentsCoursesDAO.create("10 2");
+    }
 }
