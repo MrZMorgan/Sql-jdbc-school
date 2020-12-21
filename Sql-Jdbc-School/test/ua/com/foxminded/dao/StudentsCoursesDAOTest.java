@@ -76,9 +76,32 @@ class StudentsCoursesDAOTest {
         }
     }
 
-//    @Test
-//    void deleteById() {
-//    }
+    @Test
+    void shouldDeleteById() {
+        try {
+            coursesDAO.create("math");
+            studentsDAO.create("Egor Anchutin");
+            studentsCoursesDAO.create("1 1");
+            studentsCoursesDAO.deleteById(1);
+
+            int expectedTableSize = 0;
+
+            Connection connection = factory.connect();
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
+
+            int actualTableSize = 0;
+            while (resultSet.next()) {
+                actualTableSize++;
+            }
+
+            assertEquals(expectedTableSize, actualTableSize);
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 //
 //    @Test
 //    void deleteFromCourse() {
