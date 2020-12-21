@@ -77,7 +77,7 @@ public class StudentsDAO implements StudentsDAOInterface {
 
             connection = factory.connect();
             statement = connection.createStatement();
-            statement.executeQuery(
+            statement.execute(
                     String.format(properties.getProperty("assign.student.to.group"), groupId, studentId));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

@@ -27,12 +27,12 @@ class StudentsCoursesDAOTest {
     private final CoursesDAO coursesDAO = new CoursesDAO(CONNECTION_PROPERTIES);
     private final StudentsDAO studentsDAO = new StudentsDAO(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
+    private final DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
     Connection connection = null;
     Statement statement = null;
 
     @BeforeEach
     void createTable() {
-        DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
         Properties properties = new Properties();
         FileInputStream stream = null;
         try {
