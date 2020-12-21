@@ -57,8 +57,8 @@ class CoursesDAOTest {
                 id = resultSet.getString("ID");
                 name = resultSet.getString("NAME");
             }
-            assertEquals(id, "1");
-            assertEquals(name, "math");
+            assertEquals("1", id);
+            assertEquals("math", name);
             connection.close();
         } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();

@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StudentsDAO implements StudentsDAOInterface {
@@ -37,7 +35,7 @@ public class StudentsDAO implements StudentsDAOInterface {
             connection = factory.connect();
             statement = connection.createStatement();
             String[] data = fullName.split(SPACE);
-            statement.executeQuery(String.format(properties.getProperty("create.students"), data[0], data[1]));
+            statement.execute(String.format(properties.getProperty("create.student"), data[0], data[1]));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
