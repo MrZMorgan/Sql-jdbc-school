@@ -1,7 +1,8 @@
-package ua.com.foxminded;
+package ua.com.foxminded.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.dao.CoursesDAO;
 import ua.com.foxminded.dao.StudentsCoursesDAO;

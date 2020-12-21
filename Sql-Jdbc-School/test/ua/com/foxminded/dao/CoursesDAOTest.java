@@ -1,7 +1,8 @@
-package ua.com.foxminded;
+package ua.com.foxminded.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.dao.CoursesDAO;
 import ua.com.foxminded.dao.GroupsDAO;
@@ -13,16 +14,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GroupsDAOTest {
+class CoursesDAOTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final GroupsDAO dao = new GroupsDAO(CONNECTION_PROPERTIES);
+    private final CoursesDAO dao = new CoursesDAO(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     Connection connection = null;
     Statement statement = null;
@@ -36,21 +35,21 @@ class GroupsDAOTest {
             stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             generator.generateTable(
-                    properties.getProperty("drop.groups.table"),
-                    properties.getProperty("create.groups.table.h2.database"));
+                    properties.getProperty("drop.courses.table"),
+                    properties.getProperty("create.courses.table.h2.database"));
         } catch (DAOException | IOException e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    void shouldCreateGroup() {
+    void shouldCreateNewCourse() {
         try {
-            dao.create("gs-58");
+            dao.create("math");
 
             connection = factory.connect();
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM groups;");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM courses;");
             String id = "";
             String name = "";
             while (resultSet.next()) {
@@ -58,9 +57,27 @@ class GroupsDAOTest {
                 name = resultSet.getString("NAME");
             }
             assertEquals("1", id);
-            assertEquals("gs-58", name);
+            assertEquals("math", name);
             connection.close();
         } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void shouldGetCoursesList() {
+        Map<Integer, String> expectedGroupsMap = new LinkedHashMap<>();
+        expectedGroupsMap.put(1, "math");
+        expectedGroupsMap.put(2, "geometry");
+        expectedGroupsMap.put(3, "biology");
+        try {
+            dao.create("math");
+            dao.create("geometry");
+            dao.create("biology");
+
+            Map<Integer, String> actualCoursesMap = dao.getCoursesList();
+            assertEquals(expectedGroupsMap, actualCoursesMap);
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }
