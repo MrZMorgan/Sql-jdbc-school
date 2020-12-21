@@ -93,4 +93,29 @@ class StudentsDAOTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void shouldAssignStudentToGroup() {
+        try {
+            int groupId = 1;
+            int studentId = 1;
+            dao.create("Egor Anchutin");
+            dao.assignStudentToGroup(groupId, studentId);
+
+            Connection connection = factory.connect();
+            Statement statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
+
+            int actualGroupId = 0;
+            while (resultSet.next()) {
+                actualGroupId = resultSet.getInt("GROUP_ID");
+                System.out.println(groupId);
+            }
+            assertEquals(groupId, actualGroupId);
+            connection.close();
+        } catch (DAOException | SQLException | IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
