@@ -35,7 +35,7 @@ public class GroupsDAO implements GroupsDAOInterface {
 
             connection = factory.connect();
             statement = connection.createStatement();
-            statement.executeQuery(String.format(properties.getProperty("create.group"), groupName));
+            statement.execute(String.format(properties.getProperty("create.group"), groupName));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
