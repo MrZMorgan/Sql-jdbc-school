@@ -1,10 +1,10 @@
 package ua.com.foxminded.facade;
 
 import ua.com.foxminded.DataGenerator;
-import ua.com.foxminded.dao.CoursesDAO;
-import ua.com.foxminded.dao.GroupsDAO;
-import ua.com.foxminded.dao.StudentsCoursesDAO;
-import ua.com.foxminded.dao.StudentsDAO;
+import ua.com.foxminded.dao.CoursesJdbcDao;
+import ua.com.foxminded.dao.GroupsJdbcDao;
+import ua.com.foxminded.dao.StudentsCoursesJdbcDao;
+import ua.com.foxminded.dao.StudentsJdbcDao;
 import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,21 +14,21 @@ import java.util.logging.Logger;
 public class Facade {
 
     private final DataGenerator dataGenerator;
-    private final CoursesDAO coursesDao;
-    private final GroupsDAO groupsDao;
-    private final StudentsDAO studentsDAO;
-    private final StudentsCoursesDAO studentsCoursesDAO;
+    private final CoursesJdbcDao coursesJdbcDao;
+    private final GroupsJdbcDao groupsJdbcDao;
+    private final StudentsJdbcDao studentsJdbcDao;
+    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao;
 
     public Facade(DataGenerator dataGenerator,
-                  CoursesDAO coursesDao,
-                  GroupsDAO groupsDao,
-                  StudentsDAO studentsDAO,
-                  StudentsCoursesDAO studentsCoursesDAO) {
+                  CoursesJdbcDao coursesJdbcDao,
+                  GroupsJdbcDao groupsJdbcDao,
+                  StudentsJdbcDao studentsJdbcDao,
+                  StudentsCoursesJdbcDao studentsCoursesJdbcDao) {
         this.dataGenerator = dataGenerator;
-        this.coursesDao = coursesDao;
-        this.groupsDao = groupsDao;
-        this.studentsDAO = studentsDAO;
-        this.studentsCoursesDAO = studentsCoursesDAO;
+        this.coursesJdbcDao = coursesJdbcDao;
+        this.groupsJdbcDao = groupsJdbcDao;
+        this.studentsJdbcDao = studentsJdbcDao;
+        this.studentsCoursesJdbcDao = studentsCoursesJdbcDao;
     }
 
     public final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
@@ -108,7 +108,7 @@ public class Facade {
         System.out.println(GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE);
         int expectedGroupSize = scanner.nextInt();
         List<int[]> groups = null;
-        groups = groupsDao.getGroupsBySize(expectedGroupSize);
+        groups = groupsJdbcDao.getGroupsBySize(expectedGroupSize);
         groups.forEach(g -> System.out.println("Group " + g[0] + " : " + g[1] + " students"));
         System.out.println();
     }
@@ -118,7 +118,7 @@ public class Facade {
         System.out.println(STUDENTS_RELATED_TO_COURSES_MESSAGE);
         String courseName = scanner.nextLine();
         List<String[]> strings = null;
-        strings = studentsCoursesDAO.getStudentsRelatedToCourses(courseName);
+        strings = studentsCoursesJdbcDao.getStudentsRelatedToCourses(courseName);
         strings.forEach(n -> System.out.println(n[0] + SPACE + n[1]));
         System.out.println();
     }
@@ -131,25 +131,25 @@ public class Facade {
         String firstName = scanner.nextLine();
         System.out.println(ADD_NEW_STUDENT_LAST_NAME_MESSAGE);
         String lastName = scanner.nextLine();
-        studentsDAO.create(firstName + SPACE + lastName);
+        studentsJdbcDao.create(firstName + SPACE + lastName);
     }
 
     private void deleteStudentById() throws DAOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println(DELETE_STUDENT_BY_ID_MESSAGE);
         int studentId = scanner.nextInt();
-        studentsCoursesDAO.deleteById(studentId);
-        studentsDAO.deleteById(studentId);
+        studentsCoursesJdbcDao.deleteById(studentId);
+        studentsJdbcDao.deleteById(studentId);
     }
 
     private void assignStudentToCourse() throws DAOException, IOException {
         int[] studentInfo = collectInfoForQuery();
-        studentsCoursesDAO.create(studentInfo[0] + " " + studentInfo[1]);
+        studentsCoursesJdbcDao.create(studentInfo[0] + " " + studentInfo[1]);
     }
 
     private void removeStudentFromCourse() throws DAOException, IOException {
         int[] studentInfo = collectInfoForQuery();
-        studentsCoursesDAO.deleteFromCourse(studentInfo[0], studentInfo[1]);
+        studentsCoursesJdbcDao.deleteFromCourse(studentInfo[0], studentInfo[1]);
     }
 
     private int[] collectInfoForQuery() throws DAOException {
@@ -157,7 +157,7 @@ public class Facade {
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENT_ID_MESSAGE);
         info[0] = scanner.nextInt();
-        coursesDao.getCoursesList().forEach((id, name) -> System.out.println("Course id: " + id + " - " + name));
+        coursesJdbcDao.getCoursesList().forEach((id, name) -> System.out.println("Course id: " + id + " - " + name));
         System.out.println(COURSE_ID_MESSAGE);
         info[1] = scanner.nextInt();
         return info;
@@ -195,23 +195,23 @@ public class Facade {
         List<String> assertions = dataGenerator.assignStudentsToCourses(fullNamesList, courses);
 
         for (String group : groups) {
-            groupsDao.create(group);
+            groupsJdbcDao.create(group);
         }
 
         for (String course : courses) {
-            coursesDao.create(course);
+            coursesJdbcDao.create(course);
         }
 
         for (String fullName : fullNamesList) {
-            studentsDAO.create(fullName);
+            studentsJdbcDao.create(fullName);
         }
 
         for (int[] s : studentsJournal) {
-            studentsDAO.assignStudentToGroup(s[1], s[0]);
+            studentsJdbcDao.assignStudentToGroup(s[1], s[0]);
         }
 
         for (String assertion : assertions) {
-            studentsCoursesDAO.create(assertion);
+            studentsCoursesJdbcDao.create(assertion);
         }
     }
 }

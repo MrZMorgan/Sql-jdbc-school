@@ -4,7 +4,7 @@ import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.IOException;
 
-public interface CourseDAOInterface extends GenericDAO <String> {
+public interface CourseDAO extends GenericDAO <String> {
     @Override
     void create(String courseName) throws DAOException, IOException;
 }

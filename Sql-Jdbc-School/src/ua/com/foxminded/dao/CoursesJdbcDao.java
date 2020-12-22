@@ -2,27 +2,28 @@ package ua.com.foxminded.dao;
 
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
-import ua.com.foxminded.interfaces.StudentsDAOInterface;
+import ua.com.foxminded.interfaces.CourseDAO;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class StudentsDAO implements StudentsDAOInterface {
+public class CoursesJdbcDao implements CourseDAO {
 
     String resourceFilePath;
 
-    public StudentsDAO(String resourceFilePath) {
+    public CoursesJdbcDao(String resourceFilePath) {
         this.resourceFilePath = resourceFilePath;
     }
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    public final static String SPACE = " ";
-    private final static Logger logger = Logger.getLogger(StudentsDAO.class.getName());
+    private final static Logger logger = Logger.getLogger(CoursesJdbcDao.class.getName());
 
     @Override
-    public void create(String fullName) throws DAOException {
+    public void create(String courseName) throws DAOException {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
@@ -31,11 +32,9 @@ public class StudentsDAO implements StudentsDAOInterface {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
             stream.close();
-
             connection = factory.connect();
             statement = connection.createStatement();
-            String[] data = fullName.split(SPACE);
-            statement.execute(String.format(properties.getProperty("create.student"), data[0], data[1]));
+            statement.execute(String.format(properties.getProperty("create.course"), courseName));
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
@@ -44,9 +43,9 @@ public class StudentsDAO implements StudentsDAOInterface {
         }
     }
 
-    public void deleteById(int studentId) throws DAOException {
+    public Map<Integer, String> getCoursesList() throws DAOException {
         Connection connection = null;
-        Statement statement = null;
+        Map<Integer, String> courseList = new LinkedHashMap<>();
         Properties properties = new Properties();
         ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
@@ -55,35 +54,17 @@ public class StudentsDAO implements StudentsDAOInterface {
             stream.close();
 
             connection = factory.connect();
-            statement = connection.createStatement();
-            statement.execute(String.format(properties.getProperty("delete.student.by.id"), studentId));
+            PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.courses.list"));
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
+            }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
             factory.close(connection);
         }
-    }
-
-    public void assignStudentToGroup(int groupId, int studentId) throws DAOException {
-        Connection connection = null;
-        Statement statement = null;
-        Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
-        try {
-            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
-            properties.load(stream);
-            stream.close();
-
-            connection = factory.connect();
-            statement = connection.createStatement();
-            statement.execute(
-                    String.format(properties.getProperty("assign.student.to.group"), groupId, studentId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
-            throwables.printStackTrace();
-            logger.info(throwables.getMessage());
-        } finally {
-            factory.close(connection);
-        }
+        return courseList;
     }
 }

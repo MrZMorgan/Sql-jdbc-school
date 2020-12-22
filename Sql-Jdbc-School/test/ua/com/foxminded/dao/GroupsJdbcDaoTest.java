@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
-import ua.com.foxminded.dao.CoursesDAO;
-import ua.com.foxminded.dao.GroupsDAO;
 import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.FileInputStream;
@@ -14,18 +12,17 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GroupsDAOTest {
+class GroupsJdbcDaoTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final GroupsDAO groupsDAO = new GroupsDAO(CONNECTION_PROPERTIES);
-    private final StudentsDAO studentsDAO = new StudentsDAO(CONNECTION_PROPERTIES);
-    private final StudentsCoursesDAO studentsCoursesDAO = new StudentsCoursesDAO(CONNECTION_PROPERTIES);
+    private final GroupsJdbcDao groupsJdbcDao = new GroupsJdbcDao(CONNECTION_PROPERTIES);
+    private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(CONNECTION_PROPERTIES);
+    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
     Connection connection = null;
@@ -55,7 +52,7 @@ class GroupsDAOTest {
     @Test
     void shouldCreateGroup() {
         try {
-            groupsDAO.create("gs-58");
+            groupsJdbcDao.create("gs-58");
 
             connection = factory.connect();
             statement = connection.createStatement();
@@ -79,7 +76,7 @@ class GroupsDAOTest {
         try {
             generateData();
 
-            List<int[]> actualGroupsSizeList = groupsDAO.getGroupsBySize(3);
+            List<int[]> actualGroupsSizeList = groupsJdbcDao.getGroupsBySize(3);
 
             int groupId = 2;
             int groupSize = 2;
@@ -93,26 +90,26 @@ class GroupsDAOTest {
     }
 
     void generateData() throws DAOException {
-        studentsDAO.create("Mikel Legg");
-        studentsDAO.create("Fania Battram");
-        studentsDAO.create("Mikel Deetlefs");
-        studentsDAO.create("Gunther Skedgell");
-        studentsDAO.create("Reed Rentoll");
-        studentsDAO.create("Kylie Godfroy");
-        studentsDAO.create("Enrique Laurence");
-        studentsDAO.create("Enrique Soal");
-        studentsDAO.create("Jerrie Josefsson");
-        studentsDAO.create("Leyla Skedgell");
+        studentsJdbcDao.create("Mikel Legg");
+        studentsJdbcDao.create("Fania Battram");
+        studentsJdbcDao.create("Mikel Deetlefs");
+        studentsJdbcDao.create("Gunther Skedgell");
+        studentsJdbcDao.create("Reed Rentoll");
+        studentsJdbcDao.create("Kylie Godfroy");
+        studentsJdbcDao.create("Enrique Laurence");
+        studentsJdbcDao.create("Enrique Soal");
+        studentsJdbcDao.create("Jerrie Josefsson");
+        studentsJdbcDao.create("Leyla Skedgell");
 
-        studentsDAO.assignStudentToGroup(1, 1);
-        studentsDAO.assignStudentToGroup(1, 2);
-        studentsDAO.assignStudentToGroup(1, 3);
-        studentsDAO.assignStudentToGroup(2, 4);
-        studentsDAO.assignStudentToGroup(2, 5);
-        studentsDAO.assignStudentToGroup(3, 6);
-        studentsDAO.assignStudentToGroup(3, 7);
-        studentsDAO.assignStudentToGroup(3, 8);
-        studentsDAO.assignStudentToGroup(3, 9);
-        studentsDAO.assignStudentToGroup(1, 10);
+        studentsJdbcDao.assignStudentToGroup(1, 1);
+        studentsJdbcDao.assignStudentToGroup(1, 2);
+        studentsJdbcDao.assignStudentToGroup(1, 3);
+        studentsJdbcDao.assignStudentToGroup(2, 4);
+        studentsJdbcDao.assignStudentToGroup(2, 5);
+        studentsJdbcDao.assignStudentToGroup(3, 6);
+        studentsJdbcDao.assignStudentToGroup(3, 7);
+        studentsJdbcDao.assignStudentToGroup(3, 8);
+        studentsJdbcDao.assignStudentToGroup(3, 9);
+        studentsJdbcDao.assignStudentToGroup(1, 10);
     }
 }

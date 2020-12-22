@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
-import ua.com.foxminded.dao.GroupsDAO;
-import ua.com.foxminded.dao.StudentsDAO;
 import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.FileInputStream;
@@ -18,10 +16,10 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StudentsDAOTest {
+class StudentsJdbcDaoTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final StudentsDAO dao = new StudentsDAO(CONNECTION_PROPERTIES);
+    private final StudentsJdbcDao dao = new StudentsJdbcDao(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
     Connection connection = null;

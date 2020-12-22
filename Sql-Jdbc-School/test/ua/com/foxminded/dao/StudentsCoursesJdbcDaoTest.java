@@ -4,9 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
-import ua.com.foxminded.dao.CoursesDAO;
-import ua.com.foxminded.dao.StudentsCoursesDAO;
-import ua.com.foxminded.dao.StudentsDAO;
 import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.FileInputStream;
@@ -20,13 +17,13 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StudentsCoursesDAOTest {
+class StudentsCoursesJdbcDaoTest {
 
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final StudentsCoursesDAO studentsCoursesDAO = new StudentsCoursesDAO(CONNECTION_PROPERTIES);
-    private final CoursesDAO coursesDAO = new CoursesDAO(CONNECTION_PROPERTIES);
-    private final StudentsDAO studentsDAO = new StudentsDAO(CONNECTION_PROPERTIES);
+    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(CONNECTION_PROPERTIES);
+    private final CoursesJdbcDao coursesJdbcDao = new CoursesJdbcDao(CONNECTION_PROPERTIES);
+    private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
     Connection connection = null;
@@ -79,7 +76,7 @@ class StudentsCoursesDAOTest {
     void shouldDeleteById() {
         try {
             generateTestData();
-            studentsCoursesDAO.deleteById(1);
+            studentsCoursesJdbcDao.deleteById(1);
 
             int expectedTableSize = 0;
 
@@ -101,7 +98,7 @@ class StudentsCoursesDAOTest {
     void deleteFromCourse() {
         try {
             generateTestData();
-            studentsCoursesDAO.deleteFromCourse(1, 1);
+            studentsCoursesJdbcDao.deleteFromCourse(1, 1);
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
 
@@ -121,7 +118,7 @@ class StudentsCoursesDAOTest {
     void getStudentsRelatedToCourses() {
         try {
             generateDataForGetStudentsRelatedToCourses();
-            List<String[]> data = studentsCoursesDAO.getStudentsRelatedToCourses("math");
+            List<String[]> data = studentsCoursesJdbcDao.getStudentsRelatedToCourses("math");
 
             String[] student1 = {"Mikel", "Legg"};
             String[] student2 = {"Mikel", "Deetlefs"};
@@ -135,35 +132,35 @@ class StudentsCoursesDAOTest {
     }
 
     void generateTestData() throws DAOException {
-        coursesDAO.create("math");
-        studentsDAO.create("Egor Anchutin");
-        studentsCoursesDAO.create("1 1");
+        coursesJdbcDao.create("math");
+        studentsJdbcDao.create("Egor Anchutin");
+        studentsCoursesJdbcDao.create("1 1");
     }
 
     void generateDataForGetStudentsRelatedToCourses() throws DAOException {
-        studentsDAO.create("Mikel Legg");
-        studentsDAO.create("Fania Battram");
-        studentsDAO.create("Mikel Deetlefs");
-        studentsDAO.create("Gunther Skedgell");
-        studentsDAO.create("Reed Rentoll");
-        studentsDAO.create("Kylie Godfroy");
-        studentsDAO.create("Enrique Laurence");
-        studentsDAO.create("Enrique Soal");
-        studentsDAO.create("Jerrie Josefsson");
-        studentsDAO.create("Leyla Skedgell");
+        studentsJdbcDao.create("Mikel Legg");
+        studentsJdbcDao.create("Fania Battram");
+        studentsJdbcDao.create("Mikel Deetlefs");
+        studentsJdbcDao.create("Gunther Skedgell");
+        studentsJdbcDao.create("Reed Rentoll");
+        studentsJdbcDao.create("Kylie Godfroy");
+        studentsJdbcDao.create("Enrique Laurence");
+        studentsJdbcDao.create("Enrique Soal");
+        studentsJdbcDao.create("Jerrie Josefsson");
+        studentsJdbcDao.create("Leyla Skedgell");
 
-        coursesDAO.create("math");
-        coursesDAO.create("economy");
+        coursesJdbcDao.create("math");
+        coursesJdbcDao.create("economy");
 
-        studentsCoursesDAO.create("1 1");
-        studentsCoursesDAO.create("2 2");
-        studentsCoursesDAO.create("3 1");
-        studentsCoursesDAO.create("4 2");
-        studentsCoursesDAO.create("5 2");
-        studentsCoursesDAO.create("6 2");
-        studentsCoursesDAO.create("7 2");
-        studentsCoursesDAO.create("8 2");
-        studentsCoursesDAO.create("9 2");
-        studentsCoursesDAO.create("10 2");
+        studentsCoursesJdbcDao.create("1 1");
+        studentsCoursesJdbcDao.create("2 2");
+        studentsCoursesJdbcDao.create("3 1");
+        studentsCoursesJdbcDao.create("4 2");
+        studentsCoursesJdbcDao.create("5 2");
+        studentsCoursesJdbcDao.create("6 2");
+        studentsCoursesJdbcDao.create("7 2");
+        studentsCoursesJdbcDao.create("8 2");
+        studentsCoursesJdbcDao.create("9 2");
+        studentsCoursesJdbcDao.create("10 2");
     }
 }

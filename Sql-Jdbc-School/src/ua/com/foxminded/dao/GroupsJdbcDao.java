@@ -2,7 +2,7 @@ package ua.com.foxminded.dao;
 
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
-import ua.com.foxminded.interfaces.GroupsDAOInterface;
+import ua.com.foxminded.interfaces.GroupsDAO;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class GroupsDAO implements GroupsDAOInterface {
+public class GroupsJdbcDao implements GroupsDAO {
 
     String resourceFilePath;
 
-    public GroupsDAO(String resourceFilePath) {
+    public GroupsJdbcDao(String resourceFilePath) {
         this.resourceFilePath = resourceFilePath;
     }
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final static Logger logger = Logger.getLogger(GroupsDAO.class.getName());
+    private final static Logger logger = Logger.getLogger(GroupsJdbcDao.class.getName());
 
     @Override
     public void create(String groupName) throws DAOException {

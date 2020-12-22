@@ -1,9 +1,9 @@
 package ua.com.foxminded;
 
-import ua.com.foxminded.dao.CoursesDAO;
-import ua.com.foxminded.dao.GroupsDAO;
-import ua.com.foxminded.dao.StudentsCoursesDAO;
-import ua.com.foxminded.dao.StudentsDAO;
+import ua.com.foxminded.dao.CoursesJdbcDao;
+import ua.com.foxminded.dao.GroupsJdbcDao;
+import ua.com.foxminded.dao.StudentsCoursesJdbcDao;
+import ua.com.foxminded.dao.StudentsJdbcDao;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.facade.Facade;
 import java.io.IOException;
@@ -15,10 +15,10 @@ public class Solution {
         String connectionProperties = "resources/postrgres_connection.properties";
 
         Facade facade = new Facade(new DataGenerator(connectionProperties),
-                                   new CoursesDAO(connectionProperties),
-                                   new GroupsDAO(connectionProperties),
-                                   new StudentsDAO(connectionProperties),
-                                   new StudentsCoursesDAO(connectionProperties));
+                                   new CoursesJdbcDao(connectionProperties),
+                                   new GroupsJdbcDao(connectionProperties),
+                                   new StudentsJdbcDao(connectionProperties),
+                                   new StudentsCoursesJdbcDao(connectionProperties));
         try {
             facade.createTable();
             facade.fillTableWithTestData();
