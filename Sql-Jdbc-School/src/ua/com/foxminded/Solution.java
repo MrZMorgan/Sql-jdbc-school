@@ -1,5 +1,6 @@
 package ua.com.foxminded;
 
+import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.dao.CoursesJdbcDao;
 import ua.com.foxminded.dao.GroupsJdbcDao;
 import ua.com.foxminded.dao.StudentsCoursesJdbcDao;
@@ -13,12 +14,13 @@ public class Solution {
     public static void main(String[] args) {
         Logger logger = Logger.getLogger(Facade.class.getName());
         String connectionProperties = "resources/postrgres_connection.properties";
+        ConnectionFactory factory = new ConnectionFactory(connectionProperties);
 
-        Facade facade = new Facade(new DataGenerator(connectionProperties),
-                                   new CoursesJdbcDao(connectionProperties),
-                                   new GroupsJdbcDao(connectionProperties),
-                                   new StudentsJdbcDao(connectionProperties),
-                                   new StudentsCoursesJdbcDao(connectionProperties));
+        Facade facade = new Facade(new DataGenerator(factory),
+                                   new CoursesJdbcDao(factory),
+                                   new GroupsJdbcDao(factory),
+                                   new StudentsJdbcDao(factory),
+                                   new StudentsCoursesJdbcDao(factory));
         try {
             facade.createTable();
             facade.fillTableWithTestData();

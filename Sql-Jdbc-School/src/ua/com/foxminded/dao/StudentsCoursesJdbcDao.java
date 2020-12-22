@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 
 public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
 
-    String resourceFilePath;
+    ConnectionFactory factory;
 
-    public StudentsCoursesJdbcDao(String resourceFilePath) {
-        this.resourceFilePath = resourceFilePath;
+    public StudentsCoursesJdbcDao(ConnectionFactory factory) {
+        this.factory = factory;
     }
 
     public final static String SQL_RESOURCES = "resources/sql.properties";
@@ -28,7 +28,6 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -54,7 +53,6 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -76,7 +74,6 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         Properties properties = new Properties();
         Connection connection = null;
         Statement statement = null;
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -98,7 +95,6 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         Properties properties = new Properties();
         Connection connection = null;
         List<String[]> names = new LinkedList<>();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);

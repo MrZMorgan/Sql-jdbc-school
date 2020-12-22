@@ -21,11 +21,11 @@ class StudentsCoursesJdbcDaoTest {
 
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(CONNECTION_PROPERTIES);
-    private final CoursesJdbcDao coursesJdbcDao = new CoursesJdbcDao(CONNECTION_PROPERTIES);
-    private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
-    private final DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
+    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(factory);
+    private final CoursesJdbcDao coursesJdbcDao = new CoursesJdbcDao(factory);
+    private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(factory);
+    private final DataGenerator generator = new DataGenerator(factory);
     Connection connection = null;
     Statement statement = null;
 

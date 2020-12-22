@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class GroupsJdbcDaoTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final GroupsJdbcDao groupsJdbcDao = new GroupsJdbcDao(CONNECTION_PROPERTIES);
-    private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(CONNECTION_PROPERTIES);
-    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
-    private final DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
+    private final GroupsJdbcDao groupsJdbcDao = new GroupsJdbcDao(factory);
+    private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(factory);
+    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(factory);
+    private final DataGenerator generator = new DataGenerator(factory);
     Connection connection = null;
     Statement statement = null;
 

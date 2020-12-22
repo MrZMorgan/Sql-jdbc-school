@@ -5,7 +5,6 @@ import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
@@ -14,11 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DataGeneratorTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
+    private final static String SQL_RESOURCES = "resources/sql.properties";
+    private final static ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
 
     @BeforeEach
     void createTable() {
-        DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
+        DataGenerator generator = new DataGenerator(factory);
         Properties properties = new Properties();
         FileInputStream stream = null;
         try {

@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 
 public class GroupsJdbcDao implements GroupsDAO {
 
-    String resourceFilePath;
+    ConnectionFactory factory;
 
-    public GroupsJdbcDao(String resourceFilePath) {
-        this.resourceFilePath = resourceFilePath;
+    public GroupsJdbcDao(ConnectionFactory factory) {
+        this.factory = factory;
     }
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
@@ -27,7 +27,6 @@ public class GroupsJdbcDao implements GroupsDAO {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -47,7 +46,6 @@ public class GroupsJdbcDao implements GroupsDAO {
     public List<int[]> getGroupsBySize(int expectedGroupSize) throws DAOException {
         Connection connection = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         List<int[]> groupsSizes = new LinkedList<>();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);

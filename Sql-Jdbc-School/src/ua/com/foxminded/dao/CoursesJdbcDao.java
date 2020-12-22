@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 
 public class CoursesJdbcDao implements CourseDAO {
 
-    String resourceFilePath;
+    ConnectionFactory factory;
 
-    public CoursesJdbcDao(String resourceFilePath) {
-        this.resourceFilePath = resourceFilePath;
+    public CoursesJdbcDao(ConnectionFactory factory) {
+        this.factory = factory;
     }
 
     public static final String SQL_RESOURCES = "resources/sql.properties";
@@ -27,7 +27,6 @@ public class CoursesJdbcDao implements CourseDAO {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);
@@ -47,7 +46,6 @@ public class CoursesJdbcDao implements CourseDAO {
         Connection connection = null;
         Map<Integer, String> courseList = new LinkedHashMap<>();
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);

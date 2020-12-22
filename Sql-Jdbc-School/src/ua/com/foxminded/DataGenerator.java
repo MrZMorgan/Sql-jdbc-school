@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 
 public class DataGenerator {
 
-    String resourceFilePath;
+    ConnectionFactory factory;
 
-    public DataGenerator(String resourceFilePath) {
-        this.resourceFilePath = resourceFilePath;
+    public DataGenerator(ConnectionFactory factory) {
+        this.factory = factory;
     }
 
     private static final String HYPHEN = "-";
@@ -29,7 +29,6 @@ public class DataGenerator {
         Connection connection = null;
         Statement statement = null;
         Properties properties = new Properties();
-        ConnectionFactory factory = new ConnectionFactory(resourceFilePath);
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
             properties.load(stream);

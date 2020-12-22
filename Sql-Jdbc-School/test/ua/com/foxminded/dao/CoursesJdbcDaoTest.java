@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class CoursesJdbcDaoTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final CoursesJdbcDao dao = new CoursesJdbcDao(CONNECTION_PROPERTIES);
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
-    DataGenerator generator = new DataGenerator(CONNECTION_PROPERTIES);
+    private final CoursesJdbcDao dao = new CoursesJdbcDao(factory);
+    DataGenerator generator = new DataGenerator(factory);
     Connection connection = null;
     Statement statement = null;
 
