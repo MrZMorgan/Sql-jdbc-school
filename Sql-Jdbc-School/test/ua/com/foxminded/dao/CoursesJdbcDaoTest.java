@@ -9,7 +9,6 @@ import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
@@ -17,13 +16,16 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CoursesJdbcDaoTest {
-    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
-    private final CoursesJdbcDao dao = new CoursesJdbcDao(factory);
-    DataGenerator generator = new DataGenerator(factory);
-    Connection connection = null;
-    Statement statement = null;
+    private final CoursesJdbcDao courseDao = new CoursesJdbcDao(factory);
+    private final DataGenerator generator = new DataGenerator(factory);
+    private Connection connection = null;
+    private Statement statement = null;
+    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
+    private final static String SQL_RESOURCES = "resources/sql.properties";
+    private final static String COURSE_NAME_MATH = "math";
+    private final static String COURSE_NAME_GEOMETRY = "geometry";
+    private final static String COURSE_NAME_BIOLOGY = "biology";
 
     @BeforeEach
     void createTable() {
@@ -43,19 +45,20 @@ class CoursesJdbcDaoTest {
     @Test
     void shouldCreateNewCourse() {
         try {
-            dao.create("math");
-
+            courseDao.create(COURSE_NAME_MATH);
             connection = factory.connect();
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM courses;");
-            String id = "";
-            String name = "";
-            while (resultSet.next()) {
-                id = resultSet.getString("ID");
-                name = resultSet.getString("NAME");
+
+            int courseId = 0;
+            String courseName = "";
+            Map<Integer, String> courses = courseDao.getCoursesList();
+            for (Map.Entry<Integer, String> entry : courses.entrySet()) {
+                courseId = entry.getKey();
+                courseName = entry.getValue();
             }
-            assertEquals("1", id);
-            assertEquals("math", name);
+
+            assertEquals(1, courseId);
+            assertEquals(COURSE_NAME_MATH, courseName);
             connection.close();
         } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -65,15 +68,15 @@ class CoursesJdbcDaoTest {
     @Test
     void shouldGetCoursesList() {
         Map<Integer, String> expectedGroupsMap = new LinkedHashMap<>();
-        expectedGroupsMap.put(1, "math");
-        expectedGroupsMap.put(2, "geometry");
-        expectedGroupsMap.put(3, "biology");
+        expectedGroupsMap.put(1, COURSE_NAME_MATH);
+        expectedGroupsMap.put(2, COURSE_NAME_GEOMETRY);
+        expectedGroupsMap.put(3, COURSE_NAME_BIOLOGY);
         try {
-            dao.create("math");
-            dao.create("geometry");
-            dao.create("biology");
+            courseDao.create(COURSE_NAME_MATH);
+            courseDao.create(COURSE_NAME_GEOMETRY);
+            courseDao.create(COURSE_NAME_BIOLOGY);
 
-            Map<Integer, String> actualCoursesMap = dao.getCoursesList();
+            Map<Integer, String> actualCoursesMap = courseDao.getCoursesList();
             assertEquals(expectedGroupsMap, actualCoursesMap);
         } catch (DAOException e) {
             e.printStackTrace();
