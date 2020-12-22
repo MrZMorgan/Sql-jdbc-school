@@ -70,9 +70,9 @@ public class GroupsJdbcDao implements GroupsDAO {
         return groupsSizes;
     }
 
-    public Map<Integer, String> getGroupsList() throws DAOException {
+    public List<String[]> readAllData() throws DAOException {
         Connection connection = null;
-        Map<Integer, String> courseList = new LinkedHashMap<>();
+        List<String[]> courseList = new LinkedList<>();
         Properties properties = new Properties();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
@@ -83,7 +83,7 @@ public class GroupsJdbcDao implements GroupsDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.groups.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
+                courseList.add(new String[]{resultSet.getString("id"), resultSet.getString("name")});
             }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

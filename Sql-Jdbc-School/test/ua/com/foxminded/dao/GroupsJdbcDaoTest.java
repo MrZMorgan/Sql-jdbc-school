@@ -9,11 +9,9 @@ import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,10 +57,10 @@ class GroupsJdbcDaoTest {
             int groupsId = 0;
             String groupsName = "";
 
-            Map<Integer, String> courses = groupsJdbcDao.getGroupsList();
-            for (Map.Entry<Integer, String> entry : courses.entrySet()) {
-                groupsId = entry.getKey();
-                groupsName = entry.getValue();
+            List<String[]> groups = groupsJdbcDao.readAllData();
+            for (String[] group : groups) {
+                groupsId = Integer.parseInt(group[0]);
+                groupsName = group[1];
             }
 
             assertEquals(1, groupsId);
