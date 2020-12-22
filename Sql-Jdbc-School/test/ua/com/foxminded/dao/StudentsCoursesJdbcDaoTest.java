@@ -57,17 +57,17 @@ class StudentsCoursesJdbcDaoTest {
     void shouldCreateRecordInTable() {
         try {
             generateTestData();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
-            String student_id = "";
-            String course_id = "";
-            while (resultSet.next()) {
-                student_id = String.valueOf(resultSet.getInt("STUDENT_ID"));
-                course_id = String.valueOf(resultSet.getInt("COURSE_ID"));
-            }
-            assertEquals("1", student_id);
-            assertEquals("1", course_id);
-            connection.close();
-        } catch (DAOException | SQLException e) {
+
+            List<String[]> studentsCourses = studentsCoursesJdbcDao.readAllData();
+            int expectedStudentId = Integer.parseInt(studentsCourses.get(0)[0]);
+            int expectedCourseId = Integer.parseInt(studentsCourses.get(0)[1]);;
+
+            int actualStudentId = 1;
+            int actualCourseId = 1;
+
+            assertEquals(expectedStudentId, actualStudentId);
+            assertEquals(expectedCourseId, actualCourseId);
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }

@@ -118,4 +118,31 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         }
         return names;
     }
+
+    public List<String[]> readAllData() throws DAOException {
+        Connection connection = null;
+        List<String[]> courseList = new LinkedList<>();
+        Properties properties = new Properties();
+        try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
+            connection = factory.connect();
+            PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.students.courses.list"));
+            final ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                courseList.add(new String[]{
+                        resultSet.getString("student_id"),
+                        resultSet.getString("course_id")
+                });
+            }
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
+        } finally {
+            factory.close(connection);
+        }
+        return courseList;
+    }
 }
