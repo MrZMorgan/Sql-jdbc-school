@@ -5,12 +5,8 @@ import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
@@ -24,8 +20,6 @@ class GroupsJdbcDaoTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     private final static String SQL_RESOURCES = "resources/sql.properties";
     private final static String GROUP_NAME_FOR_TEST = "gs-58";
-    Connection connection = null;
-    Statement statement = null;
 
     @BeforeEach
     void createTable() {
@@ -80,7 +74,6 @@ class GroupsJdbcDaoTest {
 
             assertEquals(groupId, actualGroupsSizeList.get(0)[0]);
             assertEquals(groupSize, actualGroupsSizeList.get(0)[1]);
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -5,12 +5,8 @@ import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,8 +15,6 @@ class CoursesJdbcDaoTest {
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final CoursesJdbcDao courseDao = new CoursesJdbcDao(factory);
     private final DataGenerator generator = new DataGenerator(factory);
-    private Connection connection = null;
-    private Statement statement = null;
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     private final static String SQL_RESOURCES = "resources/sql.properties";
     private final static String COURSE_NAME_MATH = "math";
@@ -49,7 +43,6 @@ class CoursesJdbcDaoTest {
 
             int courseId = 0;
             String courseName = "";
-
             List<String[]> courses = courseDao.readAllData();
             for (String[] course : courses) {
                 courseId = Integer.parseInt(course[0]);

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -28,8 +27,6 @@ class StudentsJdbcDaoTest {
     private final static String FULL_NAME_1_FOR_TEST = "Egor Anchutin";
     private final static String FULL_NAME_2_FOR_TEST = "Zach Morgan";
     private final static String FULL_NAME_3_FOR_TEST = "York Morgan";
-    Connection connection = null;
-    Statement statement = null;
 
     @BeforeEach
     void createTable() {
@@ -41,9 +38,7 @@ class StudentsJdbcDaoTest {
             generator.generateTable(
                     properties.getProperty("drop.students.table"),
                     properties.getProperty("create.students.table.h2.database"));
-            connection = factory.connect();
-            statement = connection.createStatement();
-        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+        } catch (DAOException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -68,8 +63,7 @@ class StudentsJdbcDaoTest {
             assertEquals(1, id);
             assertEquals(FIRST_NAME_FOR_TEST, firstName);
             assertEquals(LAST_NAME_FOR_TEST, lastName);
-            connection.close();
-        } catch (DAOException | SQLException e) {
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }
@@ -80,16 +74,13 @@ class StudentsJdbcDaoTest {
             studentsDao.create(FULL_NAME_1_FOR_TEST);
             studentsDao.create(FULL_NAME_2_FOR_TEST);
             studentsDao.create(FULL_NAME_3_FOR_TEST);
-
             studentsDao.deleteById(1);
 
             int expectedTableSize = 2;
-
             List<String[]> students = studentsDao.readAllData();
 
             assertEquals(expectedTableSize, students.size());
-            connection.close();
-        } catch (DAOException | SQLException e) {
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }
@@ -99,19 +90,15 @@ class StudentsJdbcDaoTest {
         try {
             int groupId = 1;
             int studentId = 1;
+
             studentsDao.create(FULL_NAME_1_FOR_TEST);
             studentsDao.assignStudentToGroup(groupId, studentId);
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
+            List<String[]> students = studentsDao.readAllData();
+            int actualGroupId = Integer.parseInt(students.get(0)[1]);
 
-            int actualGroupId = 0;
-            while (resultSet.next()) {
-                actualGroupId = resultSet.getInt("GROUP_ID");
-                System.out.println(groupId);
-            }
             assertEquals(groupId, actualGroupId);
-            connection.close();
-        } catch (DAOException | SQLException e) {
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }
