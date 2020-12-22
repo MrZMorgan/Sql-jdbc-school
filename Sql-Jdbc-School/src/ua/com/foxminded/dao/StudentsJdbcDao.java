@@ -118,4 +118,28 @@ public class StudentsJdbcDao implements StudentsDAO {
         }
         return courseList;
     }
+
+    @Override
+    public void update(int studentId, String fullNameRawData) throws DAOException {
+        Connection connection = null;
+        Statement statement = null;
+        Properties properties = new Properties();
+        try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
+            connection = factory.connect();
+            statement = connection.createStatement();
+
+            String[] fullName = fullNameRawData.split(SPACE);
+            statement.execute(
+                    String.format(properties.getProperty("update.student.name"), fullName[0], fullName[1], studentId));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
+        } finally {
+            factory.close(connection);
+        }
+    }
 }
