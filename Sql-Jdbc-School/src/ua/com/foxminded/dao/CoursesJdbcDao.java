@@ -89,5 +89,25 @@ public class CoursesJdbcDao implements CourseDAO {
         }
     }
 
+    @Override
+    public void update(int courseId, String courseName) throws DAOException {
+        Connection connection = null;
+        Statement statement = null;
+        Properties properties = new Properties();
+        try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
 
+            connection = factory.connect();
+            statement = connection.createStatement();
+            statement.execute(
+                    String.format(properties.getProperty("update.course.name"), courseName, courseId));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
+        } finally {
+            factory.close(connection);
+        }
+    }
 }

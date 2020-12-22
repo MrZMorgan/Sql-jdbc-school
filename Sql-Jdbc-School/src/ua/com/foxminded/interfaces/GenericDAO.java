@@ -8,5 +8,6 @@ import java.util.List;
 public interface GenericDAO <T> {
     void create(T groupName) throws DAOException, IOException;
     List<String[]> readAllData() throws DAOException;
-    void deleteById(int id) throws DAOException ;
+    void deleteById(int id) throws DAOException;
+    void update(int id, String data) throws DAOException;
 }
