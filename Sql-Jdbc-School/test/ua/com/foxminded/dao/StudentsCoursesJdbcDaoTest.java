@@ -80,15 +80,10 @@ class StudentsCoursesJdbcDaoTest {
 
             int expectedTableSize = 0;
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
-
-            int actualTableSize = 0;
-            while (resultSet.next()) {
-                actualTableSize++;
-            }
+            List<String[]> studentsCourses = studentsCoursesJdbcDao.readAllData();
+            int actualTableSize = studentsCourses.size();
 
             assertEquals(expectedTableSize, actualTableSize);
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
