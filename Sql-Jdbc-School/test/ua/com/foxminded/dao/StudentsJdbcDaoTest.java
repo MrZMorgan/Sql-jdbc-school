@@ -85,13 +85,9 @@ class StudentsJdbcDaoTest {
 
             int expectedTableSize = 2;
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
+            List<String[]> students = studentsDao.readAllData();
 
-            int actualTableSize = 0;
-            while (resultSet.next()) {
-                actualTableSize++;
-            }
-            assertEquals(expectedTableSize, actualTableSize);
+            assertEquals(expectedTableSize, students.size());
             connection.close();
         } catch (DAOException | SQLException e) {
             e.printStackTrace();
