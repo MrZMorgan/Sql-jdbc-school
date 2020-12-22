@@ -51,10 +51,10 @@ class CoursesJdbcDaoTest {
 
             int courseId = 0;
             String courseName = "";
-            Map<Integer, String> courses = courseDao.getCoursesList();
-            for (Map.Entry<Integer, String> entry : courses.entrySet()) {
-                courseId = entry.getKey();
-                courseName = entry.getValue();
+            List<String[]> courses = courseDao.readAllData();
+            for (String[] course : courses) {
+                courseId = Integer.parseInt(course[0]);
+                courseName = course[1];
             }
 
             assertEquals(1, courseId);
@@ -67,17 +67,21 @@ class CoursesJdbcDaoTest {
 
     @Test
     void shouldGetCoursesList() {
-        Map<Integer, String> expectedGroupsMap = new LinkedHashMap<>();
-        expectedGroupsMap.put(1, COURSE_NAME_MATH);
-        expectedGroupsMap.put(2, COURSE_NAME_GEOMETRY);
-        expectedGroupsMap.put(3, COURSE_NAME_BIOLOGY);
         try {
             courseDao.create(COURSE_NAME_MATH);
             courseDao.create(COURSE_NAME_GEOMETRY);
             courseDao.create(COURSE_NAME_BIOLOGY);
 
-            Map<Integer, String> actualCoursesMap = courseDao.getCoursesList();
-            assertEquals(expectedGroupsMap, actualCoursesMap);
+            List<String[]> actualCoursesList = courseDao.readAllData();
+
+            assertEquals(1, Integer.parseInt(actualCoursesList.get(0)[0]));
+            assertEquals(COURSE_NAME_MATH, actualCoursesList.get(0)[1]);
+
+            assertEquals(2, Integer.parseInt(actualCoursesList.get(1)[0]));
+            assertEquals(COURSE_NAME_GEOMETRY, actualCoursesList.get(1)[1]);
+
+            assertEquals(3, Integer.parseInt(actualCoursesList.get(2)[0]));
+            assertEquals(COURSE_NAME_BIOLOGY, actualCoursesList.get(2)[1]);
         } catch (DAOException e) {
             e.printStackTrace();
         }

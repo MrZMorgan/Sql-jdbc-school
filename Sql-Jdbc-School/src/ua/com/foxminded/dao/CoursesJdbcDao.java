@@ -6,9 +6,7 @@ import ua.com.foxminded.interfaces.CourseDAO;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class CoursesJdbcDao implements CourseDAO {
@@ -42,9 +40,9 @@ public class CoursesJdbcDao implements CourseDAO {
         }
     }
 
-    public Map<Integer, String> getCoursesList() throws DAOException {
+    public List<String[]> readAllData() throws DAOException {
         Connection connection = null;
-        Map<Integer, String> courseList = new LinkedHashMap<>();
+        List<String[]> courseList = new LinkedList<>();
         Properties properties = new Properties();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
@@ -55,7 +53,7 @@ public class CoursesJdbcDao implements CourseDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.courses.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                courseList.put(resultSet.getInt("id"), resultSet.getString("name"));
+                courseList.add(new String[] {resultSet.getString("id"), resultSet.getString("name")});
             }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

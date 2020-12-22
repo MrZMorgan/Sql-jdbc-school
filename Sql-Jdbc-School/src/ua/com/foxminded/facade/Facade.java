@@ -157,7 +157,10 @@ public class Facade {
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENT_ID_MESSAGE);
         info[0] = scanner.nextInt();
-        coursesJdbcDao.getCoursesList().forEach((id, name) -> System.out.println("Course id: " + id + " - " + name));
+        List<String[]> courses = coursesJdbcDao.readAllData();
+        for (String[] course : courses) {
+            System.out.println("Course id: " + course[0] + " - " + course[1]);
+        }
         System.out.println(COURSE_ID_MESSAGE);
         info[1] = scanner.nextInt();
         return info;
