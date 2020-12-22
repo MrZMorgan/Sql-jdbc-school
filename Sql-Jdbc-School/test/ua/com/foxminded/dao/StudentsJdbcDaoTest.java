@@ -12,16 +12,22 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentsJdbcDaoTest {
-    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
-    private final StudentsJdbcDao dao = new StudentsJdbcDao(factory);
+    private final StudentsJdbcDao studentsDao = new StudentsJdbcDao(factory);
     private final DataGenerator generator = new DataGenerator(factory);
+    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
+    private final static String SQL_RESOURCES = "resources/sql.properties";
+    private final static String FIRST_NAME_FOR_TEST = "Egor";
+    private final static String LAST_NAME_FOR_TEST = "Anchutin";
+    private final static String FULL_NAME_1_FOR_TEST = "Egor Anchutin";
+    private final static String FULL_NAME_2_FOR_TEST = "Zach Morgan";
+    private final static String FULL_NAME_3_FOR_TEST = "York Morgan";
     Connection connection = null;
     Statement statement = null;
 
@@ -45,20 +51,23 @@ class StudentsJdbcDaoTest {
     @Test
     void shouldCreateStudent() {
         try {
-            dao.create("Egor Anchutin");
+            studentsDao.create(FULL_NAME_1_FOR_TEST);
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
-            String id = "";
+            int id = 0;
             String firstName = "";
             String lastName = "";
-            while (resultSet.next()) {
-                id = resultSet.getString("ID");
-                firstName = resultSet.getString("FIRST_NAME");
-                lastName = resultSet.getString("LAST_NAME");
+
+            List<String[]> students = studentsDao.readAllData();
+
+            for (String[] studentInfo : students) {
+                id = Integer.parseInt(studentInfo[0]);
+                firstName = studentInfo[2];
+                lastName = studentInfo[3];
             }
-            assertEquals("1", id);
-            assertEquals("Egor", firstName);
-            assertEquals("Anchutin", lastName);
+
+            assertEquals(1, id);
+            assertEquals(FIRST_NAME_FOR_TEST, firstName);
+            assertEquals(LAST_NAME_FOR_TEST, lastName);
             connection.close();
         } catch (DAOException | SQLException e) {
             e.printStackTrace();
@@ -68,11 +77,11 @@ class StudentsJdbcDaoTest {
     @Test
     void shouldDeleteStudentById() {
         try {
-            dao.create("Egor Anchutin");
-            dao.create("Zach Morgan");
-            dao.create("York Morgan");
+            studentsDao.create(FULL_NAME_1_FOR_TEST);
+            studentsDao.create(FULL_NAME_2_FOR_TEST);
+            studentsDao.create(FULL_NAME_3_FOR_TEST);
 
-            dao.deleteById(1);
+            studentsDao.deleteById(1);
 
             int expectedTableSize = 2;
 
@@ -94,8 +103,8 @@ class StudentsJdbcDaoTest {
         try {
             int groupId = 1;
             int studentId = 1;
-            dao.create("Egor Anchutin");
-            dao.assignStudentToGroup(groupId, studentId);
+            studentsDao.create(FULL_NAME_1_FOR_TEST);
+            studentsDao.assignStudentToGroup(groupId, studentId);
 
             ResultSet resultSet = statement.executeQuery("SELECT * FROM students;");
 

@@ -46,11 +46,10 @@ class CoursesJdbcDaoTest {
     void shouldCreateNewCourse() {
         try {
             courseDao.create(COURSE_NAME_MATH);
-            connection = factory.connect();
-            statement = connection.createStatement();
 
             int courseId = 0;
             String courseName = "";
+
             List<String[]> courses = courseDao.readAllData();
             for (String[] course : courses) {
                 courseId = Integer.parseInt(course[0]);
@@ -59,8 +58,7 @@ class CoursesJdbcDaoTest {
 
             assertEquals(1, courseId);
             assertEquals(COURSE_NAME_MATH, courseName);
-            connection.close();
-        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }

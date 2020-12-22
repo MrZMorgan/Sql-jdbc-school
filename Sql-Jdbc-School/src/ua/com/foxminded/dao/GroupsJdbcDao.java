@@ -83,7 +83,10 @@ public class GroupsJdbcDao implements GroupsDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.groups.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                courseList.add(new String[]{resultSet.getString("id"), resultSet.getString("name")});
+                courseList.add(new String[]{
+                        resultSet.getString("id"),
+                        resultSet.getString("name")
+                });
             }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

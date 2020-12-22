@@ -53,7 +53,10 @@ public class CoursesJdbcDao implements CourseDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.courses.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                courseList.add(new String[] {resultSet.getString("id"), resultSet.getString("name")});
+                courseList.add(new String[] {
+                        resultSet.getString("id"),
+                        resultSet.getString("name")
+                });
             }
         } catch (SQLException | IOException | ClassNotFoundException throwables) {
             throwables.printStackTrace();

@@ -52,8 +52,7 @@ class GroupsJdbcDaoTest {
     void shouldCreateGroup() {
         try {
             groupsJdbcDao.create(GROUP_NAME_FOR_TEST);
-            connection = factory.connect();
-            statement = connection.createStatement();
+
             int groupsId = 0;
             String groupsName = "";
 
@@ -65,8 +64,7 @@ class GroupsJdbcDaoTest {
 
             assertEquals(1, groupsId);
             assertEquals(GROUP_NAME_FOR_TEST, groupsName);
-            connection.close();
-        } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }
