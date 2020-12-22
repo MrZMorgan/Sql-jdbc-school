@@ -13,5 +13,8 @@ public interface StudentsDAO extends GenericDAO <String> {
     List<String[]> readAllData() throws DAOException;
 
     @Override
-    void deleteById(int id) throws DAOException ;
+    void deleteById(int id) throws DAOException;
+
+    @Override
+    void update(int id, String data) throws DAOException;
 }

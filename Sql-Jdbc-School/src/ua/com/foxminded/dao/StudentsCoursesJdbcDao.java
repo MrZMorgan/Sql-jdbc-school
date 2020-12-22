@@ -148,5 +148,26 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         return courseList;
     }
 
+    @Override
+    public void update(int studentId, String courseId) throws DAOException {
+        Connection connection = null;
+        Statement statement = null;
+        Properties properties = new Properties();
+        try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
 
+            connection = factory.connect();
+            statement = connection.createStatement();
+            statement.execute(
+                    String.format(
+                            properties.getProperty("update.group.name"), Integer.parseInt(courseId), studentId));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
+        } finally {
+            factory.close(connection);
+        }
+    }
 }

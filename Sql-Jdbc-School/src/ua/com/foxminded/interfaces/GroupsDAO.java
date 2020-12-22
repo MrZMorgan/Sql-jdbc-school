@@ -14,4 +14,7 @@ public interface GroupsDAO extends GenericDAO <String> {
 
     @Override
     void deleteById(int id) throws DAOException;
+
+    @Override
+    void update(int id, String data) throws DAOException;
 }
