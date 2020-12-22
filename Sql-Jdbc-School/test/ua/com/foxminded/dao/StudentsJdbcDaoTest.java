@@ -13,11 +13,11 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentsJdbcDaoTest {
+    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
+    private final static String SQL_RESOURCES = "resources/sql.properties";
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final StudentsJdbcDao studentsDao = new StudentsJdbcDao(factory);
     private final DataGenerator generator = new DataGenerator(factory);
-    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
-    private final static String SQL_RESOURCES = "resources/sql.properties";
     private final static String FIRST_NAME_FOR_TEST = "Egor";
     private final static String LAST_NAME_FOR_TEST = "Anchutin";
     private final static String FULL_NAME_1_FOR_TEST = "Egor Anchutin";

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentsCoursesJdbcDaoTest {
 
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
+    private final static String SQL_RESOURCES = "resources/sql.properties";
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(factory);
     private final CoursesJdbcDao coursesJdbcDao = new CoursesJdbcDao(factory);
