@@ -46,18 +46,14 @@ class GroupsJdbcDaoTest {
     void shouldCreateGroup() {
         try {
             groupsJdbcDao.create(GROUP_NAME_FOR_TEST);
-
-            int groupsId = 0;
-            String groupsName = "";
+            int actualGroupId = 1;
 
             List<String[]> groups = groupsJdbcDao.readAllData();
-            for (String[] group : groups) {
-                groupsId = Integer.parseInt(group[0]);
-                groupsName = group[1];
-            }
+            int expectedGroupsId = Integer.parseInt(groups.get(0)[0]);
+            String expectedGroupsName = groups.get(0)[1];
 
-            assertEquals(1, groupsId);
-            assertEquals(GROUP_NAME_FOR_TEST, groupsName);
+            assertEquals(actualGroupId, expectedGroupsId);
+            assertEquals(GROUP_NAME_FOR_TEST, expectedGroupsName);
         } catch (DAOException e) {
             e.printStackTrace();
         }
@@ -67,13 +63,16 @@ class GroupsJdbcDaoTest {
     void getGroupsBySize() {
         try {
             generateData();
+            int actualGroupId = 2;
+            int actualGroupSize = 2;
+            int expectedGroupSizeForTest = 3;
 
-            List<int[]> actualGroupsSizeList = groupsJdbcDao.getGroupsBySize(3);
-            int groupId = 2;
-            int groupSize = 2;
+            List<int[]> actualGroupsSizeList = groupsJdbcDao.getGroupsBySize(expectedGroupSizeForTest);
+            int expectedGroupId = actualGroupsSizeList.get(0)[0];
+            int expectedGroupSize = actualGroupsSizeList.get(0)[1];
 
-            assertEquals(groupId, actualGroupsSizeList.get(0)[0]);
-            assertEquals(groupSize, actualGroupsSizeList.get(0)[1]);
+            assertEquals(actualGroupId, expectedGroupId);
+            assertEquals(actualGroupSize, expectedGroupSize);
         } catch (Exception e) {
             e.printStackTrace();
         }

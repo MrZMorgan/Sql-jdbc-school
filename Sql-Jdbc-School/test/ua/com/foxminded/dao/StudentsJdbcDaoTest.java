@@ -46,23 +46,18 @@ class StudentsJdbcDaoTest {
     @Test
     void shouldCreateStudent() {
         try {
+            int actualId = 1;
             studentsDao.create(FULL_NAME_1_FOR_TEST);
-
-            int id = 0;
-            String firstName = "";
-            String lastName = "";
 
             List<String[]> students = studentsDao.readAllData();
 
-            for (String[] studentInfo : students) {
-                id = Integer.parseInt(studentInfo[0]);
-                firstName = studentInfo[2];
-                lastName = studentInfo[3];
-            }
+            int expectedId = Integer.parseInt(students.get(0)[0]);
+            String expectedFirstName = students.get(0)[2];
+            String expectedLastName = students.get(0)[3];
 
-            assertEquals(1, id);
-            assertEquals(FIRST_NAME_FOR_TEST, firstName);
-            assertEquals(LAST_NAME_FOR_TEST, lastName);
+            assertEquals(actualId, expectedId);
+            assertEquals(FIRST_NAME_FOR_TEST, expectedFirstName);
+            assertEquals(LAST_NAME_FOR_TEST, expectedLastName);
         } catch (DAOException e) {
             e.printStackTrace();
         }
@@ -88,16 +83,16 @@ class StudentsJdbcDaoTest {
     @Test
     void shouldAssignStudentToGroup() {
         try {
-            int groupId = 1;
+            int expectedGroupId = 1;
             int studentId = 1;
 
             studentsDao.create(FULL_NAME_1_FOR_TEST);
-            studentsDao.assignStudentToGroup(groupId, studentId);
+            studentsDao.assignStudentToGroup(expectedGroupId, studentId);
 
             List<String[]> students = studentsDao.readAllData();
             int actualGroupId = Integer.parseInt(students.get(0)[1]);
 
-            assertEquals(groupId, actualGroupId);
+            assertEquals(expectedGroupId, actualGroupId);
         } catch (DAOException e) {
             e.printStackTrace();
         }

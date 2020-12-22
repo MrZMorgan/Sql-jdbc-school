@@ -39,18 +39,15 @@ class CoursesJdbcDaoTest {
     @Test
     void shouldCreateNewCourse() {
         try {
+            int actualCourseId = 1;
             courseDao.create(COURSE_NAME_MATH);
 
-            int courseId = 0;
-            String courseName = "";
             List<String[]> courses = courseDao.readAllData();
-            for (String[] course : courses) {
-                courseId = Integer.parseInt(course[0]);
-                courseName = course[1];
-            }
+            int expectedCourseId = Integer.parseInt(courses.get(0)[0]);
+            String expectedCourseName = courses.get(0)[1];
 
-            assertEquals(1, courseId);
-            assertEquals(COURSE_NAME_MATH, courseName);
+            assertEquals(actualCourseId, expectedCourseId);
+            assertEquals(COURSE_NAME_MATH, expectedCourseName);
         } catch (DAOException e) {
             e.printStackTrace();
         }
