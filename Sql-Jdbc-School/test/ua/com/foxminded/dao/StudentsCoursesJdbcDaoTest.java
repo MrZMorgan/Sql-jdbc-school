@@ -5,13 +5,8 @@ import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
 import ua.com.foxminded.exceptions.DAOException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
@@ -26,8 +21,7 @@ class StudentsCoursesJdbcDaoTest {
     private final CoursesJdbcDao coursesJdbcDao = new CoursesJdbcDao(factory);
     private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(factory);
     private final DataGenerator generator = new DataGenerator(factory);
-    Connection connection = null;
-    Statement statement = null;
+
 
     @BeforeEach
     void createTable() {
@@ -45,10 +39,7 @@ class StudentsCoursesJdbcDaoTest {
             generator.generateTable(
                     properties.getProperty("drop.students.courses.table"),
                     properties.getProperty("create.students.courses.table"));
-
-            connection = factory.connect();
-            statement = connection.createStatement();
-        } catch (DAOException | IOException | ClassNotFoundException | SQLException e) {
+        } catch (DAOException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -95,16 +86,13 @@ class StudentsCoursesJdbcDaoTest {
             generateTestData();
             studentsCoursesJdbcDao.deleteFromCourse(1, 1);
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students_courses;");
+            int expectedTableSize = 0;
 
-            String actualCourseId = "";
-            while (resultSet.next()) {
-                actualCourseId = String.valueOf(resultSet.getInt("COURSE_ID"));
-            }
+            List<String[]> studentsCourses = studentsCoursesJdbcDao.readAllData();
+            int actualTableSize = studentsCourses.size();
 
-            assertEquals("", actualCourseId);
-            connection.close();
-        } catch (DAOException | SQLException e) {
+            assertEquals(expectedTableSize, actualTableSize);
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }
@@ -112,15 +100,21 @@ class StudentsCoursesJdbcDaoTest {
     @Test
     void getStudentsRelatedToCourses() {
         try {
-            generateDataForGetStudentsRelatedToCourses();
-            List<String[]> data = studentsCoursesJdbcDao.getStudentsRelatedToCourses("math");
+            String courseNameForTest = "math";
+            String firstName1ForTest = "Mikel";
+            String firstName2ForTest = "John";
+            String lastName1ForTest = "Legg";
+            String lastName2ForTest = "Deetlefs";
 
-            String[] student1 = {"Mikel", "Legg"};
-            String[] student2 = {"Mikel", "Deetlefs"};
+            generateDataForGetStudentsRelatedToCourses();
+
+            List<String[]> data = studentsCoursesJdbcDao.getStudentsRelatedToCourses(courseNameForTest);
+
+            String[] student1 = {firstName1ForTest, lastName1ForTest};
+            String[] student2 = {firstName2ForTest, lastName2ForTest};
 
             assertEquals(student1[0] + student1[1], data.get(0)[0] + data.get(0)[1]);
             assertEquals(student2[0] + student2[1], data.get(1)[0] + data.get(1)[1]);
-
         } catch (DAOException e) {
             e.printStackTrace();
         }
@@ -135,7 +129,7 @@ class StudentsCoursesJdbcDaoTest {
     void generateDataForGetStudentsRelatedToCourses() throws DAOException {
         studentsJdbcDao.create("Mikel Legg");
         studentsJdbcDao.create("Fania Battram");
-        studentsJdbcDao.create("Mikel Deetlefs");
+        studentsJdbcDao.create("John Deetlefs");
         studentsJdbcDao.create("Gunther Skedgell");
         studentsJdbcDao.create("Reed Rentoll");
         studentsJdbcDao.create("Kylie Godfroy");
