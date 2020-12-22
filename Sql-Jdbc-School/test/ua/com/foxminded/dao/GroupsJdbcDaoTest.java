@@ -13,18 +13,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GroupsJdbcDaoTest {
-    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final GroupsJdbcDao groupsJdbcDao = new GroupsJdbcDao(factory);
     private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(factory);
-    private final StudentsCoursesJdbcDao studentsCoursesJdbcDao = new StudentsCoursesJdbcDao(factory);
     private final DataGenerator generator = new DataGenerator(factory);
+    private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
+    private final static String SQL_RESOURCES = "resources/sql.properties";
+    private final static String GROUP_NAME_FOR_TEST = "gs-58";
     Connection connection = null;
     Statement statement = null;
 
@@ -52,19 +53,20 @@ class GroupsJdbcDaoTest {
     @Test
     void shouldCreateGroup() {
         try {
-            groupsJdbcDao.create("gs-58");
-
+            groupsJdbcDao.create(GROUP_NAME_FOR_TEST);
             connection = factory.connect();
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM groups;");
-            String id = "";
-            String name = "";
-            while (resultSet.next()) {
-                id = resultSet.getString("ID");
-                name = resultSet.getString("NAME");
+            int groupsId = 0;
+            String groupsName = "";
+
+            Map<Integer, String> courses = groupsJdbcDao.getGroupsList();
+            for (Map.Entry<Integer, String> entry : courses.entrySet()) {
+                groupsId = entry.getKey();
+                groupsName = entry.getValue();
             }
-            assertEquals("1", id);
-            assertEquals("gs-58", name);
+
+            assertEquals(1, groupsId);
+            assertEquals(GROUP_NAME_FOR_TEST, groupsName);
             connection.close();
         } catch (DAOException | IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -77,7 +79,6 @@ class GroupsJdbcDaoTest {
             generateData();
 
             List<int[]> actualGroupsSizeList = groupsJdbcDao.getGroupsBySize(3);
-
             int groupId = 2;
             int groupSize = 2;
 
