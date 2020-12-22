@@ -187,9 +187,9 @@ public class Facade {
 
     public void fillTableWithTestData() throws DAOException, IOException {
         List<String> groups = dataGenerator.generateGroupsNamesList();
-        List<String> courses = dataGenerator.readFile("src/ua/com/foxminded/rawdata/courses");
-        List<String> firstNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/first_names");
-        List<String> lastNames = dataGenerator.readFile("src/ua/com/foxminded/rawdata/last_names");
+        List<String> courses = dataGenerator.readFile("resources/rawdata/courses");
+        List<String> firstNames = dataGenerator.readFile("resources/rawdata/first_names");
+        List<String> lastNames = dataGenerator.readFile("resources/rawdata/last_names");
         List<String> fullNamesList = dataGenerator.generateFullNamesList(firstNames, lastNames);
         List<int[]> studentsJournal = dataGenerator.assignStudentsToGroups(groups, fullNamesList);
         List<String> assertions = dataGenerator.assignStudentsToCourses(fullNamesList, courses);
