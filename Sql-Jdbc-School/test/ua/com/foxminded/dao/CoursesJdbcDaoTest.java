@@ -62,14 +62,30 @@ class CoursesJdbcDaoTest {
 
             List<String[]> actualCoursesList = courseDao.readAllData();
 
-            assertEquals(1, Integer.parseInt(actualCoursesList.get(0)[0]));
-            assertEquals(COURSE_NAME_MATH, actualCoursesList.get(0)[1]);
+            String[] actualCourse1 = actualCoursesList.get(0);
+            String[] actualCourse2 = actualCoursesList.get(1);
+            String[] actualCourse3 = actualCoursesList.get(2);
 
-            assertEquals(2, Integer.parseInt(actualCoursesList.get(1)[0]));
-            assertEquals(COURSE_NAME_GEOMETRY, actualCoursesList.get(1)[1]);
+            int actualCourse1Id = Integer.parseInt(actualCourse1[0]);
+            int actualCourse2Id = Integer.parseInt(actualCourse2[0]);
+            int actualCourse3Id = Integer.parseInt(actualCourse3[0]);
 
-            assertEquals(3, Integer.parseInt(actualCoursesList.get(2)[0]));
-            assertEquals(COURSE_NAME_BIOLOGY, actualCoursesList.get(2)[1]);
+            String actualCourse1Name = actualCourse1[1];
+            String actualCourse2Name = actualCourse2[1];
+            String actualCourse3Name = actualCourse3[1];
+
+            int expectedCourse1Id = 1;
+            int expectedCourse2Id = 2;
+            int expectedCourse3Id = 3;
+
+            assertEquals(expectedCourse1Id, actualCourse1Id);
+            assertEquals(COURSE_NAME_MATH, actualCourse1Name);
+
+            assertEquals(expectedCourse2Id, actualCourse2Id);
+            assertEquals(COURSE_NAME_GEOMETRY, actualCourse2Name);
+
+            assertEquals(expectedCourse3Id, actualCourse3Id);
+            assertEquals(COURSE_NAME_BIOLOGY, actualCourse3Name);
         } catch (DAOException e) {
             e.printStackTrace();
         }
