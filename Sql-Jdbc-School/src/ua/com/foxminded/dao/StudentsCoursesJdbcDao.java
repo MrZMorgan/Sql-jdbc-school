@@ -49,6 +49,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         }
     }
 
+    @Override
     public void deleteById(int studentId) throws DAOException {
         Connection connection = null;
         Statement statement = null;
@@ -119,6 +120,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         return names;
     }
 
+    @Override
     public List<String[]> readAllData() throws DAOException {
         Connection connection = null;
         List<String[]> courseList = new LinkedList<>();
@@ -145,4 +147,6 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
         }
         return courseList;
     }
+
+
 }

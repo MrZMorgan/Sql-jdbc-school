@@ -40,6 +40,7 @@ public class CoursesJdbcDao implements CourseDAO {
         }
     }
 
+    @Override
     public List<String[]> readAllData() throws DAOException {
         Connection connection = null;
         List<String[]> courseList = new LinkedList<>();
@@ -66,4 +67,27 @@ public class CoursesJdbcDao implements CourseDAO {
         }
         return courseList;
     }
+
+    @Override
+    public void deleteById(int courseId) throws DAOException {
+        Connection connection = null;
+        Statement statement = null;
+        Properties properties = new Properties();
+        try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
+            connection = factory.connect();
+            statement = connection.createStatement();
+            statement.execute(String.format(properties.getProperty("delete.course.by.id"), courseId));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
+        } finally {
+            factory.close(connection);
+        }
+    }
+
+
 }

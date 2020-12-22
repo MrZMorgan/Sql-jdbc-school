@@ -70,6 +70,7 @@ public class GroupsJdbcDao implements GroupsDAO {
         return groupsSizes;
     }
 
+    @Override
     public List<String[]> readAllData() throws DAOException {
         Connection connection = null;
         List<String[]> courseList = new LinkedList<>();
@@ -95,5 +96,26 @@ public class GroupsJdbcDao implements GroupsDAO {
             factory.close(connection);
         }
         return courseList;
+    }
+
+    @Override
+    public void deleteById(int groupId) throws DAOException {
+        Connection connection = null;
+        Statement statement = null;
+        Properties properties = new Properties();
+        try {
+            FileInputStream stream = new FileInputStream(SQL_RESOURCES);
+            properties.load(stream);
+            stream.close();
+
+            connection = factory.connect();
+            statement = connection.createStatement();
+            statement.execute(String.format(properties.getProperty("delete.group.by.id"), groupId));
+        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+            throwables.printStackTrace();
+            logger.info(throwables.getMessage());
+        } finally {
+            factory.close(connection);
+        }
     }
 }

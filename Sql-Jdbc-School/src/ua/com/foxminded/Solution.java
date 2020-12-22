@@ -16,11 +16,13 @@ public class Solution {
         String connectionProperties = "resources/postrgres_connection.properties";
         ConnectionFactory factory = new ConnectionFactory(connectionProperties);
 
-        Facade facade = new Facade(new DataGenerator(factory),
-                                   new CoursesJdbcDao(factory),
-                                   new GroupsJdbcDao(factory),
-                                   new StudentsJdbcDao(factory),
-                                   new StudentsCoursesJdbcDao(factory));
+        Facade facade = new Facade(
+                new DataGenerator(factory),
+                new CoursesJdbcDao(factory),
+                new GroupsJdbcDao(factory),
+                new StudentsJdbcDao(factory),
+                new StudentsCoursesJdbcDao(factory)
+        );
         try {
             facade.createTable();
             facade.fillTableWithTestData();
