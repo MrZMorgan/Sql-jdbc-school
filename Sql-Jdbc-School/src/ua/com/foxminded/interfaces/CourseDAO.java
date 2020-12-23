@@ -1,16 +1,17 @@
 package ua.com.foxminded.interfaces;
 
+import ua.com.foxminded.dao.data.Course;
 import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.IOException;
 import java.util.List;
 
-public interface CourseDAO extends GenericDAO <String, String[]> {
+    public interface CourseDAO extends GenericDAO <String, Course> {
     @Override
     void create(String courseName) throws DAOException, IOException;
 
     @Override
-    List<String[]> readAllData() throws DAOException;
+    List<Course> readAllData() throws DAOException;
 
     @Override
     void deleteById(int id) throws DAOException;

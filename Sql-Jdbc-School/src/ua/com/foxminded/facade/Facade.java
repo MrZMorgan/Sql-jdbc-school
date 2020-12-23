@@ -5,6 +5,7 @@ import ua.com.foxminded.dao.CoursesJdbcDao;
 import ua.com.foxminded.dao.GroupsJdbcDao;
 import ua.com.foxminded.dao.StudentsCoursesJdbcDao;
 import ua.com.foxminded.dao.StudentsJdbcDao;
+import ua.com.foxminded.dao.data.Course;
 import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -157,9 +158,9 @@ public class Facade {
         Scanner scanner = new Scanner(System.in);
         System.out.println(STUDENT_ID_MESSAGE);
         info[0] = scanner.nextInt();
-        List<String[]> courses = coursesJdbcDao.readAllData();
-        for (String[] course : courses) {
-            System.out.println("Course id: " + course[0] + " - " + course[1]);
+        List<Course> courses = coursesJdbcDao.readAllData();
+        for (Course course : courses) {
+            System.out.println("Course id: " + course.getId() + " - " + course.getName());
         }
         System.out.println(COURSE_ID_MESSAGE);
         info[1] = scanner.nextInt();

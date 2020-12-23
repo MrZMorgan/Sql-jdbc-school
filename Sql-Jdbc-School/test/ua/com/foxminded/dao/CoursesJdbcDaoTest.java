@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.data.Course;
 import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,9 +43,9 @@ class CoursesJdbcDaoTest {
             int actualCourseId = 1;
             courseDao.create(COURSE_NAME_MATH);
 
-            List<String[]> courses = courseDao.readAllData();
-            int expectedCourseId = Integer.parseInt(courses.get(0)[0]);
-            String expectedCourseName = courses.get(0)[1];
+            List<Course> courses = courseDao.readAllData();
+            int expectedCourseId = courses.get(0).getId();
+            String expectedCourseName = courses.get(0).getName();
 
             assertEquals(actualCourseId, expectedCourseId);
             assertEquals(COURSE_NAME_MATH, expectedCourseName);
@@ -60,19 +61,19 @@ class CoursesJdbcDaoTest {
             courseDao.create(COURSE_NAME_GEOMETRY);
             courseDao.create(COURSE_NAME_BIOLOGY);
 
-            List<String[]> actualCoursesList = courseDao.readAllData();
+            List<Course> actualCoursesList = courseDao.readAllData();
 
-            String[] actualCourse1 = actualCoursesList.get(0);
-            String[] actualCourse2 = actualCoursesList.get(1);
-            String[] actualCourse3 = actualCoursesList.get(2);
+            Course actualCourse1 = actualCoursesList.get(0);
+            Course actualCourse2 = actualCoursesList.get(1);
+            Course actualCourse3 = actualCoursesList.get(2);
 
-            int actualCourse1Id = Integer.parseInt(actualCourse1[0]);
-            int actualCourse2Id = Integer.parseInt(actualCourse2[0]);
-            int actualCourse3Id = Integer.parseInt(actualCourse3[0]);
+            int actualCourse1Id = actualCourse1.getId();
+            int actualCourse2Id = actualCourse2.getId();
+            int actualCourse3Id = actualCourse3.getId();
 
-            String actualCourse1Name = actualCourse1[1];
-            String actualCourse2Name = actualCourse2[1];
-            String actualCourse3Name = actualCourse3[1];
+            String actualCourse1Name = actualCourse1.getName();
+            String actualCourse2Name = actualCourse2.getName();
+            String actualCourse3Name = actualCourse3.getName();
 
             int expectedCourse1Id = 1;
             int expectedCourse2Id = 2;
