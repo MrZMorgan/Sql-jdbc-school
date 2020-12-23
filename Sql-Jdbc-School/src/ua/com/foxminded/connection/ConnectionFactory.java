@@ -10,13 +10,13 @@ import java.util.Properties;
 
 public class ConnectionFactory {
 
-    String resourceFilePath;
+    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
+
+    private final String resourceFilePath;
 
     public ConnectionFactory(String resourceFilePath) {
         this.resourceFilePath = resourceFilePath;
     }
-
-    private static final String FAILED_CONNECTION_MESSAGE = "Database connection failed";
 
     public Connection connect() throws ClassNotFoundException, IOException {
         Properties properties = new Properties();

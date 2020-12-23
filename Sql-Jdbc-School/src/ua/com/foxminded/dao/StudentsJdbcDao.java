@@ -13,14 +13,15 @@ import java.util.logging.Logger;
 
 public class StudentsJdbcDao implements StudentsDAO {
 
+    public final static String SQL_RESOURCES = "resources/sql.properties";
+    public final static String SPACE = " ";
+
     ConnectionFactory factory;
 
     public StudentsJdbcDao(ConnectionFactory factory) {
         this.factory = factory;
     }
 
-    public static final String SQL_RESOURCES = "resources/sql.properties";
-    public final static String SPACE = " ";
     private final static Logger logger = Logger.getLogger(StudentsJdbcDao.class.getName());
 
     @Override

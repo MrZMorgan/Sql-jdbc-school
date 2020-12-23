@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DataGeneratorTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     private final static String SQL_RESOURCES = "resources/sql.properties";
-    private final static ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
+    private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
 
     @BeforeEach
     void createTable() {

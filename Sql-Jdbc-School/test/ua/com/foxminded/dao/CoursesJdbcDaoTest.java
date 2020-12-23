@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class CoursesJdbcDaoTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     private final static String SQL_RESOURCES = "resources/sql.properties";
-    private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
-    private final CoursesJdbcDao courseDao = new CoursesJdbcDao(factory);
-    private final DataGenerator generator = new DataGenerator(factory);
     private final static String COURSE_NAME_MATH = "math";
     private final static String COURSE_NAME_GEOMETRY = "geometry";
     private final static String COURSE_NAME_BIOLOGY = "biology";
+    private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
+    private final CoursesJdbcDao courseDao = new CoursesJdbcDao(factory);
+    private final DataGenerator generator = new DataGenerator(factory);
 
     @BeforeEach
     void createTable() {

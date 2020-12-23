@@ -11,14 +11,14 @@ import java.util.logging.Logger;
 
 public class CoursesJdbcDao implements CourseDAO {
 
+    public final static String SQL_RESOURCES = "resources/sql.properties";
+    private final static Logger logger = Logger.getLogger(CoursesJdbcDao.class.getName());
+
     ConnectionFactory factory;
 
     public CoursesJdbcDao(ConnectionFactory factory) {
         this.factory = factory;
     }
-
-    public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final static Logger logger = Logger.getLogger(CoursesJdbcDao.class.getName());
 
     @Override
     public void create(String courseName) throws DAOException {

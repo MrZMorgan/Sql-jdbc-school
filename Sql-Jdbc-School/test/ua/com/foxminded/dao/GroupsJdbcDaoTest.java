@@ -15,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class GroupsJdbcDaoTest {
     private final static String CONNECTION_PROPERTIES = "resources/h2_connection.properties";
     private final static String SQL_RESOURCES = "resources/sql.properties";
+    private final static String GROUP_NAME_FOR_TEST = "gs-58";
     private final ConnectionFactory factory = new ConnectionFactory(CONNECTION_PROPERTIES);
     private final GroupsJdbcDao groupsJdbcDao = new GroupsJdbcDao(factory);
     private final StudentsJdbcDao studentsJdbcDao = new StudentsJdbcDao(factory);
     private final DataGenerator generator = new DataGenerator(factory);
-    private final static String GROUP_NAME_FOR_TEST = "gs-58";
 
     @BeforeEach
     void createTable() {

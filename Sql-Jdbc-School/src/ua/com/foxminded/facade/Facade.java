@@ -13,6 +13,34 @@ import java.util.logging.Logger;
 
 public class Facade {
 
+    public final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
+            "To find all students related to course with given name type \"courses\"\n" +
+            "To add new student to database type \"add\"\n" +
+            "To delete student by id type \"delete\"\n" +
+            "To add student to course type \"assign\"\n" +
+            "To remove student to course type \"remove\"\n\n" +
+            "To close app type \"exit\"";
+    public final static String ADD_NEW_STUDENT_ID_MESSAGE =
+            "Type the number of course to which you want to assign the student and press \"Enter\" button\n" +
+                    "To not assign a student to the course type \"0\" and press \"Enter\" button";
+    public final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
+            "Type student first name and press \"Enter\" button";
+    public final static String ADD_NEW_STUDENT_LAST_NAME_MESSAGE =
+            "Type student last name and press \"Enter\" button";
+    public final static String DELETE_STUDENT_BY_ID_MESSAGE =
+            "Type the id of student you wand delete from database and press \"Enter\" button";
+    public final static String STUDENT_ID_MESSAGE =
+            "Type the student id and press \"Enter\" button";
+    public final static String COURSE_ID_MESSAGE =
+            "Type the course id and press \"Enter\" button";
+    public final static String GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE =
+            "Type expected group size and press \"Enter\" button";
+    public final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
+            "Type course name press \"Enter\" button";
+    public final static String SQL_RESOURCES = "resources/sql.properties";
+    public final static String SPACE = " ";
+    private final static Logger logger = Logger.getLogger(Facade.class.getName());
+
     private final DataGenerator dataGenerator;
     private final CoursesJdbcDao coursesJdbcDao;
     private final GroupsJdbcDao groupsJdbcDao;
@@ -30,34 +58,6 @@ public class Facade {
         this.studentsJdbcDao = studentsJdbcDao;
         this.studentsCoursesJdbcDao = studentsCoursesJdbcDao;
     }
-
-    public final static String INTRO_MESSAGE = "To find all groups with less or equals student count type \"groups\"\n" +
-                                                "To find all students related to course with given name type \"courses\"\n" +
-                                                "To add new student to database type \"add\"\n" +
-                                                "To delete student by id type \"delete\"\n" +
-                                                "To add student to course type \"assign\"\n" +
-                                                "To remove student to course type \"remove\"\n\n" +
-                                                "To close app type \"exit\"";
-    public final static String ADD_NEW_STUDENT_ID_MESSAGE =
-            "Type the number of course to which you want to assign the student and press \"Enter\" button\n" +
-            "To not assign a student to the course type \"0\" and press \"Enter\" button";
-    public final static String ADD_NEW_STUDENT_FIRST_NAME_MESSAGE =
-            "Type student first name and press \"Enter\" button";
-    public final static String ADD_NEW_STUDENT_LAST_NAME_MESSAGE =
-            "Type student last name and press \"Enter\" button";
-    public final static String DELETE_STUDENT_BY_ID_MESSAGE =
-            "Type the id of student you wand delete from database and press \"Enter\" button";
-    public final static String STUDENT_ID_MESSAGE =
-            "Type the student id and press \"Enter\" button";
-    public final static String COURSE_ID_MESSAGE =
-            "Type the course id and press \"Enter\" button";
-    public final static String GROUPS_WITH_LESS_OR_EQUALS_COUNT_MESSAGE =
-            "Type expected group size and press \"Enter\" button";
-    public final static String STUDENTS_RELATED_TO_COURSES_MESSAGE =
-            "Type course name press \"Enter\" button";
-    public static final String SQL_RESOURCES = "resources/sql.properties";
-    public final static String SPACE = " ";
-    private final static Logger logger = Logger.getLogger(Facade.class.getName());
 
     public void workWithDataBase() throws DAOException, IOException {
         Scanner scanner = new Scanner(System.in);

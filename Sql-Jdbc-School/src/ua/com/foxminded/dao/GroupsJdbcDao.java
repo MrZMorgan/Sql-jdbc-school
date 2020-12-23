@@ -11,14 +11,14 @@ import java.util.logging.Logger;
 
 public class GroupsJdbcDao implements GroupsDAO {
 
+    public final static String SQL_RESOURCES = "resources/sql.properties";
+    private final static Logger logger = Logger.getLogger(GroupsJdbcDao.class.getName());
+
     ConnectionFactory factory;
 
     public GroupsJdbcDao(ConnectionFactory factory) {
         this.factory = factory;
     }
-
-    public static final String SQL_RESOURCES = "resources/sql.properties";
-    private final static Logger logger = Logger.getLogger(GroupsJdbcDao.class.getName());
 
     @Override
     public void create(String groupName) throws DAOException {

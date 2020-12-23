@@ -13,15 +13,15 @@ import java.util.logging.Logger;
 
 public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
 
+    public final static String SQL_RESOURCES = "resources/sql.properties";
+    public final static String SPACE = " ";
+    private final static Logger logger = Logger.getLogger(StudentsCoursesJdbcDao.class.getName());
+
     ConnectionFactory factory;
 
     public StudentsCoursesJdbcDao(ConnectionFactory factory) {
         this.factory = factory;
     }
-
-    public final static String SQL_RESOURCES = "resources/sql.properties";
-    public final static String SPACE = " ";
-    private final static Logger logger = Logger.getLogger(StudentsCoursesJdbcDao.class.getName());
 
     @Override
     public void create(String rowData) throws DAOException {
