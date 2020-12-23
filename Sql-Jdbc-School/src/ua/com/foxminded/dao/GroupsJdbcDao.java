@@ -1,6 +1,7 @@
 package ua.com.foxminded.dao;
 
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.data.Group;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.GroupsDAO;
 import java.io.FileInputStream;
@@ -71,9 +72,9 @@ public class GroupsJdbcDao implements GroupsDAO {
     }
 
     @Override
-    public List<String[]> readAllData() throws DAOException {
+    public List<Group> readAllData() throws DAOException {
         Connection connection = null;
-        List<String[]> courseList = new LinkedList<>();
+        List<Group> courseList = new LinkedList<>();
         Properties properties = new Properties();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
@@ -84,10 +85,10 @@ public class GroupsJdbcDao implements GroupsDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.groups.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                courseList.add(new String[]{
-                        resultSet.getString("id"),
+                courseList.add(new Group(
+                        resultSet.getInt("id"),
                         resultSet.getString("name")
-                });
+                ));
             }
         } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();

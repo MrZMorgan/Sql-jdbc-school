@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.data.Group;
 import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,9 +49,9 @@ class GroupsJdbcDaoTest {
             groupsJdbcDao.create(GROUP_NAME_FOR_TEST);
             int actualGroupId = 1;
 
-            List<String[]> groups = groupsJdbcDao.readAllData();
-            int expectedGroupsId = Integer.parseInt(groups.get(0)[0]);
-            String expectedGroupsName = groups.get(0)[1];
+            List<Group> groups = groupsJdbcDao.readAllData();
+            int expectedGroupsId = groups.get(0).getId();
+            String expectedGroupsName = groups.get(0).getName();
 
             assertEquals(actualGroupId, expectedGroupsId);
             assertEquals(GROUP_NAME_FOR_TEST, expectedGroupsName);

@@ -105,13 +105,12 @@ public class StudentsJdbcDao implements StudentsDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.students.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Student student = new Student(
+                courseList.add(new Student(
                         resultSet.getInt("id"),
                         resultSet.getInt("group_id"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name")
-                );
-                courseList.add(student);
+                ));
             }
         } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
