@@ -1,6 +1,7 @@
 package ua.com.foxminded.dao;
 
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.data.StudentCourse;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.StudentsCoursesDAO;
 import java.io.FileInputStream;
@@ -121,9 +122,9 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
     }
 
     @Override
-    public List<String[]> readAllData() throws DAOException {
+    public List<StudentCourse> readAllData() throws DAOException {
         Connection connection = null;
-        List<String[]> courseList = new LinkedList<>();
+        List<StudentCourse> courseList = new LinkedList<>();
         Properties properties = new Properties();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
@@ -134,10 +135,10 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.students.courses.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                courseList.add(new String[]{
-                        resultSet.getString("student_id"),
-                        resultSet.getString("course_id")
-                });
+                courseList.add(new StudentCourse(
+                        resultSet.getInt("student_id"),
+                        resultSet.getInt("course_id")
+                ));
             }
         } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();

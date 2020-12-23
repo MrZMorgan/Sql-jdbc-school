@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.data.StudentCourse;
 import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -49,9 +50,9 @@ class StudentsCoursesJdbcDaoTest {
         try {
             generateTestData();
 
-            List<String[]> studentsCourses = studentsCoursesJdbcDao.readAllData();
-            int expectedStudentId = Integer.parseInt(studentsCourses.get(0)[0]);
-            int expectedCourseId = Integer.parseInt(studentsCourses.get(0)[1]);;
+            List<StudentCourse> studentsCourses = studentsCoursesJdbcDao.readAllData();
+            int expectedStudentId = studentsCourses.get(0).getStudentId();
+            int expectedCourseId = studentsCourses.get(0).getCourseId();
 
             int actualStudentId = 1;
             int actualCourseId = 1;
@@ -71,7 +72,7 @@ class StudentsCoursesJdbcDaoTest {
 
             int expectedTableSize = 0;
 
-            List<String[]> studentsCourses = studentsCoursesJdbcDao.readAllData();
+            List<StudentCourse> studentsCourses = studentsCoursesJdbcDao.readAllData();
             int actualTableSize = studentsCourses.size();
 
             assertEquals(expectedTableSize, actualTableSize);
@@ -88,7 +89,7 @@ class StudentsCoursesJdbcDaoTest {
 
             int expectedTableSize = 0;
 
-            List<String[]> studentsCourses = studentsCoursesJdbcDao.readAllData();
+            List<StudentCourse> studentsCourses = studentsCoursesJdbcDao.readAllData();
             int actualTableSize = studentsCourses.size();
 
             assertEquals(expectedTableSize, actualTableSize);
