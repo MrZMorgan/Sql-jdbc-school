@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class DataGenerator {
 
-    ConnectionFactory factory;
+    private final ConnectionFactory factory;
 
     public DataGenerator(ConnectionFactory factory) {
         this.factory = factory;
