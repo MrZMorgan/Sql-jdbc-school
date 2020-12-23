@@ -33,7 +33,7 @@ public class GroupsJdbcDao implements GroupsDAO {
             connection = factory.connect();
             statement = connection.createStatement();
             statement.execute(String.format(properties.getProperty("create.group"), groupName));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -61,7 +61,7 @@ public class GroupsJdbcDao implements GroupsDAO {
                 groupSize[1] = resultSet.getInt("count");
                 groupsSizes.add(groupSize);
             }
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -89,7 +89,7 @@ public class GroupsJdbcDao implements GroupsDAO {
                         resultSet.getString("name")
                 });
             }
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -111,7 +111,7 @@ public class GroupsJdbcDao implements GroupsDAO {
             connection = factory.connect();
             statement = connection.createStatement();
             statement.execute(String.format(properties.getProperty("delete.group.by.id"), groupId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -133,7 +133,7 @@ public class GroupsJdbcDao implements GroupsDAO {
             statement = connection.createStatement();
             statement.execute(
                     String.format(properties.getProperty("update.group.name"), groupName, groupId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {

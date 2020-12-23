@@ -1,6 +1,7 @@
 package ua.com.foxminded.dao;
 
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.data.Student;
 import ua.com.foxminded.exceptions.DAOException;
 import ua.com.foxminded.interfaces.StudentsDAO;
 import java.io.FileInputStream;
@@ -38,7 +39,7 @@ public class StudentsJdbcDao implements StudentsDAO {
             statement = connection.createStatement();
             String[] data = fullName.split(SPACE);
             statement.execute(String.format(properties.getProperty("create.student"), data[0], data[1]));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -61,7 +62,7 @@ public class StudentsJdbcDao implements StudentsDAO {
             connection = factory.connect();
             statement = connection.createStatement();
             statement.execute(String.format(properties.getProperty("delete.student.by.id"), studentId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -82,7 +83,7 @@ public class StudentsJdbcDao implements StudentsDAO {
             statement = connection.createStatement();
             statement.execute(
                     String.format(properties.getProperty("assign.student.to.group"), groupId, studentId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -91,9 +92,9 @@ public class StudentsJdbcDao implements StudentsDAO {
     }
 
     @Override
-    public List<String[]> readAllData() throws DAOException {
+    public List<Student> readAllData() throws DAOException {
         Connection connection = null;
-        List<String[]> courseList = new LinkedList<>();
+        List<Student> courseList = new LinkedList<>();
         Properties properties = new Properties();
         try {
             FileInputStream stream = new FileInputStream(SQL_RESOURCES);
@@ -104,14 +105,15 @@ public class StudentsJdbcDao implements StudentsDAO {
             PreparedStatement statement = connection.prepareStatement(properties.getProperty("get.students.list"));
             final ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                courseList.add(new String[]{
-                        resultSet.getString("id"),
-                        resultSet.getString("group_id"),
+                Student student = new Student(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("group_id"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name")
-                });
+                );
+                courseList.add(student);
             }
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -136,7 +138,7 @@ public class StudentsJdbcDao implements StudentsDAO {
             String[] fullName = fullNameRawData.split(SPACE);
             statement.execute(
                     String.format(properties.getProperty("update.student.name"), fullName[0], fullName[1], studentId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {

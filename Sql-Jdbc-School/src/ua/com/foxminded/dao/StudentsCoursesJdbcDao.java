@@ -41,7 +41,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
                             properties.getProperty("create.student.to.course"),
                             Integer.parseInt(data[0]), Integer.parseInt(data[1]))
             );
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -63,7 +63,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
             statement = connection.createStatement();
             statement.execute(
                     String.format(properties.getProperty("delete.from.students.courses.by.student.id"), studentId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -84,7 +84,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
             statement = connection.createStatement();
             statement.execute(
                     String.format(properties.getProperty("delete.from.course"), studentId, courseId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -111,7 +111,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
                 groupSize[1] = resultSet.getString("last_name");
                 names.add(groupSize);
             }
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -139,7 +139,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
                         resultSet.getString("course_id")
                 });
             }
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -163,7 +163,7 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
             statement.execute(
                     String.format(
                             properties.getProperty("update.group.name"), Integer.parseInt(courseId), studentId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {

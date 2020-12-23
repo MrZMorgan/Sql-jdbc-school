@@ -2,6 +2,7 @@ package ua.com.foxminded;
 
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.exceptions.DAOException;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -21,7 +22,7 @@ class ConnectionFactoryTest {
             connection = factory.connect();
             assertNotNull(connection);
             connection.close();
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | DAOException throwables) {
             throwables.printStackTrace();
         }
     }

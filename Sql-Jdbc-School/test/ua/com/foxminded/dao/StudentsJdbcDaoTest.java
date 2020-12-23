@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxminded.DataGenerator;
 import ua.com.foxminded.connection.ConnectionFactory;
+import ua.com.foxminded.dao.data.Student;
 import ua.com.foxminded.exceptions.DAOException;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,11 +46,11 @@ class StudentsJdbcDaoTest {
             int actualId = 1;
             studentsDao.create(FULL_NAME_1_FOR_TEST);
 
-            List<String[]> students = studentsDao.readAllData();
+            List<Student> students = studentsDao.readAllData();
 
-            int expectedId = Integer.parseInt(students.get(0)[0]);
-            String expectedFirstName = students.get(0)[2];
-            String expectedLastName = students.get(0)[3];
+            int expectedId = students.get(0).getId();
+            String expectedFirstName = students.get(0).getFirstName();
+            String expectedLastName = students.get(0).getLastName();
 
             assertEquals(actualId, expectedId);
             assertEquals(FIRST_NAME_FOR_TEST, expectedFirstName);
@@ -68,7 +69,7 @@ class StudentsJdbcDaoTest {
             studentsDao.deleteById(1);
 
             int expectedTableSize = 2;
-            List<String[]> students = studentsDao.readAllData();
+            List<Student> students = studentsDao.readAllData();
 
             assertEquals(expectedTableSize, students.size());
         } catch (DAOException e) {
@@ -85,8 +86,8 @@ class StudentsJdbcDaoTest {
             studentsDao.create(FULL_NAME_1_FOR_TEST);
             studentsDao.assignStudentToGroup(expectedGroupId, studentId);
 
-            List<String[]> students = studentsDao.readAllData();
-            int actualGroupId = Integer.parseInt(students.get(0)[1]);
+            List<Student> students = studentsDao.readAllData();
+            int actualGroupId = students.get(0).getGroupId();
 
             assertEquals(expectedGroupId, actualGroupId);
         } catch (DAOException e) {

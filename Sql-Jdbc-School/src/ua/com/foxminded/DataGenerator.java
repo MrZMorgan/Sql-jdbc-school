@@ -42,7 +42,7 @@ public class DataGenerator {
                 e.printStackTrace();
             }
             statement.execute(sqlCreate);
-        } catch (ClassNotFoundException | SQLException | IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
             logger.info(e.getMessage());
         } finally {

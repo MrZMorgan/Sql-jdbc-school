@@ -46,7 +46,7 @@ class DataGeneratorTest {
             assertEquals("NAME", metaData.getColumnName(2));
             assertEquals("DESCRIPTION", metaData.getColumnName(3));
             connection.close();
-        } catch (SQLException | IOException | ClassNotFoundException e) {
+        } catch (SQLException | DAOException e) {
             e.printStackTrace();
         }
     }

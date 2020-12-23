@@ -32,7 +32,7 @@ public class CoursesJdbcDao implements CourseDAO {
             connection = factory.connect();
             statement = connection.createStatement();
             statement.execute(String.format(properties.getProperty("create.course"), courseName));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -59,7 +59,7 @@ public class CoursesJdbcDao implements CourseDAO {
                         resultSet.getString("name")
                 });
             }
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -81,7 +81,7 @@ public class CoursesJdbcDao implements CourseDAO {
             connection = factory.connect();
             statement = connection.createStatement();
             statement.execute(String.format(properties.getProperty("delete.course.by.id"), courseId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
@@ -103,7 +103,7 @@ public class CoursesJdbcDao implements CourseDAO {
             statement = connection.createStatement();
             statement.execute(
                     String.format(properties.getProperty("update.course.name"), courseName, courseId));
-        } catch (SQLException | IOException | ClassNotFoundException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());
         } finally {
