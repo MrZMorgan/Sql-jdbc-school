@@ -163,7 +163,8 @@ public class StudentsCoursesJdbcDao implements StudentsCoursesDAO {
             statement = connection.createStatement();
             statement.execute(
                     String.format(
-                            properties.getProperty("update.group.name"), Integer.parseInt(courseId), studentId));
+                            properties.getProperty("update.students.courses.record"),
+                            Integer.parseInt(courseId), studentId));
         } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
             logger.info(throwables.getMessage());

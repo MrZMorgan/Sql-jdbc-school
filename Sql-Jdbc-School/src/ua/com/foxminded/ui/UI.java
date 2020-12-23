@@ -6,8 +6,6 @@ import ua.com.foxminded.dao.StudentsCoursesJdbcDao;
 import ua.com.foxminded.dao.StudentsJdbcDao;
 import ua.com.foxminded.dao.data.Course;
 import ua.com.foxminded.exceptions.DAOException;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
