@@ -1,0 +1,7 @@
+package ua.com.foxminded.exceptions;
+
+public class DAOException extends Exception {
+    public DAOException(String message) {
+        super(message);
+    }
+}
